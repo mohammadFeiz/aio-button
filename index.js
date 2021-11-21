@@ -45,18 +45,18 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var RDButton = /*#__PURE__*/function (_Component) {
-  _inherits(RDButton, _Component);
+var AIOButton = /*#__PURE__*/function (_Component) {
+  _inherits(AIOButton, _Component);
 
-  var _super = _createSuper(RDButton);
+  var _super = _createSuper(AIOButton);
 
-  function RDButton() {
-    _classCallCheck(this, RDButton);
+  function AIOButton() {
+    _classCallCheck(this, AIOButton);
 
     return _super.apply(this, arguments);
   }
 
-  _createClass(RDButton, [{
+  _createClass(AIOButton, [{
     key: "getMultiselectValues",
     value: function getMultiselectValues() {
       var values = this.props.values,
@@ -126,11 +126,10 @@ var RDButton = /*#__PURE__*/function (_Component) {
           _this$props2$options = _this$props2.options,
           options = _this$props2$options === void 0 ? [] : _this$props2$options,
           onChange = _this$props2.onChange,
-          values = _this$props2.values,
-          showTags = _this$props2.showTags;
+          values = _this$props2.values;
       var Values = this.getMultiselectValues();
       var Options = this.getMultiselectOptions(Values);
-      return /*#__PURE__*/_react.default.createElement(RDropdownButton, _extends({
+      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
         popupWidth: 'fit',
         caret: true
       }, this.props, {
@@ -224,7 +223,7 @@ var RDButton = /*#__PURE__*/function (_Component) {
           options = _this$props4$options === void 0 ? [] : _this$props4$options,
           _this$props4$onChange = _this$props4.onChange,
           onChange = _this$props4$onChange === void 0 ? function () {} : _this$props4$onChange;
-      return /*#__PURE__*/_react.default.createElement(RDropdownButton, _extends({
+      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
         text: this.getSelectText(),
         caret: true
       }, this.props, {
@@ -250,25 +249,25 @@ var RDButton = /*#__PURE__*/function (_Component) {
         return this.RenderMultiselect();
       }
 
-      return /*#__PURE__*/_react.default.createElement(RDropdownButton, this.props);
+      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, this.props);
     }
   }]);
 
-  return RDButton;
+  return AIOButton;
 }(_react.Component);
 
-exports.default = RDButton;
+exports.default = AIOButton;
 var dpContext = /*#__PURE__*/(0, _react.createContext)();
 
-var RDropdownButton = /*#__PURE__*/function (_Component2) {
-  _inherits(RDropdownButton, _Component2);
+var AIOButtonBase = /*#__PURE__*/function (_Component2) {
+  _inherits(AIOButtonBase, _Component2);
 
-  var _super2 = _createSuper(RDropdownButton);
+  var _super2 = _createSuper(AIOButtonBase);
 
-  function RDropdownButton(props) {
+  function AIOButtonBase(props) {
     var _this4;
 
-    _classCallCheck(this, RDropdownButton);
+    _classCallCheck(this, AIOButtonBase);
 
     _this4 = _super2.call(this, props);
     _this4.state = {
@@ -279,7 +278,7 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
     return _this4;
   }
 
-  _createClass(RDropdownButton, [{
+  _createClass(AIOButtonBase, [{
     key: "toggle",
     value: function toggle() {
       var _this5 = this;
@@ -297,9 +296,9 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
         });
 
         if (state) {
-          (0, _jquery.default)('body').addClass('rdb-open');
+          (0, _jquery.default)('body').addClass('aio-button-open');
         } else {
-          (0, _jquery.default)('body').removeClass('rdb-open');
+          (0, _jquery.default)('body').removeClass('aio-button-open');
         }
 
         var _this5$props = _this5.props,
@@ -323,7 +322,7 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
   }, {
     key: "click",
     value: function click(e) {
-      if ((0, _jquery.default)(e.target).parents('.rdb-checkeds').length !== 0) {
+      if ((0, _jquery.default)(e.target).parents('.aio-button-checkeds').length !== 0) {
         return;
       }
 
@@ -373,7 +372,7 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
       }
 
       return /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-badge",
+        className: "aio-button-badge",
         style: badgeStyle
       }, badge);
     }
@@ -389,7 +388,7 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
   }, {
     key: "itemClick",
     value: function itemClick(item, e) {
-      if ((0, _jquery.default)(e.target).parents('.rdb-list-item-after').length !== 0) {
+      if ((0, _jquery.default)(e.target).parents('.aio-button-list-item-after').length !== 0) {
         return;
       }
 
@@ -427,7 +426,7 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
             flex: 1
           }
         }), /*#__PURE__*/_react.default.createElement("div", {
-          className: "rdb-caret",
+          className: "aio-button-caret",
           style: caretStyle
         }));
       }
@@ -489,7 +488,7 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
       contextValue.hover = hover;
       var props = {
         id: id,
-        className: "r-dropdown-button ".concat(rtl ? 'rtl' : 'ltr').concat(className ? ' ' + className : ''),
+        className: "aio-button ".concat(rtl ? 'rtl' : 'ltr').concat(className ? ' ' + className : ''),
         style: _jquery.default.extend({}, {
           direction: rtl ? 'rtl' : 'ltr'
         }, this.getValue(style)),
@@ -511,22 +510,22 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
       return /*#__PURE__*/_react.default.createElement(dpContext.Provider, {
         value: contextValue
       }, type === 'multiselect' && /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-multiselect",
+        className: "aio-button-multiselect",
         style: {
           width: props.style.width
         }
       }, button, checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
-        className: 'rdb-checkeds' + (rtl ? ' rtl' : '')
+        className: 'aio-button-checkeds' + (rtl ? ' rtl' : '')
       }, checks.map(function (check) {
         return /*#__PURE__*/_react.default.createElement("div", {
-          className: "rdb-checked",
+          className: "aio-button-checked",
           onClick: function onClick() {
             return _onClick(check);
           }
         }, /*#__PURE__*/_react.default.createElement("div", {
-          className: "rdb-checked-close"
+          className: "aio-button-checked-close"
         }), /*#__PURE__*/_react.default.createElement("div", {
-          className: "rdb-checked-text"
+          className: "aio-button-checked-text"
         }, check.text));
       }))), type !== 'multiselect' && button, this.showPopup() && /*#__PURE__*/_react.default.createElement(Popup, {
         ref: this.popup
@@ -534,10 +533,10 @@ var RDropdownButton = /*#__PURE__*/function (_Component2) {
     }
   }]);
 
-  return RDropdownButton;
+  return AIOButtonBase;
 }(_react.Component);
 
-RDropdownButton.defaultProps = {
+AIOButtonBase.defaultProps = {
   getOptionText: function getOptionText() {},
   getOptionChecked: function getOptionChecked() {},
   getOptionBefore: function getOptionBefore() {},
@@ -600,7 +599,7 @@ var Popup = /*#__PURE__*/function (_Component3) {
           type = _this$context.type,
           popupWidth = _this$context.popupWidth;
       var popup = (0, _jquery.default)(this.dom.current);
-      var button = type === 'multiselect' ? popup.prev().find('.r-dropdown-button') : popup.prev();
+      var button = type === 'multiselect' ? popup.prev().find('.aio-button') : popup.prev();
       var parent = openRelatedTo ? popup.parents(openRelatedTo) : undefined;
       parent = Array.isArray(parent) && parent.length === 0 ? undefined : parent;
       var bodyWidth = window.innerWidth;
@@ -689,7 +688,7 @@ var Popup = /*#__PURE__*/function (_Component3) {
       }
 
       popup.focus();
-      (0, _jquery.default)('body').addClass('rdb-open');
+      (0, _jquery.default)('body').addClass('aio-button-open');
     }
   }, {
     key: "componentDidMount",
@@ -739,7 +738,7 @@ var Popup = /*#__PURE__*/function (_Component3) {
 
       if (e.keyCode === 40) {
         e.preventDefault();
-        var items = (0, _jquery.default)(this.dom.current).find('.rdb-list-item');
+        var items = (0, _jquery.default)(this.dom.current).find('.aio-button-list-item');
         var active = items.filter('.active');
 
         if (active.length === 0) {
@@ -759,7 +758,7 @@ var Popup = /*#__PURE__*/function (_Component3) {
         }
       } else if (e.keyCode === 38) {
         e.preventDefault();
-        var items = (0, _jquery.default)(this.dom.current).find('.rdb-list-item');
+        var items = (0, _jquery.default)(this.dom.current).find('.aio-button-list-item');
         var active = items.filter('.active');
 
         if (active.length === 0) {
@@ -879,9 +878,9 @@ var Popup = /*#__PURE__*/function (_Component3) {
 
       var searchValue = this.state.searchValue;
       return /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-search"
+        className: "aio-button-search"
       }, /*#__PURE__*/_react.default.createElement("div", {
-        className: 'rdb-search-icon' + (searchValue ? ' rdb-search-icon-filled' : ''),
+        className: 'aio-button-search-icon' + (searchValue ? ' aio-button-search-icon-filled' : ''),
         onClick: function onClick() {
           _this8.setState({
             searchValue: ''
@@ -904,7 +903,7 @@ var Popup = /*#__PURE__*/function (_Component3) {
       var _this$context5 = this.context,
           popupClassName = _this$context5.popupClassName,
           rtl = _this$context5.rtl;
-      var className = 'rdb-popup-container';
+      var className = 'aio-button-popup-container';
       className += rtl ? ' rtl' : ' ltr';
 
       if (popupClassName) {
@@ -941,19 +940,19 @@ var Popup = /*#__PURE__*/function (_Component3) {
         onKeyDown: this.keyDown.bind(this),
         tabIndex: 0
       }, !hover && /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-backdrop",
+        className: "aio-button-backdrop",
         onClick: function onClick() {
           return toggle(false, true);
         },
         style: this.getBackDropStyle()
       }), /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-popup",
+        className: "aio-button-popup",
         style: {
           width: popupWidth === 'fit' ? undefined : popupWidth,
           ...popupStyle
         }
       }, this.getSearchBox(), /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-items"
+        className: "aio-button-items"
       }, PopOver || this.getOptions())));
     }
   }]);
@@ -987,20 +986,20 @@ var ListItem = /*#__PURE__*/function (_Component4) {
           index = _this$props10.index;
 
       var Text = /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-text",
+        className: "aio-button-text",
         title: item._title || item._text
       }, item._text);
 
       var CheckIcon = item._checked !== undefined ? /*#__PURE__*/_react.default.createElement(_react.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
-        className: 'rdb-check-icon' + (item._checked ? ' checked' : '')
+        className: 'aio-button-check-icon' + (item._checked ? ' checked' : '')
       }), /*#__PURE__*/_react.default.createElement("div", {
-        className: "rdb-gap",
+        className: "aio-button-gap",
         style: {
           width: gap
         }
       })) : null;
       var props = {
-        className: "rdb-list-item".concat(item._className ? ' ' + item._className : '').concat(item._disabled ? ' disabled' : ''),
+        className: "aio-button-list-item".concat(item._className ? ' ' + item._className : '').concat(item._disabled ? ' disabled' : ''),
         style: item._style,
         onClick: function onClick(e) {
           return itemClick(item, e);
@@ -1010,7 +1009,7 @@ var ListItem = /*#__PURE__*/function (_Component4) {
         tabIndex: 0
       };
       return /*#__PURE__*/_react.default.createElement(_react.Fragment, null, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
-        className: 'rdb-splitter ' + (rtl ? 'rtl' : 'ltr')
+        className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
       }, item.splitter), item._href ? /*#__PURE__*/_react.default.createElement("a", _extends({
         href: item._href
       }, props), item._before, Text, item._after) : /*#__PURE__*/_react.default.createElement("div", props, CheckIcon, item._before, Text, item._after));

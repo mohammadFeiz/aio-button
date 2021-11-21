@@ -1,7 +1,7 @@
 import React,{Component,Fragment,createRef,createContext} from 'react';
 import $ from 'jquery'
 import './index.css';
-export default class RDButton extends Component{
+export default class AIOButton extends Component{
   getMultiselectValues(){
     let {values} = this.props,Values = [];
     if(Array.isArray(values)){this.multiSelectType = 'array'; Values = values;}
@@ -30,11 +30,11 @@ export default class RDButton extends Component{
     return Options;
   }
   RenderMultiselect(){
-    let {options = [],onChange,values,showTags} = this.props;
+    let {options = [],onChange,values} = this.props;
     let Values = this.getMultiselectValues();
     let Options = this.getMultiselectOptions(Values);
     return (
-      <RDropdownButton
+      <AIOButtonBase
         popupWidth={'fit'} 
         caret={true} 
         {...this.props}
@@ -97,7 +97,7 @@ export default class RDButton extends Component{
   RenderSelect(){
     let {options = [],onChange=()=>{}} = this.props;
     return (
-      <RDropdownButton
+      <AIOButtonBase
         text={this.getSelectText()} 
         caret={true}
         {...this.props}
@@ -115,11 +115,11 @@ export default class RDButton extends Component{
     let {type} = this.props;
     if(type === 'select'){return this.RenderSelect()}
     if(type === 'multiselect'){return this.RenderMultiselect()}
-    return <RDropdownButton {...this.props}/>;
+    return <AIOButtonBase {...this.props}/>;
   }
 }
 const dpContext = createContext();
-class RDropdownButton extends Component {
+class AIOButtonBase extends Component {
     constructor(props){
       super(props);
       this.state = {open:this.props.open || false}
@@ -131,8 +131,8 @@ class RDropdownButton extends Component {
       this.timeOut = setTimeout(()=>{
         if(state === this.state.open){return}
         this.setState({open:state});
-        if(state){$('body').addClass('rdb-open');}
-        else{$('body').removeClass('rdb-open');}
+        if(state){$('body').addClass('aio-button-open');}
+        else{$('body').removeClass('aio-button-open');}
         var {onBackdropClick,onToggle} = this.props;
         if(onBackdropClick && isBackdrop){onBackdropClick(this.props)}
         if(onToggle){onToggle(state)}
@@ -140,7 +140,7 @@ class RDropdownButton extends Component {
     }
     getValue(value){return typeof value === 'function' ? value(this.props):value;}
     click(e){
-      if($(e.target).parents('.rdb-checkeds').length !== 0){return;}
+      if($(e.target).parents('.aio-button-checkeds').length !== 0){return;}
       var {items,popOver,onClick = ()=>{}} = this.props;
       if(items || popOver){this.toggle(true);}
       else{onClick(this.props);}
@@ -155,14 +155,14 @@ class RDropdownButton extends Component {
     getBadge(){
       let {badge,badgeStyle} = this.props;
       if(badge === undefined){return null;}
-      return <div className='rdb-badge' style={badgeStyle}>{badge}</div>
+      return <div className='aio-button-badge' style={badgeStyle}>{badge}</div>
     }
     getHoverEnabled(){
       if(this.touch){return false}
       return this.getValue(this.props.hover);
     }
     itemClick(item,e){
-      if($(e.target).parents('.rdb-list-item-after').length !== 0){return;}
+      if($(e.target).parents('.aio-button-list-item-after').length !== 0){return;}
       var {onClick} = this.props;
       if(item._disabled){return;}
       if(item.onClick){item.onClick(item);}
@@ -173,7 +173,7 @@ class RDropdownButton extends Component {
       var {items,caret,caretStyle} = this.props;
       if(!items || !caret){return '';}
       if(caret === true){
-        return (<><div style={{flex:1}}></div><div className='rdb-caret' style={caretStyle}></div></>);
+        return (<><div style={{flex:1}}></div><div className='aio-button-caret' style={caretStyle}></div></>);
       }
       return (<><div style={{flex:1}}></div>{caret}</>)
     }
@@ -201,7 +201,7 @@ class RDropdownButton extends Component {
         contextValue.hover = hover
         var props = {
           id,
-          className:`r-dropdown-button ${rtl?'rtl':'ltr'}${className?' ' + className:''}`,
+          className:`aio-button ${rtl?'rtl':'ltr'}${className?' ' + className:''}`,
           style:$.extend({},{direction:rtl?'rtl':'ltr'},this.getValue(style)),
           disabled,title,
           ref:this.dom,
@@ -217,16 +217,16 @@ class RDropdownButton extends Component {
           <dpContext.Provider value={contextValue}>
               {
                 type === 'multiselect' &&
-                <div className='rdb-multiselect' style={{width:props.style.width}}>
+                <div className='aio-button-multiselect' style={{width:props.style.width}}>
                   {button}
                   {
                     checks.length !== 0 &&
-                    <div className={'rdb-checkeds' + (rtl?' rtl':'')}>
+                    <div className={'aio-button-checkeds' + (rtl?' rtl':'')}>
                       {
                         checks.map((check)=>{return (
-                          <div className='rdb-checked' onClick={()=>onClick(check)}>
-                            <div className='rdb-checked-close'></div>
-                            <div className='rdb-checked-text'>{check.text}</div>
+                          <div className='aio-button-checked' onClick={()=>onClick(check)}>
+                            <div className='aio-button-checked-close'></div>
+                            <div className='aio-button-checked-text'>{check.text}</div>
                           </div>
                         )})}
                     </div>
@@ -240,7 +240,7 @@ class RDropdownButton extends Component {
         );
     }    
 }
-RDropdownButton.defaultProps = {
+AIOButtonBase.defaultProps = {
   getOptionText:()=>{},
   getOptionChecked:()=>{},
   getOptionBefore:()=>{},
@@ -274,7 +274,7 @@ class Popup extends Component{
   update(){
     var {rtl,openRelatedTo,animate,dropdownType,type,popupWidth} = this.context;
     var popup = $(this.dom.current);
-    var button = type === 'multiselect'?popup.prev().find('.r-dropdown-button'):popup.prev();
+    var button = type === 'multiselect'?popup.prev().find('.aio-button'):popup.prev();
     var parent = openRelatedTo?popup.parents(openRelatedTo):undefined;
     parent = Array.isArray(parent) && parent.length === 0?undefined:parent;
     var bodyWidth = window.innerWidth;
@@ -323,7 +323,7 @@ class Popup extends Component{
       popup.css(style)
     }
     popup.focus();
-    $('body').addClass('rdb-open');
+    $('body').addClass('aio-button-open');
   }
   componentDidMount(){
     this.update();
@@ -352,7 +352,7 @@ class Popup extends Component{
     console.log(e.keyCode);
     if(e.keyCode === 40){
       e.preventDefault();
-      var items = $(this.dom.current).find('.rdb-list-item')
+      var items = $(this.dom.current).find('.aio-button-list-item')
       var active = items.filter('.active');
       if(active.length === 0){
         this.activeIndex = 0;
@@ -371,7 +371,7 @@ class Popup extends Component{
     }
     else if(e.keyCode === 38){
       e.preventDefault();
-      var items = $(this.dom.current).find('.rdb-list-item')
+      var items = $(this.dom.current).find('.aio-button-list-item')
       var active = items.filter('.active');
       if(active.length === 0){
         this.activeIndex = items.length - 1;
@@ -439,8 +439,8 @@ class Popup extends Component{
     if(!search){return null}
     let {searchValue} = this.state;
     return (
-      <div className='rdb-search'>
-        <div className={'rdb-search-icon' + (searchValue?' rdb-search-icon-filled':'')} onClick={()=>{this.setState({searchValue:''})}}></div>
+      <div className='aio-button-search'>
+        <div className={'aio-button-search-icon' + (searchValue?' aio-button-search-icon-filled':'')} onClick={()=>{this.setState({searchValue:''})}}></div>
         <input 
           type='text' value={searchValue} placeholder={placeHolder} 
           onChange={(e)=>this.setState({searchValue:e.target.value})}
@@ -450,7 +450,7 @@ class Popup extends Component{
   }
   getClassName(){
     let {popupClassName,rtl} = this.context;
-    let className = 'rdb-popup-container';
+    let className = 'aio-button-popup-container';
     className += rtl?' rtl':' ltr';
     if(popupClassName){className += ' ' + popupClassName}
     return className;
@@ -466,10 +466,10 @@ class Popup extends Component{
         onMouseLeave={()=>{if(hover){toggle(false)}}} 
         onKeyDown={this.keyDown.bind(this)} 
       tabIndex={0}>
-        {!hover && <div className='rdb-backdrop' onClick={()=>toggle(false,true)} style={this.getBackDropStyle()}></div>} 
-        <div className="rdb-popup" style={{width:popupWidth === 'fit'?undefined:popupWidth,...popupStyle}}>
+        {!hover && <div className='aio-button-backdrop' onClick={()=>toggle(false,true)} style={this.getBackDropStyle()}></div>} 
+        <div className="aio-button-popup" style={{width:popupWidth === 'fit'?undefined:popupWidth,...popupStyle}}>
           {this.getSearchBox()}
-          <div className='rdb-items'>{PopOver || this.getOptions()}</div>     
+          <div className='aio-button-items'>{PopOver || this.getOptions()}</div>     
         </div>
       </div>
     );
@@ -481,20 +481,20 @@ class ListItem extends Component{
   render(){
     var {itemClick,gap = 8,rtl} = this.context;
     let {item,index} = this.props; 
-    var Text = <div className='rdb-text' title={item._title || item._text}>{item._text}</div>;  
+    var Text = <div className='aio-button-text' title={item._title || item._text}>{item._text}</div>;  
     var CheckIcon = item._checked !== undefined?(
       <Fragment>
-        <div className={'rdb-check-icon' + (item._checked?' checked':'')}></div>
-        <div className='rdb-gap' style={{width:gap}}></div>
+        <div className={'aio-button-check-icon' + (item._checked?' checked':'')}></div>
+        <div className='aio-button-gap' style={{width:gap}}></div>
       </Fragment>
     ):null;
     var props = {
-      className:`rdb-list-item${item._className?' ' + item._className:''}${item._disabled?' disabled':''}`,
+      className:`aio-button-list-item${item._className?' ' + item._className:''}${item._disabled?' disabled':''}`,
       style:item._style,onClick:(e)=>itemClick(item,e),title:'',dataindex:index,tabIndex:0
     }
     return(
       <Fragment>
-        {item.splitter &&<div className={'rdb-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
+        {item.splitter &&<div className={'aio-button-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
         {item._href?<a href={item._href} {...props}>{item._before}{Text}{item._after}</a>:<div {...props}>{CheckIcon}{item._before}{Text}{item._after}</div>}
       </Fragment>
     );
