@@ -162,7 +162,6 @@ class AIOButtonBase extends Component {
       return this.getValue(this.props.hover);
     }
     itemClick(item,e){
-      if($(e.target).parents('.aio-button-list-item-after').length !== 0){return;}
       var {onClick} = this.props;
       if(item._disabled){return;}
       if(item.onClick){item.onClick(item);}
@@ -495,7 +494,12 @@ class ListItem extends Component{
     return(
       <Fragment>
         {item.splitter &&<div className={'aio-button-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
-        {item._href?<a href={item._href} {...props}>{item._before}{Text}{item._after}</a>:<div {...props}>{CheckIcon}{item._before}{Text}{item._after}</div>}
+        <div {...props}>
+          {CheckIcon}
+          {item._before}
+          {Text}
+          {item._after}
+        </div>
       </Fragment>
     );
   }

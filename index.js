@@ -388,10 +388,6 @@ var AIOButtonBase = /*#__PURE__*/function (_Component2) {
   }, {
     key: "itemClick",
     value: function itemClick(item, e) {
-      if ((0, _jquery.default)(e.target).parents('.aio-button-list-item-after').length !== 0) {
-        return;
-      }
-
       var onClick = this.props.onClick;
 
       if (item._disabled) {
@@ -1010,9 +1006,7 @@ var ListItem = /*#__PURE__*/function (_Component4) {
       };
       return /*#__PURE__*/_react.default.createElement(_react.Fragment, null, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
-      }, item.splitter), item._href ? /*#__PURE__*/_react.default.createElement("a", _extends({
-        href: item._href
-      }, props), item._before, Text, item._after) : /*#__PURE__*/_react.default.createElement("div", props, CheckIcon, item._before, Text, item._after));
+      }, item.splitter), /*#__PURE__*/_react.default.createElement("div", props, CheckIcon, item._before, Text, item._after));
     }
   }]);
 
