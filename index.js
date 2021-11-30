@@ -237,9 +237,18 @@ var AIOButton = /*#__PURE__*/function (_Component) {
       }));
     }
   }, {
+    key: "RenderButton",
+    value: function RenderButton() {
+      var popOver = this.props.popOver;
+      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
+        caret: popOver ? true : false
+      }, this.props));
+    }
+  }, {
     key: "render",
     value: function render() {
-      var type = this.props.type;
+      var _this$props$type = this.props.type,
+          type = _this$props$type === void 0 ? 'button' : _this$props$type;
 
       if (type === 'select') {
         return this.RenderSelect();
@@ -249,7 +258,9 @@ var AIOButton = /*#__PURE__*/function (_Component) {
         return this.RenderMultiselect();
       }
 
-      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, this.props);
+      if (type === 'button') {
+        return this.RenderButton();
+      }
     }
   }]);
 
@@ -408,11 +419,10 @@ var AIOButtonBase = /*#__PURE__*/function (_Component2) {
     key: "getCaret",
     value: function getCaret() {
       var _this$props8 = this.props,
-          items = _this$props8.items,
           caret = _this$props8.caret,
           caretStyle = _this$props8.caretStyle;
 
-      if (!items || !caret) {
+      if (caret === false) {
         return '';
       }
 

@@ -111,11 +111,15 @@ export default class AIOButton extends Component{
       />
     )
   }
+  RenderButton(){
+    let {popOver} = this.props;
+    return <AIOButtonBase caret={popOver?true:false} {...this.props}/>;
+  }
   render(){
-    let {type} = this.props;
+    let {type = 'button'} = this.props;
     if(type === 'select'){return this.RenderSelect()}
     if(type === 'multiselect'){return this.RenderMultiselect()}
-    return <AIOButtonBase {...this.props}/>;
+    if(type === 'button'){return this.RenderButton()}  
   }
 }
 const dpContext = createContext();
@@ -169,8 +173,8 @@ class AIOButtonBase extends Component {
       if(item.close !== false && item._checked === undefined ){this.toggle();}
     }
     getCaret(){
-      var {items,caret,caretStyle} = this.props;
-      if(!items || !caret){return '';}
+      var {caret,caretStyle} = this.props;
+      if(caret === false){return '';}
       if(caret === true){
         return (<><div style={{flex:1}}></div><div className='aio-button-caret' style={caretStyle}></div></>);
       }
