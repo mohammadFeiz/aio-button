@@ -155,8 +155,8 @@ class AIOButtonBase extends Component {
       onSwipeEnd();
     }
     getTags(checks = [],rtl,onClick){
-      let {editTag = (text)=>text} = this.props;
-      if(checks.length === 0){return ''}
+      let {editTag = (text)=>text,showTag = true} = this.props;
+      if(checks.length === 0 || !showTag){return ''}
       return (
         <div className={'aio-button-checkeds' + (rtl?' rtl':'')}>
           {

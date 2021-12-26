@@ -348,12 +348,15 @@ var AIOButtonBase = /*#__PURE__*/function (_Component2) {
 
       var _onClick = arguments.length > 2 ? arguments[2] : undefined;
 
-      var _this$props$editTag = this.props.editTag,
-          editTag = _this$props$editTag === void 0 ? function (text) {
+      var _this$props5 = this.props,
+          _this$props5$editTag = _this$props5.editTag,
+          editTag = _this$props5$editTag === void 0 ? function (text) {
         return text;
-      } : _this$props$editTag;
+      } : _this$props5$editTag,
+          _this$props5$showTag = _this$props5.showTag,
+          showTag = _this$props5$showTag === void 0 ? true : _this$props5$showTag;
 
-      if (checks.length === 0) {
+      if (checks.length === 0 || !showTag) {
         return '';
       }
 
@@ -574,9 +577,9 @@ var ListItem = /*#__PURE__*/function (_Component4) {
       var _this$context3 = this.context,
           fn = _this$context3.fn,
           rtl = _this$context3.rtl;
-      var _this$props5 = this.props,
-          item = _this$props5.item,
-          index = _this$props5.index;
+      var _this$props6 = this.props,
+          item = _this$props6.item,
+          index = _this$props6.index;
 
       var Text = /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-text",
