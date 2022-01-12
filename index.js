@@ -778,6 +778,19 @@ function AIOBTNFN(_getProps10, getState, setState) {
     dragOver: function dragOver(e) {
       e.preventDefault();
     },
+    swap: function swap(arr, from, to) {
+      var Arr = arr.map(function (o, i) {
+        o._testswapindex = i;
+        return o;
+      });
+      var fromIndex = Arr[from]._testswapindex;
+      Arr.splice(to, 0, { ...Arr[from],
+        _testswapindex: false
+      });
+      return Arr.filter(function (o) {
+        return o._testswapindex !== fromIndex;
+      });
+    },
     drop: function drop(e) {
       e.stopPropagation();
 
@@ -805,14 +818,7 @@ function AIOBTNFN(_getProps10, getState, setState) {
         return;
       }
 
-      var fromIndex = options[from]._index;
-      options.splice(to, 0, { ...options[from],
-        _index: false
-      });
-      var Options = options.filter(function (o, i) {
-        return o._index !== fromIndex;
-      });
-      onSwap(Options, [from, to]);
+      onSwap(from, to, $$.swap);
     }
   };
   $$.render = new AIOBTNrender($$);

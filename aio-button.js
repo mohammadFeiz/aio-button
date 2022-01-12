@@ -388,7 +388,13 @@ function AIOBTNFN(getProps,getState,setState){
     dragOver(e){
       e.preventDefault();
     },
-    
+    swap(arr,from,to){
+      let Arr = arr.map((o,i)=>{o._testswapindex = i; return o})
+      let fromIndex = Arr[from]._testswapindex
+      Arr.splice(to,0,{...Arr[from],_testswapindex:false})
+      return Arr.filter((o)=>o._testswapindex !== fromIndex)
+      
+    },
     drop(e){
       e.stopPropagation();
       let {onSwap,options} = getProps();
@@ -403,10 +409,7 @@ function AIOBTNFN(getProps,getState,setState){
 
       let to = parseInt(dom.attr('dataindex'));
       if(from === to){return}
-      let fromIndex = options[from]._index
-      options.splice(to,0,{...options[from],_index:false})
-      let Options = options.filter((o,i)=>o._index !== fromIndex)
-      onSwap(Options,[from,to])
+      onSwap(from,to,$$.swap)
     }
 
   }
