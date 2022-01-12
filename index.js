@@ -19,8 +19,6 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -31,7 +29,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } Object.defineProperty(subClass, "prototype", { value: Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }), writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
@@ -123,13 +121,13 @@ var AIOButton = /*#__PURE__*/function (_Component) {
           _this$props2$options = _this$props2.options,
           options = _this$props2$options === void 0 ? [] : _this$props2$options,
           onChange = _this$props2.onChange,
-          values = _this$props2.values,
-          popOver = _this$props2.popOver;
+          values = _this$props2.values;
       return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
-        popupWidth: popOver ? undefined : 'fit',
+        popupWidth: 'fit',
         caret: true
       }, this.props, {
         type: 'multiselect',
+        popOver: false,
         items: details.options,
         checks: details.checks,
         onClick: function onClick(_ref) {
@@ -252,7 +250,6 @@ var AIOButton = /*#__PURE__*/function (_Component) {
 }(_react.Component);
 
 exports.default = AIOButton;
-var dpContext = /*#__PURE__*/(0, _react.createContext)();
 
 var AIOButtonBase = /*#__PURE__*/function (_Component2) {
   _inherits(AIOButtonBase, _Component2);
@@ -276,173 +273,14 @@ var AIOButtonBase = /*#__PURE__*/function (_Component2) {
       open: _this2.props.open || false,
       touch: 'ontouchstart' in document.documentElement
     };
-    _this2.dom = /*#__PURE__*/(0, _react.createRef)();
     return _this2;
   }
 
   _createClass(AIOButtonBase, [{
-    key: "getValue",
-    value: function getValue(value) {
-      return typeof value === 'function' ? value(this.props) : value;
-    }
-  }, {
-    key: "mouseDown",
-    value: function mouseDown(e) {
-      if (!this.props.onSwipe) {
-        return;
-      }
-
-      this.canMove = false;
-      this.firstMove = true;
-      this.moved = false;
-      this.coords = {
-        x: e.clientX,
-        y: e.clientY
-      };
-      (0, _jquery.default)(window).bind('mousemove', _jquery.default.proxy(this.mouseMove, this));
-      (0, _jquery.default)(window).bind('mouseup', _jquery.default.proxy(this.mouseUp, this));
-    }
-  }, {
-    key: "mouseMove",
-    value: function mouseMove(e) {
-      var offsetX = e.clientX - this.coords.x;
-      var offsetY = this.coords.y - e.clientY;
-
-      if (!this.canMove && Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)) < 7) {
-        return;
-      }
-
-      if (this.firstMove) {
-        this.coords = {
-          x: e.clientX,
-          y: e.clientY
-        };
-        this.firstMove = false;
-        return;
-      }
-
-      this.canMove = true;
-      this.moved = true;
-      var onSwipe = this.props.onSwipe;
-      onSwipe(offsetX, offsetY);
-    }
-  }, {
-    key: "mouseUp",
-    value: function mouseUp() {
-      (0, _jquery.default)(window).unbind('mousemove', this.mouseMove);
-      (0, _jquery.default)(window).unbind('mouseup', this.mouseUp);
-
-      if (!this.moved) {
-        return;
-      }
-
-      var _this$props$onSwipeEn = this.props.onSwipeEnd,
-          onSwipeEnd = _this$props$onSwipeEn === void 0 ? function () {} : _this$props$onSwipeEn;
-      onSwipeEnd();
-    }
-  }, {
-    key: "getTags",
-    value: function getTags() {
-      var checks = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var rtl = arguments.length > 1 ? arguments[1] : undefined;
-
-      var _onClick = arguments.length > 2 ? arguments[2] : undefined;
-
-      var _this$props5 = this.props,
-          _this$props5$editTag = _this$props5.editTag,
-          editTag = _this$props5$editTag === void 0 ? function (text) {
-        return text;
-      } : _this$props5$editTag,
-          _this$props5$showTag = _this$props5.showTag,
-          showTag = _this$props5$showTag === void 0 ? true : _this$props5$showTag;
-
-      if (checks.length === 0 || !showTag) {
-        return '';
-      }
-
-      return /*#__PURE__*/_react.default.createElement("div", {
-        className: 'aio-button-checkeds' + (rtl ? ' rtl' : '')
-      }, checks.map(function (check, i) {
-        var _check$color = check.color,
-            color = _check$color === void 0 ? [] : _check$color;
-        return /*#__PURE__*/_react.default.createElement("div", {
-          key: i,
-          className: "aio-button-checked",
-          onClick: function onClick() {
-            return _onClick(check);
-          },
-          style: {
-            background: color[0],
-            color: color[1]
-          }
-        }, /*#__PURE__*/_react.default.createElement("div", {
-          className: "aio-button-checked-close"
-        }), /*#__PURE__*/_react.default.createElement("div", {
-          className: "aio-button-checked-text"
-        }, editTag(check.text)));
-      }));
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
-      var _this$fn$getProps = this.fn.getProps(),
-          type = _this$fn$getProps.type,
-          before = _this$fn$getProps.before,
-          text = _this$fn$getProps.text,
-          checks = _this$fn$getProps.checks,
-          onClick = _this$fn$getProps.onClick,
-          id = _this$fn$getProps.id,
-          disabled = _this$fn$getProps.disabled,
-          title = _this$fn$getProps.title,
-          className = _this$fn$getProps.className,
-          rtl = _this$fn$getProps.rtl,
-          style = _this$fn$getProps.style,
-          hover = _this$fn$getProps.hover,
-          attrs = _this$fn$getProps.attrs;
-
       var open = this.state.open;
-      var contextValue = { ...this.props
-      };
-      contextValue.getValue = this.getValue.bind(this);
-      contextValue.hover = hover;
-      contextValue.fn = this.fn;
-      var props = { ...attrs,
-        id: id,
-        className: "aio-button ".concat(rtl ? 'rtl' : 'ltr').concat(className ? ' ' + className : ''),
-        style: _jquery.default.extend({}, {
-          direction: rtl ? 'rtl' : 'ltr'
-        }, this.getValue(style)),
-        disabled: disabled,
-        title: title,
-        ref: this.dom,
-        onClick: function onClick(e) {
-          return _this3.fn.onClick(e);
-        },
-        onMouseEnter: hover ? function () {
-          return _this3.fn.toggle(true);
-        } : undefined,
-        onMouseLeave: hover ? function () {
-          return _this3.fn.toggle(false);
-        } : undefined,
-        onMouseDown: this.mouseDown.bind(this),
-        onTouchStart: this.mouseDown.bind(this),
-        tabIndex: 0
-      };
-
-      var button = /*#__PURE__*/_react.default.createElement("button", props, before, " ", text, " ", this.fn.getCaret('react'), " ", this.fn.getAfter('react'), " ", this.fn.getBadge('react'));
-
-      return /*#__PURE__*/_react.default.createElement(dpContext.Provider, {
-        value: contextValue
-      }, type === 'multiselect' && /*#__PURE__*/_react.default.createElement("div", {
-        className: "aio-button-multiselect",
-        style: {
-          width: props.style.width
-        }
-      }, button, this.getTags(checks, rtl, onClick)), type !== 'multiselect' && button, this.fn.showPopup(open) && /*#__PURE__*/_react.default.createElement(Popup, {
-        ref: this.popup
-      }));
+      return this.fn.render.base(open);
     }
   }]);
 
@@ -455,187 +293,43 @@ var Popup = /*#__PURE__*/function (_Component3) {
   var _super3 = _createSuper(Popup);
 
   function Popup(props) {
-    var _this4;
+    var _this3;
 
     _classCallCheck(this, Popup);
 
-    _this4 = _super3.call(this, props);
-    _this4.dom = /*#__PURE__*/(0, _react.createRef)();
-    _this4.state = {
+    _this3 = _super3.call(this, props);
+    _this3.dom = /*#__PURE__*/(0, _react.createRef)();
+    _this3.state = {
       searchValue: ''
     };
-    return _this4;
+    return _this3;
   }
 
   _createClass(Popup, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var fn = this.context.fn;
+      var fn = this.props.fn;
       fn.update((0, _jquery.default)(this.dom.current));
-    }
-  }, {
-    key: "getSearchBox",
-    value: function getSearchBox() {
-      var _this5 = this;
-
-      var _this$context = this.context,
-          search = _this$context.search,
-          placeHolder = _this$context.placeHolder;
-
-      if (!search) {
-        return null;
-      }
-
-      var searchValue = this.state.searchValue;
-      return /*#__PURE__*/_react.default.createElement("div", {
-        className: "aio-button-search"
-      }, /*#__PURE__*/_react.default.createElement("div", {
-        className: 'aio-button-search-icon' + (searchValue ? ' aio-button-search-icon-filled' : ''),
-        onClick: function onClick() {
-          _this5.setState({
-            searchValue: ''
-          });
-        }
-      }), /*#__PURE__*/_react.default.createElement("input", {
-        type: "text",
-        value: searchValue,
-        placeholder: placeHolder,
-        onChange: function onChange(e) {
-          return _this5.setState({
-            searchValue: e.target.value
-          });
-        }
-      }));
     }
   }, {
     key: "render",
     value: function render() {
-      var _this6 = this;
+      var _this4 = this;
 
-      var _this$context2 = this.context,
-          getValue = _this$context2.getValue,
-          hover = _this$context2.hover,
-          popupWidth = _this$context2.popupWidth,
-          fn = _this$context2.fn;
+      var fn = this.props.fn;
       var searchValue = this.state.searchValue;
-      var popupStyle = getValue(this.context.popupStyle);
-      return /*#__PURE__*/_react.default.createElement("div", {
-        className: fn.getPopupClassName(),
-        ref: this.dom,
-        style: fn.getPopupStyle('react'),
-        onMouseEnter: function onMouseEnter() {
-          if (hover) {
-            fn.toggle(true);
-          }
-        },
-        onMouseLeave: function onMouseLeave() {
-          if (hover) {
-            fn.toggle(false);
-          }
-        },
-        onKeyDown: function onKeyDown(e) {
-          return fn.keyDown(e, (0, _jquery.default)(_this6.dom.current));
-        },
-        tabIndex: 0
-      }, !hover && /*#__PURE__*/_react.default.createElement("div", {
-        className: "aio-button-backdrop",
-        onClick: function onClick() {
-          return fn.toggle(false, true);
-        },
-        style: fn.getBackDropStyle('react')
-      }), /*#__PURE__*/_react.default.createElement("div", {
-        className: "aio-button-popup",
-        style: {
-          width: popupWidth === 'fit' ? undefined : popupWidth,
-          ...popupStyle
-        }
-      }, this.getSearchBox(), /*#__PURE__*/_react.default.createElement("div", {
-        className: "aio-button-items"
-      }, fn.getPopupContent(searchValue, 'react'))));
+      return fn.render.popup(searchValue, function (obj) {
+        return _this4.setState(obj);
+      }, this.dom);
     }
   }]);
 
   return Popup;
 }(_react.Component);
 
-_defineProperty(Popup, "contextType", dpContext);
-
-var ListItem = /*#__PURE__*/function (_Component4) {
-  _inherits(ListItem, _Component4);
-
-  var _super4 = _createSuper(ListItem);
-
-  function ListItem() {
-    _classCallCheck(this, ListItem);
-
-    return _super4.apply(this, arguments);
-  }
-
-  _createClass(ListItem, [{
-    key: "render",
-    value: function render() {
-      var _this$context3 = this.context,
-          fn = _this$context3.fn,
-          rtl = _this$context3.rtl;
-      var _this$props6 = this.props,
-          item = _this$props6.item,
-          index = _this$props6.index;
-
-      var Text = /*#__PURE__*/_react.default.createElement("div", {
-        className: "aio-button-text",
-        title: item._title || item._text
-      }, item._text);
-
-      var props = {
-        className: "aio-button-list-item".concat(item._className ? ' ' + item._className : '').concat(item._disabled ? ' disabled' : ''),
-        style: item._style,
-        onClick: function onClick(e) {
-          return fn.itemClick(item, e);
-        },
-        title: '',
-        dataindex: index,
-        tabIndex: 0
-      };
-      return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
-        className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
-      }, item.splitter), /*#__PURE__*/_react.default.createElement("div", props, fn.getCheckIcon(item, 'react'), item._before, Text, item._after));
-    }
-  }]);
-
-  return ListItem;
-}(_react.Component);
-
-_defineProperty(ListItem, "contextType", dpContext);
-
-function AIOBTNFN(_getProps16, getState, setState) {
+function AIOBTNFN(_getProps10, getState, setState) {
   var $$ = {
     activeIndex: false,
-    getCheckIcon: function getCheckIcon(item) {
-      var platform = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'react';
-
-      if (item._checked === undefined) {
-        return '';
-      }
-
-      var _getProps = _getProps16(),
-          _getProps$gap = _getProps.gap,
-          gap = _getProps$gap === void 0 ? 8 : _getProps$gap;
-
-      if (platform === 'react') {
-        return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
-          className: 'aio-button-check-icon' + (item._checked ? ' checked' : '')
-        }), /*#__PURE__*/_react.default.createElement("div", {
-          className: "aio-button-gap",
-          style: {
-            width: gap
-          }
-        }));
-      }
-
-      if (platform === 'jquery') {
-        return "\n          <div class='aio-button-check-icon".concat(item._checked ? ' checked' : '', "'></div>\n          <div class='aio-button-gap' style='width:").concat(gap, "px;'></div>\n        ");
-      }
-    },
     getLimit: function getLimit(dom) {
       var offset = dom.offset();
       var left = offset.left - window.pageXOffset;
@@ -654,13 +348,13 @@ function AIOBTNFN(_getProps16, getState, setState) {
       };
     },
     update: function update(popup) {
-      var _getProps2 = _getProps16(),
-          rtl = _getProps2.rtl,
-          openRelatedTo = _getProps2.openRelatedTo,
-          animate = _getProps2.animate,
-          dropdownType = _getProps2.dropdownType,
-          type = _getProps2.type,
-          popupWidth = _getProps2.popupWidth;
+      var _getProps = _getProps10(),
+          rtl = _getProps.rtl,
+          openRelatedTo = _getProps.openRelatedTo,
+          animate = _getProps.animate,
+          dropdownType = _getProps.dropdownType,
+          type = _getProps.type,
+          popupWidth = _getProps.popupWidth;
 
       var button = type === 'multiselect' ? popup.prev().find('.aio-button') : popup.prev();
       var parent = openRelatedTo ? popup.parents(openRelatedTo) : undefined;
@@ -754,29 +448,29 @@ function AIOBTNFN(_getProps16, getState, setState) {
       (0, _jquery.default)('body').addClass('aio-button-open');
     },
     getOptions: function getOptions(items, searchValue) {
-      var _getProps3 = _getProps16(),
-          _getProps3$getOptionT = _getProps3.getOptionText,
-          getOptionText = _getProps3$getOptionT === void 0 ? function () {} : _getProps3$getOptionT,
-          _getProps3$getOptionD = _getProps3.getOptionDisabled,
-          getOptionDisabled = _getProps3$getOptionD === void 0 ? function () {} : _getProps3$getOptionD,
-          _getProps3$getOptionB = _getProps3.getOptionBefore,
-          getOptionBefore = _getProps3$getOptionB === void 0 ? function () {} : _getProps3$getOptionB,
-          _getProps3$getOptionA = _getProps3.getOptionAfter,
-          getOptionAfter = _getProps3$getOptionA === void 0 ? function () {} : _getProps3$getOptionA,
-          _getProps3$getOptionC = _getProps3.getOptionChecked,
-          getOptionChecked = _getProps3$getOptionC === void 0 ? function () {} : _getProps3$getOptionC,
-          _getProps3$getOptionC2 = _getProps3.getOptionClassName,
-          getOptionClassName = _getProps3$getOptionC2 === void 0 ? function () {} : _getProps3$getOptionC2,
-          _getProps3$getOptionS = _getProps3.getOptionStyle,
-          getOptionStyle = _getProps3$getOptionS === void 0 ? function () {} : _getProps3$getOptionS,
-          _getProps3$getOptionI = _getProps3.getOptionId,
-          getOptionId = _getProps3$getOptionI === void 0 ? function () {} : _getProps3$getOptionI,
-          _getProps3$getOptionS2 = _getProps3.getOptionShow,
-          getOptionShow = _getProps3$getOptionS2 === void 0 ? function () {} : _getProps3$getOptionS2,
-          _getProps3$getOptionH = _getProps3.getOptionHref,
-          getOptionHref = _getProps3$getOptionH === void 0 ? function () {} : _getProps3$getOptionH,
-          _getProps3$getOptionT2 = _getProps3.getOptionTitle,
-          getOptionTitle = _getProps3$getOptionT2 === void 0 ? function () {} : _getProps3$getOptionT2;
+      var _getProps2 = _getProps10(),
+          _getProps2$getOptionT = _getProps2.getOptionText,
+          getOptionText = _getProps2$getOptionT === void 0 ? function () {} : _getProps2$getOptionT,
+          _getProps2$getOptionD = _getProps2.getOptionDisabled,
+          getOptionDisabled = _getProps2$getOptionD === void 0 ? function () {} : _getProps2$getOptionD,
+          _getProps2$getOptionB = _getProps2.getOptionBefore,
+          getOptionBefore = _getProps2$getOptionB === void 0 ? function () {} : _getProps2$getOptionB,
+          _getProps2$getOptionA = _getProps2.getOptionAfter,
+          getOptionAfter = _getProps2$getOptionA === void 0 ? function () {} : _getProps2$getOptionA,
+          _getProps2$getOptionC = _getProps2.getOptionChecked,
+          getOptionChecked = _getProps2$getOptionC === void 0 ? function () {} : _getProps2$getOptionC,
+          _getProps2$getOptionC2 = _getProps2.getOptionClassName,
+          getOptionClassName = _getProps2$getOptionC2 === void 0 ? function () {} : _getProps2$getOptionC2,
+          _getProps2$getOptionS = _getProps2.getOptionStyle,
+          getOptionStyle = _getProps2$getOptionS === void 0 ? function () {} : _getProps2$getOptionS,
+          _getProps2$getOptionI = _getProps2.getOptionId,
+          getOptionId = _getProps2$getOptionI === void 0 ? function () {} : _getProps2$getOptionI,
+          _getProps2$getOptionS2 = _getProps2.getOptionShow,
+          getOptionShow = _getProps2$getOptionS2 === void 0 ? function () {} : _getProps2$getOptionS2,
+          _getProps2$getOptionH = _getProps2.getOptionHref,
+          getOptionHref = _getProps2$getOptionH === void 0 ? function () {} : _getProps2$getOptionH,
+          _getProps2$getOptionT2 = _getProps2.getOptionTitle,
+          getOptionTitle = _getProps2$getOptionT2 === void 0 ? function () {} : _getProps2$getOptionT2;
 
       return items.filter(function (item, i) {
         var _item$text = item.text,
@@ -802,6 +496,7 @@ function AIOBTNFN(_getProps16, getState, setState) {
             _item$title = item.title,
             title = _item$title === void 0 ? getOptionTitle(item, i) : _item$title;
         item._text = text;
+        item._index = i;
         item._disabled = disabled;
         item._before = before;
         item._after = after;
@@ -829,9 +524,9 @@ function AIOBTNFN(_getProps16, getState, setState) {
       });
     },
     getPopupClassName: function getPopupClassName() {
-      var _getProps4 = _getProps16(),
-          popupClassName = _getProps4.popupClassName,
-          rtl = _getProps4.rtl;
+      var _getProps3 = _getProps10(),
+          popupClassName = _getProps3.popupClassName,
+          rtl = _getProps3.rtl;
 
       var className = 'aio-button-popup-container';
       className += rtl ? ' rtl' : ' ltr';
@@ -841,65 +536,6 @@ function AIOBTNFN(_getProps16, getState, setState) {
       }
 
       return className;
-    },
-    getPopupStyle: function getPopupStyle() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
-
-      var _getProps5 = _getProps16(),
-          rtl = _getProps5.rtl,
-          dropdownType = _getProps5.dropdownType;
-
-      if (platform === 'react') {
-        var style = {
-          direction: rtl ? 'rtl' : 'ltr'
-        };
-
-        if (dropdownType === 'center') {
-          style = { ...style,
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          };
-        }
-
-        return style;
-      }
-
-      if (platform === 'jquery') {
-        var _style = "direction:".concat(rtl ? 'rtl' : 'ltr', ";");
-
-        if (dropdownType === 'center') {
-          _style += "left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;";
-        }
-
-        return _style;
-      }
-    },
-    getBackDropStyle: function getBackDropStyle() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
-
-      var _getProps6 = _getProps16(),
-          backdropStyle = _getProps6.backdropStyle;
-
-      if (platform === 'react') {
-        return {
-          height: '100%',
-          width: '100%',
-          right: 0,
-          top: 0,
-          position: 'fixed',
-          background: 'rgba(0,0,0,0)',
-          ...backdropStyle
-        };
-      }
-
-      if (platform === 'jquery') {
-        return "height:100%;width:100%;right:0;top:0;position:fixed;background:rgba(0,0,0,0);".concat(backdropStyle);
-      }
     },
     toggle: function toggle(state, isBackdrop) {
       var _getState = getState(),
@@ -925,12 +561,12 @@ function AIOBTNFN(_getProps16, getState, setState) {
           (0, _jquery.default)('body').removeClass('aio-button-open');
         }
 
-        var _getProps7 = _getProps16(),
-            onBackdropClick = _getProps7.onBackdropClick,
-            onToggle = _getProps7.onToggle;
+        var _getProps4 = _getProps10(),
+            onBackdropClick = _getProps4.onBackdropClick,
+            onToggle = _getProps4.onToggle;
 
         if (onBackdropClick && isBackdrop) {
-          onBackdropClick(_getProps16());
+          onBackdropClick(_getProps10());
         }
 
         if (onToggle) {
@@ -939,8 +575,8 @@ function AIOBTNFN(_getProps16, getState, setState) {
       }, 100);
     },
     itemClick: function itemClick(item, e) {
-      var _getProps8 = _getProps16(),
-          onClick = _getProps8.onClick;
+      var _getProps5 = _getProps10(),
+          onClick = _getProps5.onClick;
 
       if (item._disabled) {
         return;
@@ -1007,43 +643,213 @@ function AIOBTNFN(_getProps16, getState, setState) {
       }
     },
     getPopupContent: function getPopupContent(searchValue) {
-      var platform = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'react';
-
-      var _getProps9 = _getProps16(),
-          items = _getProps9.items,
-          popOver = _getProps9.popOver;
+      var _getProps6 = _getProps10(),
+          items = _getProps6.items,
+          popOver = _getProps6.popOver;
 
       if (popOver) {
-        return typeof popOver === 'function' ? popOver(_getProps16()) : popOver;
+        return typeof popOver === 'function' ? popOver(_getProps10()) : popOver;
       }
 
       $$.items = $$.getOptions(items, searchValue);
-
-      if (platform === 'react') {
-        return $$.items.map(function (item, i) {
-          return /*#__PURE__*/_react.default.createElement(ListItem, {
-            key: i,
-            item: item,
-            index: i
-          });
-        });
+      return $$.items.map(function (item, i) {
+        return $$.render.listItem(item, i);
+      });
+    },
+    onClick: function onClick(e) {
+      if ((0, _jquery.default)(e.target).parents('.aio-button-checkeds').length !== 0) {
+        return;
       }
 
-      if (platform === 'jquery') {
-        return $$.items.map(function (item, i) {
-          return ListItem({
-            item: item,
-            index: i
-          });
-        }).join(' ');
+      var _getProps7 = _getProps10(),
+          items = _getProps7.items,
+          popOver = _getProps7.popOver,
+          _getProps7$onClick = _getProps7.onClick,
+          onClick = _getProps7$onClick === void 0 ? function () {} : _getProps7$onClick;
+
+      if (items || popOver) {
+        $$.toggle(true);
+      } else {
+        onClick(_getProps10());
       }
     },
-    getCaret: function getCaret() {
+    showPopup: function showPopup(open) {
+      var _getProps8 = _getProps10(),
+          items = _getProps8.items,
+          popOver = _getProps8.popOver;
+
+      if (!open) {
+        return false;
+      }
+
+      if (popOver) {
+        return true;
+      }
+
+      if (items !== undefined) {
+        return true;
+      }
+
+      return false;
+    },
+    getHoverEnabled: function getHoverEnabled() {
+      var _getState2 = getState(),
+          touch = _getState2.touch;
+
+      if (touch) {
+        return false;
+      }
+
+      var _getProps9 = _getProps10(),
+          hover = _getProps9.hover;
+
+      return typeof hover === 'function' ? hover(_getProps10()) : hover;
+    },
+    getValue: function getValue(value) {
+      return typeof value === 'function' ? value(_getProps10()) : value;
+    },
+    getProps: function getProps() {
+      var props = _getProps10();
+
+      var type = props.type,
+          _props$before = props.before,
+          before = _props$before === void 0 ? '' : _props$before,
+          _props$text = props.text,
+          text = _props$text === void 0 ? '' : _props$text,
+          checks = props.checks,
+          _props$onClick = props.onClick,
+          onClick = _props$onClick === void 0 ? function () {} : _props$onClick;
+      var id = $$.getValue(props.id);
+      var disabled = $$.getValue(props.disabled);
+      var title = $$.getValue(props.title);
+      var className = $$.getValue(props.className);
+      var rtl = $$.getValue(props.rtl);
+      var style = $$.getValue(props.style);
+      var hover = $$.getHoverEnabled();
+      return { ...props,
+        type: type,
+        before: before,
+        text: text,
+        checks: checks,
+        onClick: onClick,
+        id: id,
+        disabled: disabled,
+        title: title,
+        className: className,
+        rtl: rtl,
+        style: style,
+        hover: hover
+      };
+    },
+    getButtonConfig: function getButtonConfig() {
+      var _$$$getProps = $$.getProps(),
+          id = _$$$getProps.id,
+          disabled = _$$$getProps.disabled,
+          title = _$$$getProps.title,
+          className = _$$$getProps.className,
+          rtl = _$$$getProps.rtl,
+          style = _$$$getProps.style,
+          hover = _$$$getProps.hover;
+
+      return {
+        id: id,
+        className: "aio-button ".concat(rtl ? 'rtl' : 'ltr').concat(className ? ' ' + className : ''),
+        style: _jquery.default.extend({}, {
+          direction: rtl ? 'rtl' : 'ltr'
+        }, $$.getValue(style)),
+        disabled: disabled,
+        title: title,
+        onClick: function onClick(e) {
+          return $$.onClick(e);
+        },
+        onMouseEnter: hover ? function () {
+          return $$.toggle(true);
+        } : undefined,
+        onMouseLeave: hover ? function () {
+          return $$.toggle(false);
+        } : undefined,
+        tabIndex: 0
+      };
+    },
+    dragStart: function dragStart(e) {
+      var index = parseInt((0, _jquery.default)(e.target).attr('dataindex'));
+      $$.dragIndex = index;
+    },
+    dragOver: function dragOver(e) {
+      e.preventDefault();
+    },
+    drop: function drop(e) {
+      e.stopPropagation();
+
+      var _getProps11 = _getProps10(),
+          onSwap = _getProps11.onSwap,
+          options = _getProps11.options;
+
+      var from = $$.dragIndex;
+      var dom = (0, _jquery.default)(e.target);
+
+      if (!dom.hasClass('aio-button-list-item')) {
+        dom = dom.parents('.aio-button-list-item');
+      }
+
+      ;
+
+      if (!dom.hasClass('aio-button-list-item')) {
+        return;
+      }
+
+      ;
+      var to = parseInt(dom.attr('dataindex'));
+
+      if (from === to) {
+        return;
+      }
+
+      var fromIndex = options[from]._index;
+      options.splice(to, 0, { ...options[from],
+        _index: false
+      });
+      var Options = options.filter(function (o, i) {
+        return o._index !== fromIndex;
+      });
+      onSwap(Options, [from, to]);
+    }
+  };
+  $$.render = new AIOBTNrender($$);
+  return {
+    getLimit: $$.getLimit,
+    update: $$.update,
+    getOptions: $$.getOptions,
+    getPopupClassName: $$.getPopupClassName,
+    toggle: $$.toggle,
+    keyDown: $$.keyDown,
+    itemClick: $$.itemClick,
+    onClick: $$.onClick,
+    showPopup: $$.showPopup,
+    getPopupContent: $$.getPopupContent,
+    getProps: $$.getProps,
+    getHoverEnabled: $$.getHoverEnabled,
+    getValue: $$.getValue,
+    render: $$.render
+  };
+}
+
+function AIOBTNrender(actions) {
+  var $$ = {
+    base: function base(open) {
+      var _actions$getProps = actions.getProps(),
+          type = _actions$getProps.type;
+
+      return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, type === 'multiselect' && $$.multiselect(), type !== 'multiselect' && $$.button(), actions.showPopup(open) && /*#__PURE__*/_react.default.createElement(Popup, {
+        fn: actions
+      }));
+    },
+    caret: function caret() {
       var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _getProps10 = _getProps16(),
-          caret = _getProps10.caret,
-          caretStyle = _getProps10.caretStyle;
+      var _actions$getProps2 = actions.getProps(),
+          caret = _actions$getProps2.caret,
+          caretStyle = _actions$getProps2.caretStyle;
 
       if (caret === false) {
         return '';
@@ -1080,9 +886,11 @@ function AIOBTNFN(_getProps16, getState, setState) {
         return "<div style='flex:1;'></div>".concat(caret);
       }
     },
-    getAfter: function getAfter(platform) {
-      var _getProps11 = _getProps16(),
-          after = _getProps11.after;
+    after: function after() {
+      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
+
+      var _actions$getProps3 = actions.getProps(),
+          after = _actions$getProps3.after;
 
       if (after === undefined) {
         return '';
@@ -1100,48 +908,12 @@ function AIOBTNFN(_getProps16, getState, setState) {
         return "<div style='flex:1;'></div>".concat(after);
       }
     },
-    onClick: function onClick(e) {
-      if ((0, _jquery.default)(e.target).parents('.aio-button-checkeds').length !== 0) {
-        return;
-      }
-
-      var _getProps12 = _getProps16(),
-          items = _getProps12.items,
-          popOver = _getProps12.popOver,
-          _getProps12$onClick = _getProps12.onClick,
-          onClick = _getProps12$onClick === void 0 ? function () {} : _getProps12$onClick;
-
-      if (items || popOver) {
-        $$.toggle(true);
-      } else {
-        onClick(_getProps16());
-      }
-    },
-    showPopup: function showPopup(open) {
-      var _getProps13 = _getProps16(),
-          items = _getProps13.items,
-          popOver = _getProps13.popOver;
-
-      if (!open) {
-        return false;
-      }
-
-      if (popOver) {
-        return true;
-      }
-
-      if (items !== undefined) {
-        return true;
-      }
-
-      return false;
-    },
-    getBadge: function getBadge() {
+    badge: function badge() {
       var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _getProps14 = _getProps16(),
-          badge = _getProps14.badge,
-          badgeStyle = _getProps14.badgeStyle;
+      var _actions$getProps4 = actions.getProps(),
+          badge = _actions$getProps4.badge,
+          badgeStyle = _actions$getProps4.badgeStyle;
 
       if (badge === undefined) {
         return '';
@@ -1158,74 +930,241 @@ function AIOBTNFN(_getProps16, getState, setState) {
         return "<div class='aio-button-badge' style='".concat(badgeStyle, "'>").concat(badge, "</div>");
       }
     },
-    getHoverEnabled: function getHoverEnabled() {
-      var _getState2 = getState(),
-          touch = _getState2.touch;
+    button: function button() {
+      var _actions$getProps5 = actions.getProps(),
+          before = _actions$getProps5.before,
+          text = _actions$getProps5.text;
 
-      if (touch) {
-        return false;
+      var config = actions.getButtonConfig();
+      return /*#__PURE__*/_react.default.createElement("button", config, before, " ", text, " ", $$.caret('react'), " ", $$.after('react'), " ", $$.badge('react'));
+    },
+    multiselect: function multiselect() {
+      var _actions$getProps6 = actions.getProps(),
+          rtl = _actions$getProps6.rtl,
+          _actions$getProps6$st = _actions$getProps6.style,
+          style = _actions$getProps6$st === void 0 ? {} : _actions$getProps6$st,
+          _onClick = _actions$getProps6.onClick,
+          checks = _actions$getProps6.checks;
+
+      return /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-multiselect",
+        style: {
+          width: style.width
+        }
+      }, $$.button(), checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
+        className: 'aio-button-checkeds' + (rtl ? ' rtl' : '')
+      }, checks.map(function (check, i) {
+        return /*#__PURE__*/_react.default.createElement("div", {
+          key: i,
+          className: "aio-button-checked",
+          onClick: function onClick() {
+            return _onClick(check);
+          }
+        }, /*#__PURE__*/_react.default.createElement("div", {
+          className: "aio-button-checked-close"
+        }), /*#__PURE__*/_react.default.createElement("div", {
+          className: "aio-button-checked-text"
+        }, check.text));
+      })));
+    },
+    searchBox: function searchBox(searchValue, _onChange) {
+      var _actions$getProps7 = actions.getProps(),
+          search = _actions$getProps7.search,
+          placeHolder = _actions$getProps7.placeHolder;
+
+      if (!search) {
+        return '';
       }
 
-      var _getProps15 = _getProps16(),
-          hover = _getProps15.hover;
-
-      return typeof hover === 'function' ? hover(_getProps16()) : hover;
+      return /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-search"
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: 'aio-button-search-icon' + (searchValue ? ' aio-button-search-icon-filled' : ''),
+        onClick: function onClick() {
+          _onChange({
+            searchValue: ''
+          });
+        }
+      }), /*#__PURE__*/_react.default.createElement("input", {
+        type: "text",
+        value: searchValue,
+        placeholder: placeHolder,
+        onChange: function onChange(e) {
+          return _onChange({
+            searchValue: e.target.value
+          });
+        }
+      }));
     },
-    getValue: function getValue(value) {
-      return typeof value === 'function' ? value(_getProps16()) : value;
-    },
-    getProps: function getProps() {
-      var props = _getProps16();
+    getPopupStyle: function getPopupStyle() {
+      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var type = props.type,
-          _props$before = props.before,
-          before = _props$before === void 0 ? '' : _props$before,
-          _props$text = props.text,
-          text = _props$text === void 0 ? '' : _props$text,
-          checks = props.checks,
-          _props$onClick = props.onClick,
-          onClick = _props$onClick === void 0 ? function () {} : _props$onClick;
-      var id = $$.getValue(props.id);
-      var disabled = $$.getValue(props.disabled);
-      var title = $$.getValue(props.title);
-      var className = $$.getValue(props.className);
-      var rtl = $$.getValue(props.rtl);
-      var style = $$.getValue(props.style);
-      var hover = $$.getHoverEnabled();
-      return {
-        type: type,
-        before: before,
-        text: text,
-        checks: checks,
-        onClick: onClick,
-        id: id,
-        disabled: disabled,
-        title: title,
-        className: className,
-        rtl: rtl,
-        style: style,
-        hover: hover
+      var _actions$getProps8 = actions.getProps(),
+          rtl = _actions$getProps8.rtl,
+          dropdownType = _actions$getProps8.dropdownType;
+
+      if (platform === 'react') {
+        var style = {
+          direction: rtl ? 'rtl' : 'ltr'
+        };
+
+        if (dropdownType === 'center') {
+          style = { ...style,
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          };
+        }
+
+        return style;
+      }
+
+      if (platform === 'jquery') {
+        var _style = "direction:".concat(rtl ? 'rtl' : 'ltr', ";");
+
+        if (dropdownType === 'center') {
+          _style += "left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;";
+        }
+
+        return _style;
+      }
+    },
+    getBackDropStyle: function getBackDropStyle() {
+      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
+
+      var _actions$getProps9 = actions.getProps(),
+          backdropStyle = _actions$getProps9.backdropStyle;
+
+      if (platform === 'react') {
+        return {
+          height: '100%',
+          width: '100%',
+          right: 0,
+          top: 0,
+          position: 'fixed',
+          background: 'rgba(0,0,0,0)',
+          ...backdropStyle
+        };
+      }
+
+      if (platform === 'jquery') {
+        return "height:100%;width:100%;right:0;top:0;position:fixed;background:rgba(0,0,0,0);".concat(backdropStyle);
+      }
+    },
+    popup: function popup(searchValue, onChange, ref) {
+      var _actions$getProps10 = actions.getProps(),
+          hover = _actions$getProps10.hover,
+          popupWidth = _actions$getProps10.popupWidth,
+          popupStyle = _actions$getProps10.popupStyle;
+
+      var PopupStyle = actions.getValue(popupStyle);
+      return /*#__PURE__*/_react.default.createElement("div", {
+        className: actions.getPopupClassName(),
+        ref: ref,
+        style: $$.getPopupStyle(),
+        onMouseEnter: function onMouseEnter() {
+          if (hover) {
+            actions.toggle(true);
+          }
+        },
+        onMouseLeave: function onMouseLeave() {
+          if (hover) {
+            actions.toggle(false);
+          }
+        },
+        onKeyDown: function onKeyDown(e) {
+          return actions.keyDown(e, (0, _jquery.default)(ref.current));
+        },
+        tabIndex: 0
+      }, !hover && /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-backdrop",
+        onClick: function onClick() {
+          return actions.toggle(false, true);
+        },
+        style: $$.getBackDropStyle()
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-popup",
+        style: {
+          width: popupWidth === 'fit' ? undefined : popupWidth,
+          ...PopupStyle
+        }
+      }, $$.searchBox(searchValue, function (obj) {
+        return onChange(obj);
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-items"
+      }, actions.getPopupContent(searchValue))));
+    },
+    checkIcon: function checkIcon(item) {
+      if (item._checked === undefined) {
+        return '';
+      }
+
+      var _actions$getProps11 = actions.getProps(),
+          _actions$getProps11$g = _actions$getProps11.gap,
+          gap = _actions$getProps11$g === void 0 ? 8 : _actions$getProps11$g;
+
+      return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
+        className: 'aio-button-check-icon' + (item._checked ? ' checked' : '')
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-gap",
+        style: {
+          width: gap
+        }
+      }));
+    },
+    listItem: function listItem(item, index) {
+      var _actions$getProps12 = actions.getProps(),
+          rtl = _actions$getProps12.rtl,
+          onSwap = _actions$getProps12.onSwap;
+
+      var Text = /*#__PURE__*/_react.default.createElement("div", {
+        className: "aio-button-text",
+        title: item._title || item._text
+      }, item._text);
+
+      var props = {
+        className: "aio-button-list-item".concat(item._className ? ' ' + item._className : '').concat(item._disabled ? ' disabled' : ''),
+        style: item._style,
+        onClick: function onClick(e) {
+          return actions.itemClick(item, e);
+        },
+        title: '',
+        dataindex: index,
+        tabIndex: 0,
+        key: index
       };
+
+      if (onSwap) {
+        props.onDragStart = function (e) {
+          return actions.dragStart(e);
+        };
+
+        props.onDragOver = function (e) {
+          return actions.dragOver(e);
+        };
+
+        props.onDrop = function (e) {
+          actions.drop(e);
+        };
+
+        props.draggable = true;
+      }
+
+      return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
+        className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
+      }, item.splitter), /*#__PURE__*/_react.default.createElement("div", props, $$.checkIcon(item), item._before, Text, item._after));
     }
   };
   return {
-    getLimit: $$.getLimit,
-    update: $$.update,
-    getOptions: $$.getOptions,
-    getPopupClassName: $$.getPopupClassName,
-    getPopupStyle: $$.getPopupStyle,
-    getBackDropStyle: $$.getBackDropStyle,
-    toggle: $$.toggle,
-    keyDown: $$.keyDown,
-    itemClick: $$.itemClick,
-    getCaret: $$.getCaret,
-    getAfter: $$.getAfter,
-    onClick: $$.onClick,
-    showPopup: $$.showPopup,
-    getPopupContent: $$.getPopupContent,
-    getBadge: $$.getBadge,
-    getProps: $$.getProps,
-    getHoverEnabled: $$.getHoverEnabled,
-    getCheckIcon: $$.getCheckIcon
+    base: $$.base,
+    button: $$.button,
+    multiselect: $$.multiselect,
+    searchBox: $$.searchBox,
+    popup: $$.popup,
+    listItem: $$.listItem
   };
 }

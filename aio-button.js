@@ -1,4 +1,4 @@
-import React,{Component,createRef,createContext} from 'react';
+import React,{Component,createRef} from 'react';
 import $ from 'jquery'
 import './index.css';
 export default class AIOButton extends Component{
@@ -24,13 +24,14 @@ export default class AIOButton extends Component{
   }
   Render_multiselect(){
     let details = this.getMultiselectDetails();
-    let {options = [],onChange,values,popOver} = this.props;
+    let {options = [],onChange,values} = this.props;
     return (
       <AIOButtonBase
-        popupWidth={popOver?undefined:'fit'} 
+        popupWidth={'fit'} 
         caret={true} 
         {...this.props}
         type={'multiselect'}
+        popOver={false}
         items={details.options}
         checks={details.checks}
         onClick={({value})=>{
@@ -111,7 +112,6 @@ export default class AIOButton extends Component{
     return this[`Render_${type}`]()
   }
 }
-const dpContext = createContext();
 class AIOButtonBase extends Component {
     constructor(props){
       super(props);
@@ -121,188 +121,32 @@ class AIOButtonBase extends Component {
         (obj)=>{this.setState(obj)}
       )
       this.state = {open:this.props.open || false,touch:'ontouchstart' in document.documentElement}
-      this.dom = createRef();
-    }
-    getValue(value){return typeof value === 'function' ? value(this.props):value;}
-    mouseDown(e){
-      if(!this.props.onSwipe){return;}
-      this.canMove = false;
-      this.firstMove = true;
-      this.moved = false;
-      this.coords = {x:e.clientX,y:e.clientY}
-      $(window).bind('mousemove',$.proxy(this.mouseMove,this))
-      $(window).bind('mouseup',$.proxy(this.mouseUp,this))
-    }
-    mouseMove(e){
-      let offsetX = e.clientX - this.coords.x;
-      let offsetY = this.coords.y - e.clientY;
-      if(!this.canMove && Math.sqrt(Math.pow(offsetX,2) + Math.pow(offsetY,2)) < 7){return}
-      if(this.firstMove){
-        this.coords = {x:e.clientX,y:e.clientY}
-        this.firstMove = false;
-        return;
-      }
-      this.canMove = true;
-      this.moved = true;
-      let {onSwipe} = this.props;
-      onSwipe(offsetX,offsetY)
-    }
-    mouseUp(){
-      $(window).unbind('mousemove',this.mouseMove)
-      $(window).unbind('mouseup',this.mouseUp)
-      if(!this.moved){return}
-      let {onSwipeEnd = ()=>{}} = this.props;
-      onSwipeEnd();
-    }
-    getTags(checks = [],rtl,onClick){
-      let {editTag = (text)=>text,showTag = true} = this.props;
-      if(checks.length === 0 || !showTag){return ''}
-      return (
-        <div className={'aio-button-checkeds' + (rtl?' rtl':'')}>
-          {
-            checks.map((check,i)=>{
-              let {color=[]} = check;
-              return (
-                <div key={i} className='aio-button-checked' onClick={()=>onClick(check)} style={{background:color[0],color:color[1]}}>
-                  <div className='aio-button-checked-close'></div>
-                  <div className='aio-button-checked-text'>{editTag(check.text)}</div>
-                </div>
-              )
-            })}
-        </div>
-      )
     }
     render(){
-        let {type,before,text,checks,onClick,id,disabled,title,className,rtl,style,hover,attrs} = this.fn.getProps()
-        let {open} = this.state;
-        var contextValue = {...this.props};
-        contextValue.getValue = this.getValue.bind(this);
-        contextValue.hover = hover;
-        contextValue.fn = this.fn;
-        var props = {
-          ...attrs,
-          id,
-          className:`aio-button ${rtl?'rtl':'ltr'}${className?' ' + className:''}`,
-          style:$.extend({},{direction:rtl?'rtl':'ltr'},this.getValue(style)),
-          disabled,title,
-          ref:this.dom,
-          onClick:(e)=>this.fn.onClick(e),
-          onMouseEnter:hover?()=>this.fn.toggle(true):undefined,
-          onMouseLeave:hover?()=>this.fn.toggle(false):undefined,
-          onMouseDown:this.mouseDown.bind(this),
-          onTouchStart:this.mouseDown.bind(this),
-          tabIndex:0
-        }
-        let button = (
-          <button {...props}>{before} {text} {this.fn.getCaret('react')} {this.fn.getAfter('react')} {this.fn.getBadge('react')}</button>
-        )
-        return (
-          <dpContext.Provider value={contextValue}>
-              {
-                type === 'multiselect' &&
-                <div className='aio-button-multiselect' style={{width:props.style.width}}>
-                  {button}
-                  {this.getTags(checks,rtl,onClick)}
-                </div>
-              }
-              {type !== 'multiselect' && button}
-              {this.fn.showPopup(open) && <Popup ref={this.popup}/>}
-          </dpContext.Provider>
-        );
+      let {open} = this.state;
+      return this.fn.render.base(open)
     }    
 }
 class Popup extends Component{
-  static contextType = dpContext;
   constructor(props){
     super(props);
     this.dom = createRef();
     this.state = {searchValue:''};
   }
-  
   componentDidMount(){
-    let {fn} = this.context; 
+    let {fn} = this.props; 
     fn.update($(this.dom.current));
   }
-  
-  getSearchBox(){
-    var {search,placeHolder} = this.context;
-    if(!search){return null}
-    let {searchValue} = this.state;
-    return (
-      <div className='aio-button-search'>
-        <div className={'aio-button-search-icon' + (searchValue?' aio-button-search-icon-filled':'')} onClick={()=>{this.setState({searchValue:''})}}></div>
-        <input 
-          type='text' value={searchValue} placeholder={placeHolder} 
-          onChange={(e)=>this.setState({searchValue:e.target.value})}
-        />
-      </div>
-    )
-  }
   render(){
-    var {getValue,hover,popupWidth,fn} = this.context;
+    var {fn} = this.props;
     let {searchValue} = this.state;
-    var popupStyle = getValue(this.context.popupStyle);
-    return(
-      <div 
-        className={fn.getPopupClassName()} ref={this.dom} style={fn.getPopupStyle('react')} 
-        onMouseEnter={()=>{if(hover){fn.toggle(true)}}} 
-        onMouseLeave={()=>{if(hover){fn.toggle(false)}}} 
-        onKeyDown={(e)=>fn.keyDown(e,$(this.dom.current))} 
-      tabIndex={0}>
-        {!hover && <div className='aio-button-backdrop' onClick={()=>fn.toggle(false,true)} style={fn.getBackDropStyle('react')}></div>} 
-        <div className="aio-button-popup" style={{width:popupWidth === 'fit'?undefined:popupWidth,...popupStyle}}>
-          {this.getSearchBox()}
-          <div className='aio-button-items'>{fn.getPopupContent(searchValue,'react')}</div>     
-        </div>
-      </div>
-    );
-  }
-}
-class ListItem extends Component{
-  static contextType = dpContext;
-  render(){
-    var {fn,rtl} = this.context;
-    let {item,index} = this.props; 
-    var Text = <div className='aio-button-text' title={item._title || item._text}>{item._text}</div>;  
-    var props = {
-      className:`aio-button-list-item${item._className?' ' + item._className:''}${item._disabled?' disabled':''}`,
-      style:item._style,onClick:(e)=>fn.itemClick(item,e),title:'',dataindex:index,tabIndex:0
-    }
-    return(
-      <>
-        {item.splitter &&<div className={'aio-button-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
-        <div {...props}>
-          {fn.getCheckIcon(item,'react')}
-          {item._before}
-          {Text}
-          {item._after}
-        </div>
-      </>
-    );
+    return fn.render.popup(searchValue,(obj)=>this.setState(obj),this.dom);
   }
 }
 
 function AIOBTNFN(getProps,getState,setState){
   let $$ = {
     activeIndex:false,
-    getCheckIcon(item,platform = 'react'){
-      if(item._checked === undefined){return ''}
-      let {gap = 8} = getProps();
-      if(platform === 'react'){
-        return (
-          <>
-            <div className={'aio-button-check-icon' + (item._checked?' checked':'')}></div>
-            <div className='aio-button-gap' style={{width:gap}}></div>
-          </>
-        );
-      }
-      if(platform === 'jquery'){
-        return (`
-          <div class='aio-button-check-icon${item._checked?' checked':''}'></div>
-          <div class='aio-button-gap' style='width:${gap}px;'></div>
-        `);
-      }
-    },
     getLimit(dom){
       var offset = dom.offset();
       var left = offset.left - window.pageXOffset;
@@ -395,6 +239,7 @@ function AIOBTNFN(getProps,getState,setState){
           title = getOptionTitle(item,i)
         } = item;
         item._text = text;
+        item._index = i;
         item._disabled = disabled;
         item._before = before;
         item._after = after;
@@ -417,32 +262,6 @@ function AIOBTNFN(getProps,getState,setState){
       className += rtl?' rtl':' ltr';
       if(popupClassName){className += ' ' + popupClassName}
       return className;
-    },
-    getPopupStyle(platform = 'react'){
-      var {rtl,dropdownType} = getProps();
-      if(platform === 'react'){
-        let style = {direction:rtl?'rtl':'ltr'}
-        if(dropdownType === 'center'){
-            style = {...style,left:0,top:0,width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center'}
-        }
-        return style;
-      }
-      if(platform === 'jquery'){
-        let style = `direction:${rtl?'rtl':'ltr'};`;
-        if(dropdownType === 'center'){
-            style += `left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;`;
-        }
-        return style;
-      }
-    },
-    getBackDropStyle(platform = 'react'){
-      var {backdropStyle} = getProps();
-      if(platform === 'react'){
-        return {height:'100%',width:'100%',right:0,top:0,position:'fixed',background:'rgba(0,0,0,0)',...backdropStyle}
-      }
-      if(platform === 'jquery'){
-        return `height:100%;width:100%;right:0;top:0;position:fixed;background:rgba(0,0,0,0);${backdropStyle}`
-      } 
     },
     toggle(state,isBackdrop){
       let {open} = getState();
@@ -511,43 +330,11 @@ function AIOBTNFN(getProps,getState,setState){
         $$.toggle();
       }
     },
-    getPopupContent(searchValue,platform = 'react'){
+    getPopupContent(searchValue){
       let {items,popOver} = getProps();
       if(popOver){return typeof popOver === 'function'?popOver(getProps()):popOver}
       $$.items = $$.getOptions(items,searchValue);
-      if(platform === 'react'){
-        return $$.items.map((item, i)=><ListItem key={i} item={item} index={i}/>)
-      }
-      if(platform === 'jquery'){
-        return $$.items.map((item, i)=>{
-          return ListItem({item,index:i})
-        }).join(' ');
-      }
-    },
-    getCaret(platform = 'react'){
-      var {caret,caretStyle} = getProps();
-      if(caret === false){return '';}
-      let cls = 'aio-button-caret';
-      if(caret === true){
-        if(platform === 'react'){
-          return (<><div style={{flex:1}}></div><div className={cls} style={caretStyle}></div></>);
-        }
-        if(platform === 'jquery'){
-          return `<div style='flex:1;'></div><div class='${cls}' style='${caretStyle}'></div>`;
-        }
-      }
-      if(platform === 'react'){return (<><div style={{flex:1}}></div>{caret}</>)}
-      if(platform === 'jquery'){return `<div style='flex:1;'></div>${caret}`}
-    },
-    getAfter(platform){
-      let {after} = getProps();
-      if(after === undefined){return ''}
-      if(platform === 'react'){
-        return (<><div style={{flex:1}}></div>{after}</>)
-      }
-      if(platform === 'jquery'){
-        return `<div style='flex:1;'></div>${after}`
-      }
+      return $$.items.map((item, i)=>$$.render.listItem(item,i))
     },
     onClick(e){
       if($(e.target).parents('.aio-button-checkeds').length !== 0){return;}
@@ -561,16 +348,6 @@ function AIOBTNFN(getProps,getState,setState){
       if(popOver){return true;}
       if(items !== undefined){return true;}
       return false
-    },
-    getBadge(platform = 'react'){
-      let {badge,badgeStyle} = getProps();
-      if(badge === undefined){return '';}
-      if(platform === 'react'){
-        return <div className='aio-button-badge' style={badgeStyle}>{badge}</div>
-      }
-      if(platform === 'jquery'){
-        return `<div class='aio-button-badge' style='${badgeStyle}'>${badge}</div>`
-      }
     },
     getHoverEnabled(){
       let {touch} = getState();
@@ -589,27 +366,244 @@ function AIOBTNFN(getProps,getState,setState){
       var rtl = $$.getValue(props.rtl); 
       var style = $$.getValue(props.style); 
       var hover = $$.getHoverEnabled();
-      return {type,before,text,checks,onClick,id,disabled,title,className,rtl,style,hover};
+      return {...props,type,before,text,checks,onClick,id,disabled,title,className,rtl,style,hover};
+    },
+    getButtonConfig(){
+      let {id,disabled,title,className,rtl,style,hover} = $$.getProps()
+      return {
+        id,
+        className:`aio-button ${rtl?'rtl':'ltr'}${className?' ' + className:''}`,
+        style:$.extend({},{direction:rtl?'rtl':'ltr'},$$.getValue(style)),
+        disabled,title,
+        onClick:(e)=>$$.onClick(e),
+        onMouseEnter:hover?()=>$$.toggle(true):undefined,
+        onMouseLeave:hover?()=>$$.toggle(false):undefined,
+        tabIndex:0
+      }
+    },
+    dragStart(e){
+      let index = parseInt($(e.target).attr('dataindex'));
+      $$.dragIndex = index;
+    },
+    dragOver(e){
+      e.preventDefault();
+    },
+    
+    drop(e){
+      e.stopPropagation();
+      let {onSwap,options} = getProps();
+      let from = $$.dragIndex;
+      let dom = $(e.target);
+      if(!dom.hasClass('aio-button-list-item')){
+        dom = dom.parents('.aio-button-list-item');
+      };
+      if(!dom.hasClass('aio-button-list-item')){
+        return
+      };
+
+      let to = parseInt(dom.attr('dataindex'));
+      if(from === to){return}
+      let fromIndex = options[from]._index
+      options.splice(to,0,{...options[from],_index:false})
+      let Options = options.filter((o,i)=>o._index !== fromIndex)
+      onSwap(Options,[from,to])
     }
+
   }
+  $$.render = new AIOBTNrender($$);
   return {
     getLimit:$$.getLimit,
     update:$$.update,
     getOptions:$$.getOptions,
     getPopupClassName:$$.getPopupClassName,
-    getPopupStyle:$$.getPopupStyle,
-    getBackDropStyle:$$.getBackDropStyle,
     toggle:$$.toggle,
     keyDown:$$.keyDown,
     itemClick:$$.itemClick,
-    getCaret:$$.getCaret,
-    getAfter:$$.getAfter,
     onClick:$$.onClick,
     showPopup:$$.showPopup,
     getPopupContent:$$.getPopupContent,
-    getBadge:$$.getBadge,
     getProps:$$.getProps,
     getHoverEnabled:$$.getHoverEnabled,
-    getCheckIcon:$$.getCheckIcon,
+    getValue:$$.getValue,
+    render:$$.render
+  }
+}
+
+function AIOBTNrender(actions){
+  let $$ = {
+    base(open){
+      let {type} = actions.getProps()
+      return (
+        <>
+            {type === 'multiselect' && $$.multiselect()}
+            {type !== 'multiselect' && $$.button()}
+            {actions.showPopup(open) && <Popup fn={actions}/>}
+        </>
+      );
+    },
+    caret(platform = 'react'){
+      var {caret,caretStyle} = actions.getProps();
+      if(caret === false){return '';}
+      let cls = 'aio-button-caret';
+      if(caret === true){
+        if(platform === 'react'){
+          return (<><div style={{flex:1}}></div><div className={cls} style={caretStyle}></div></>);
+        }
+        if(platform === 'jquery'){
+          return `<div style='flex:1;'></div><div class='${cls}' style='${caretStyle}'></div>`;
+        }
+      }
+      if(platform === 'react'){return (<><div style={{flex:1}}></div>{caret}</>)}
+      if(platform === 'jquery'){return `<div style='flex:1;'></div>${caret}`}
+    },
+    after(platform = 'react'){
+      let {after} = actions.getProps();
+      if(after === undefined){return ''}
+      if(platform === 'react'){
+        return (<><div style={{flex:1}}></div>{after}</>)
+      }
+      if(platform === 'jquery'){
+        return `<div style='flex:1;'></div>${after}`
+      }
+    },
+    badge(platform = 'react'){
+      let {badge,badgeStyle} = actions.getProps();
+      if(badge === undefined){return '';}
+      if(platform === 'react'){
+        return <div className='aio-button-badge' style={badgeStyle}>{badge}</div>
+      }
+      if(platform === 'jquery'){
+        return `<div class='aio-button-badge' style='${badgeStyle}'>${badge}</div>`
+      }
+    },
+    button(){
+      let {before,text} = actions.getProps()
+      let config = actions.getButtonConfig();
+      return (
+        <button {...config}>{before} {text} {$$.caret('react')} {$$.after('react')} {$$.badge('react')}</button>
+      )
+    },
+    multiselect(){
+      let {rtl,style = {},onClick,checks} = actions.getProps()
+      return (
+        <div className='aio-button-multiselect' style={{width:style.width}}>
+          {$$.button()}
+          {
+            checks.length !== 0 &&
+            <div className={'aio-button-checkeds' + (rtl?' rtl':'')}>
+              {
+                checks.map((check,i)=>{return (
+                  <div key={i} className='aio-button-checked' onClick={()=>onClick(check)}>
+                    <div className='aio-button-checked-close'></div>
+                    <div className='aio-button-checked-text'>{check.text}</div>
+                  </div>
+                )})}
+            </div>
+          }
+        </div>
+      )
+    },
+    searchBox(searchValue,onChange){
+      var {search,placeHolder} = actions.getProps();
+      if(!search){return ''}
+      return (
+        <div className='aio-button-search'>
+          <div className={'aio-button-search-icon' + (searchValue?' aio-button-search-icon-filled':'')} onClick={()=>{onChange({searchValue:''})}}></div>
+          <input 
+            type='text' value={searchValue} placeholder={placeHolder} 
+            onChange={(e)=>onChange({searchValue:e.target.value})}
+          />
+        </div>
+      )
+    },
+    getPopupStyle(platform = 'react'){
+      var {rtl,dropdownType} = actions.getProps();
+      if(platform === 'react'){
+        let style = {direction:rtl?'rtl':'ltr'}
+        if(dropdownType === 'center'){
+            style = {...style,left:0,top:0,width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center'}
+        }
+        return style;
+      }
+      if(platform === 'jquery'){
+        let style = `direction:${rtl?'rtl':'ltr'};`;
+        if(dropdownType === 'center'){
+            style += `left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;`;
+        }
+        return style;
+      }
+    },
+    getBackDropStyle(platform = 'react'){
+      var {backdropStyle} = actions.getProps();
+      if(platform === 'react'){
+        return {height:'100%',width:'100%',right:0,top:0,position:'fixed',background:'rgba(0,0,0,0)',...backdropStyle}
+      }
+      if(platform === 'jquery'){
+        return `height:100%;width:100%;right:0;top:0;position:fixed;background:rgba(0,0,0,0);${backdropStyle}`
+      } 
+    },
+    
+    popup(searchValue,onChange,ref){
+      var {hover,popupWidth,popupStyle} = actions.getProps();
+      var PopupStyle = actions.getValue(popupStyle);
+      return(
+        <div 
+          className={actions.getPopupClassName()} ref={ref} style={$$.getPopupStyle()} 
+          onMouseEnter={()=>{if(hover){actions.toggle(true)}}} 
+          onMouseLeave={()=>{if(hover){actions.toggle(false)}}} 
+          onKeyDown={(e)=>actions.keyDown(e,$(ref.current))} 
+        tabIndex={0}>
+          {!hover && <div className='aio-button-backdrop' onClick={()=>actions.toggle(false,true)} style={$$.getBackDropStyle()}></div>} 
+          <div className="aio-button-popup" style={{width:popupWidth === 'fit'?undefined:popupWidth,...PopupStyle}}>
+            {$$.searchBox(searchValue,(obj)=>onChange(obj))}
+            <div className='aio-button-items'>{actions.getPopupContent(searchValue)}</div>     
+          </div>
+        </div>
+      );
+    },
+    checkIcon(item){
+      if(item._checked === undefined){return ''}
+      let {gap = 8} = actions.getProps();
+      return (
+        <>
+          <div className={'aio-button-check-icon' + (item._checked?' checked':'')}></div>
+          <div className='aio-button-gap' style={{width:gap}}></div>
+        </>
+      );
+    },
+    listItem(item,index){
+      var {rtl,onSwap} = actions.getProps();
+      var Text = <div className='aio-button-text' title={item._title || item._text}>{item._text}</div>;  
+      var props = {
+        className:`aio-button-list-item${item._className?' ' + item._className:''}${item._disabled?' disabled':''}`,
+        style:item._style,onClick:(e)=>actions.itemClick(item,e),title:'',dataindex:index,tabIndex:0,key:index,
+        
+      }
+      if(onSwap){
+        props.onDragStart = (e)=>actions.dragStart(e);
+        props.onDragOver = (e)=>actions.dragOver(e);
+        props.onDrop = (e)=>{actions.drop(e);}
+        props.draggable = true;
+      }
+      return(
+        <>
+          {item.splitter &&<div className={'aio-button-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
+          <div {...props}>
+            {$$.checkIcon(item)}
+            {item._before}
+            {Text}
+            {item._after}
+          </div>
+        </>
+      );
+    }
+  }
+  return {
+    base:$$.base,
+    button:$$.button,
+    multiselect:$$.multiselect,
+    searchBox:$$.searchBox,
+    popup:$$.popup,
+    listItem:$$.listItem
   }
 }
