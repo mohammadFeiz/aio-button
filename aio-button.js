@@ -1,4 +1,4 @@
-import React,{Component,createRef} from 'react';
+import React,{Component,createRef,Fragment} from 'react';
 import $ from 'jquery'
 import './index.css';
 export default class AIOButton extends Component{
@@ -107,11 +107,99 @@ export default class AIOButton extends Component{
     let {popOver} = this.props;
     return <AIOButtonBase caret={popOver?true:false} {...this.props}/>;
   }
+  Render_radio(){
+    return <RRadioButton {...this.props}/>
+  }
   render(){
     let {type = 'button'} = this.props;
     return this[`Render_${type}`]()
   }
 }
+class RRadioButton extends Component {
+  getStyle(){
+    var {justify,style = {}} = this.props;
+    var Style = {};
+    if(justify){
+      Style.justifyContent ='center';
+    }
+    return {...Style,...style};
+  }
+  getOptionStyle(style = {}){
+    var {optionStyle = {},optionWidth} = this.props;
+    return {width:optionWidth || '100%',...optionStyle,...style}
+  }
+  getColor(color){
+    let Color = color || [];
+    if(!Array.isArray(Color)){Color = [Color]}
+    let [outerColor,innerColor = outerColor] = Color;
+    return [outerColor,innerColor]
+  }
+  getOuterStyle(color,{round = true,size = []}){
+    let [outer = 16,inner = 12,stroke = 2] = size;
+    var style = {color:color[0],width:outer,height:outer,border:`${stroke}px solid`}
+    if(round === false){style.borderRadius = 0;}
+    return style;
+  }
+  getInnerIconStyle(color,{round = true,size = []}){
+    let [outer = 16,inner = 12,stroke = 2] = size;
+    let style = {background:color[1],width:inner,height:inner}
+    if(round === false){style.borderRadius = 0;}
+    return style;
+  }
+  getIcon(active,i,option){
+    let icon = option.icon || this.props.icon || {}
+    let color = this.getColor(icon.color);
+            
+    if(active){
+      if(icon.active){return icon.active}
+      return (
+        <div className={'r-radio-button-outer' + active} style={this.getOuterStyle(color,icon)}>
+          <div className='r-radio-button-inner' style={this.getInnerIconStyle(color,icon)}></div>
+        </div>
+      )
+    }
+    else{
+      if(icon.deactive){return icon.deactive}
+      return (
+        <div className={'r-radio-button-outer' + active} style={this.getOuterStyle(color,icon)}></div>
+      )
+    }
+    
+  }
+  render(){
+    var {id,className,gap = 6,options,value = true,onChange,rtl} = this.props;
+    return (
+      <div 
+        className={'r-radio-button' + (rtl?' rtl':'') + (className?' ' + className:'')} 
+        style={this.getStyle()}
+        id={id}
+      >
+        {
+          options.map((option,i)=>{
+            let active = option.value === value ?' active':'';
+            return (
+              <Fragment key={i}>
+                <div className={'r-radio-button-option' + active} title={option.title} onClick={()=>onChange(option.value,i)} style={this.getOptionStyle(option.style)}>
+                  {this.getIcon(active,i,option)}
+                  <div className='r-radio-button-gap' style={{width:gap}}></div>  
+                  <div className='r-radio-button-text' style={option.style}>
+                    <div className='r-radio-button-uptext' style={option.style}>
+                      {option.text}
+                    </div>
+                    <div className='r-radio-button-subtext' style={option.style}>
+                      {option.subtext}
+                    </div>  
+                  </div>
+                </div>
+              </Fragment>
+            )
+          })
+        }
+      </div>
+    );
+  }
+}
+
 class AIOButtonBase extends Component {
     constructor(props){
       super(props);

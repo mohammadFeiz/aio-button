@@ -19,6 +19,18 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -238,6 +250,11 @@ var AIOButton = /*#__PURE__*/function (_Component) {
       }, this.props));
     }
   }, {
+    key: "Render_radio",
+    value: function Render_radio() {
+      return /*#__PURE__*/_react.default.createElement(RRadioButton, this.props);
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this$props$type = this.props.type,
@@ -251,29 +268,226 @@ var AIOButton = /*#__PURE__*/function (_Component) {
 
 exports.default = AIOButton;
 
-var AIOButtonBase = /*#__PURE__*/function (_Component2) {
-  _inherits(AIOButtonBase, _Component2);
+var RRadioButton = /*#__PURE__*/function (_Component2) {
+  _inherits(RRadioButton, _Component2);
 
-  var _super2 = _createSuper(AIOButtonBase);
+  var _super2 = _createSuper(RRadioButton);
+
+  function RRadioButton() {
+    _classCallCheck(this, RRadioButton);
+
+    return _super2.apply(this, arguments);
+  }
+
+  _createClass(RRadioButton, [{
+    key: "getStyle",
+    value: function getStyle() {
+      var _this$props5 = this.props,
+          justify = _this$props5.justify,
+          _this$props5$style = _this$props5.style,
+          style = _this$props5$style === void 0 ? {} : _this$props5$style;
+      var Style = {};
+
+      if (justify) {
+        Style.justifyContent = 'center';
+      }
+
+      return { ...Style,
+        ...style
+      };
+    }
+  }, {
+    key: "getOptionStyle",
+    value: function getOptionStyle() {
+      var style = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var _this$props6 = this.props,
+          _this$props6$optionSt = _this$props6.optionStyle,
+          optionStyle = _this$props6$optionSt === void 0 ? {} : _this$props6$optionSt,
+          optionWidth = _this$props6.optionWidth;
+      return {
+        width: optionWidth || '100%',
+        ...optionStyle,
+        ...style
+      };
+    }
+  }, {
+    key: "getColor",
+    value: function getColor(color) {
+      var Color = color || [];
+
+      if (!Array.isArray(Color)) {
+        Color = [Color];
+      }
+
+      var _Color = Color,
+          _Color2 = _slicedToArray(_Color, 2),
+          outerColor = _Color2[0],
+          _Color2$ = _Color2[1],
+          innerColor = _Color2$ === void 0 ? outerColor : _Color2$;
+
+      return [outerColor, innerColor];
+    }
+  }, {
+    key: "getOuterStyle",
+    value: function getOuterStyle(color, _ref2) {
+      var _ref2$round = _ref2.round,
+          round = _ref2$round === void 0 ? true : _ref2$round,
+          _ref2$size = _ref2.size,
+          size = _ref2$size === void 0 ? [] : _ref2$size;
+
+      var _size = _slicedToArray(size, 3),
+          _size$ = _size[0],
+          outer = _size$ === void 0 ? 16 : _size$,
+          _size$2 = _size[1],
+          inner = _size$2 === void 0 ? 12 : _size$2,
+          _size$3 = _size[2],
+          stroke = _size$3 === void 0 ? 2 : _size$3;
+
+      var style = {
+        color: color[0],
+        width: outer,
+        height: outer,
+        border: "".concat(stroke, "px solid")
+      };
+
+      if (round === false) {
+        style.borderRadius = 0;
+      }
+
+      return style;
+    }
+  }, {
+    key: "getInnerIconStyle",
+    value: function getInnerIconStyle(color, _ref3) {
+      var _ref3$round = _ref3.round,
+          round = _ref3$round === void 0 ? true : _ref3$round,
+          _ref3$size = _ref3.size,
+          size = _ref3$size === void 0 ? [] : _ref3$size;
+
+      var _size2 = _slicedToArray(size, 3),
+          _size2$ = _size2[0],
+          outer = _size2$ === void 0 ? 16 : _size2$,
+          _size2$2 = _size2[1],
+          inner = _size2$2 === void 0 ? 12 : _size2$2,
+          _size2$3 = _size2[2],
+          stroke = _size2$3 === void 0 ? 2 : _size2$3;
+
+      var style = {
+        background: color[1],
+        width: inner,
+        height: inner
+      };
+
+      if (round === false) {
+        style.borderRadius = 0;
+      }
+
+      return style;
+    }
+  }, {
+    key: "getIcon",
+    value: function getIcon(active, i, option) {
+      var icon = option.icon || this.props.icon || {};
+      var color = this.getColor(icon.color);
+
+      if (active) {
+        if (icon.active) {
+          return icon.active;
+        }
+
+        return /*#__PURE__*/_react.default.createElement("div", {
+          className: 'r-radio-button-outer' + active,
+          style: this.getOuterStyle(color, icon)
+        }, /*#__PURE__*/_react.default.createElement("div", {
+          className: "r-radio-button-inner",
+          style: this.getInnerIconStyle(color, icon)
+        }));
+      } else {
+        if (icon.deactive) {
+          return icon.deactive;
+        }
+
+        return /*#__PURE__*/_react.default.createElement("div", {
+          className: 'r-radio-button-outer' + active,
+          style: this.getOuterStyle(color, icon)
+        });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var _this$props7 = this.props,
+          id = _this$props7.id,
+          className = _this$props7.className,
+          _this$props7$gap = _this$props7.gap,
+          gap = _this$props7$gap === void 0 ? 6 : _this$props7$gap,
+          options = _this$props7.options,
+          _this$props7$value = _this$props7.value,
+          value = _this$props7$value === void 0 ? true : _this$props7$value,
+          onChange = _this$props7.onChange,
+          rtl = _this$props7.rtl;
+      return /*#__PURE__*/_react.default.createElement("div", {
+        className: 'r-radio-button' + (rtl ? ' rtl' : '') + (className ? ' ' + className : ''),
+        style: this.getStyle(),
+        id: id
+      }, options.map(function (option, i) {
+        var active = option.value === value ? ' active' : '';
+        return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
+          key: i
+        }, /*#__PURE__*/_react.default.createElement("div", {
+          className: 'r-radio-button-option' + active,
+          title: option.title,
+          onClick: function onClick() {
+            return onChange(option.value, i);
+          },
+          style: _this2.getOptionStyle(option.style)
+        }, _this2.getIcon(active, i, option), /*#__PURE__*/_react.default.createElement("div", {
+          className: "r-radio-button-gap",
+          style: {
+            width: gap
+          }
+        }), /*#__PURE__*/_react.default.createElement("div", {
+          className: "r-radio-button-text",
+          style: option.style
+        }, /*#__PURE__*/_react.default.createElement("div", {
+          className: "r-radio-button-uptext",
+          style: option.style
+        }, option.text), /*#__PURE__*/_react.default.createElement("div", {
+          className: "r-radio-button-subtext",
+          style: option.style
+        }, option.subtext))));
+      }));
+    }
+  }]);
+
+  return RRadioButton;
+}(_react.Component);
+
+var AIOButtonBase = /*#__PURE__*/function (_Component3) {
+  _inherits(AIOButtonBase, _Component3);
+
+  var _super3 = _createSuper(AIOButtonBase);
 
   function AIOButtonBase(props) {
-    var _this2;
+    var _this3;
 
     _classCallCheck(this, AIOButtonBase);
 
-    _this2 = _super2.call(this, props);
-    _this2.fn = new AIOBTNFN(function () {
-      return _this2.props;
+    _this3 = _super3.call(this, props);
+    _this3.fn = new AIOBTNFN(function () {
+      return _this3.props;
     }, function () {
-      return _this2.state;
+      return _this3.state;
     }, function (obj) {
-      _this2.setState(obj);
+      _this3.setState(obj);
     });
-    _this2.state = {
-      open: _this2.props.open || false,
+    _this3.state = {
+      open: _this3.props.open || false,
       touch: 'ontouchstart' in document.documentElement
     };
-    return _this2;
+    return _this3;
   }
 
   _createClass(AIOButtonBase, [{
@@ -287,22 +501,22 @@ var AIOButtonBase = /*#__PURE__*/function (_Component2) {
   return AIOButtonBase;
 }(_react.Component);
 
-var Popup = /*#__PURE__*/function (_Component3) {
-  _inherits(Popup, _Component3);
+var Popup = /*#__PURE__*/function (_Component4) {
+  _inherits(Popup, _Component4);
 
-  var _super3 = _createSuper(Popup);
+  var _super4 = _createSuper(Popup);
 
   function Popup(props) {
-    var _this3;
+    var _this4;
 
     _classCallCheck(this, Popup);
 
-    _this3 = _super3.call(this, props);
-    _this3.dom = /*#__PURE__*/(0, _react.createRef)();
-    _this3.state = {
+    _this4 = _super4.call(this, props);
+    _this4.dom = /*#__PURE__*/(0, _react.createRef)();
+    _this4.state = {
       searchValue: ''
     };
-    return _this3;
+    return _this4;
   }
 
   _createClass(Popup, [{
@@ -314,12 +528,12 @@ var Popup = /*#__PURE__*/function (_Component3) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       var fn = this.props.fn;
       var searchValue = this.state.searchValue;
       return fn.render.popup(searchValue, function (obj) {
-        return _this4.setState(obj);
+        return _this5.setState(obj);
       }, this.dom);
     }
   }]);
