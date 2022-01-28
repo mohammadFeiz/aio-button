@@ -344,9 +344,9 @@ a.aio-button-list-item{
 display:flex;
 color:#666;
 justify-content: flex-start;
-padding:6px;
 font-size:12px;
 flex-wrap: wrap;
+position: relative;
 }
 .r-radio-button.rtl{
 direction:rtl;
@@ -355,8 +355,10 @@ direction:rtl;
 display:flex;
 align-items: center;
 cursor:pointer;
-padding:6px;
+padding:12px;
 overflow:hidden;
+max-width:100%;
+box-sizing: border-box;
 }
 .r-radio-button-text{
 flex:1;
