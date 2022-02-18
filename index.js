@@ -260,16 +260,14 @@ var AIOButton = /*#__PURE__*/function (_Component) {
       var _this$props5 = this.props,
           _this$props5$icon = _this$props5.icon,
           icon = _this$props5$icon === void 0 ? {} : _this$props5$icon,
-          options = _this$props5.options,
-          _onChange = _this$props5.onChange;
+          options = _this$props5.options;
       return /*#__PURE__*/_react.default.createElement(RRadioButton, _extends({}, this.props, {
         icon: {
           round: false,
           ...icon
         },
-        value: undefined,
         onChange: function onChange(value, index) {
-          return _onChange(!value, options[index], index);
+          return options[index].onChange(!value);
         }
       }));
     }
@@ -324,7 +322,7 @@ var RRadioButton = /*#__PURE__*/function (_Component2) {
           optionStyle = _this$props7$optionSt === void 0 ? {} : _this$props7$optionSt,
           optionWidth = _this$props7.optionWidth;
       return {
-        width: optionWidth || 'fit-content',
+        width: optionWidth || '100%',
         ...optionStyle,
         ...style
       };
@@ -446,8 +444,7 @@ var RRadioButton = /*#__PURE__*/function (_Component2) {
           _this$props8$value = _this$props8.value,
           value = _this$props8$value === void 0 ? true : _this$props8$value,
           onChange = _this$props8.onChange,
-          rtl = _this$props8.rtl,
-          disabled = _this$props8.disabled;
+          rtl = _this$props8.rtl;
       return /*#__PURE__*/_react.default.createElement("div", {
         className: 'r-radio-button' + (rtl ? ' rtl' : '') + (className ? ' ' + className : ''),
         style: this.getStyle(),
@@ -457,12 +454,10 @@ var RRadioButton = /*#__PURE__*/function (_Component2) {
         return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
           key: i
         }, /*#__PURE__*/_react.default.createElement("div", {
-          className: 'r-radio-button-option' + active + (disabled ? ' disabled' : ''),
+          className: 'r-radio-button-option' + active,
           title: option.title,
           onClick: function onClick() {
-            if (!disabled && !option.disabled) {
-              onChange(option.value, i);
-            }
+            return onChange(option.value, i);
           },
           style: _this2.getOptionStyle(option.style)
         }, _this2.getIcon(active, i, option), /*#__PURE__*/_react.default.createElement("div", {
@@ -1187,23 +1182,19 @@ function AIOBTNrender(actions) {
           style = _actions$getProps6$st === void 0 ? {} : _actions$getProps6$st,
           _onClick = _actions$getProps6.onClick,
           checks = _actions$getProps6.checks,
-          tagStyle = _actions$getProps6.tagStyle;
+          showTags = _actions$getProps6.showTags;
 
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-multiselect",
         style: {
           width: style.width
         }
-      }, $$.button(), checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
+      }, $$.button(), showTags !== false && checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-checkeds' + (rtl ? ' rtl' : '')
       }, checks.map(function (check, i) {
-        var style = { ...tagStyle,
-          ...check.style
-        };
         return /*#__PURE__*/_react.default.createElement("div", {
           key: i,
           className: "aio-button-checked",
-          style: style,
           onClick: function onClick() {
             return _onClick(check);
           }
@@ -1214,7 +1205,7 @@ function AIOBTNrender(actions) {
         }, check.text));
       })));
     },
-    searchBox: function searchBox(searchValue, _onChange2) {
+    searchBox: function searchBox(searchValue, _onChange) {
       var _actions$getProps7 = actions.getProps(),
           search = _actions$getProps7.search,
           placeHolder = _actions$getProps7.placeHolder;
@@ -1228,7 +1219,7 @@ function AIOBTNrender(actions) {
       }, /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-search-icon' + (searchValue ? ' aio-button-search-icon-filled' : ''),
         onClick: function onClick() {
-          _onChange2({
+          _onChange({
             searchValue: ''
           });
         }
@@ -1237,7 +1228,7 @@ function AIOBTNrender(actions) {
         value: searchValue,
         placeholder: placeHolder,
         onChange: function onChange(e) {
-          return _onChange2({
+          return _onChange({
             searchValue: e.target.value
           });
         }
@@ -1381,7 +1372,8 @@ function AIOBTNrender(actions) {
         },
         title: '',
         dataindex: index,
-        tabIndex: 0
+        tabIndex: 0,
+        key: index
       };
 
       if (onSwap) {
@@ -1400,9 +1392,7 @@ function AIOBTNrender(actions) {
         props.draggable = true;
       }
 
-      return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
-        key: index
-      }, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
+      return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
       }, item.splitter), /*#__PURE__*/_react.default.createElement("div", props, $$.checkIcon(item), item._before, Text, item._after));
     }

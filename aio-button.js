@@ -111,13 +111,12 @@ export default class AIOButton extends Component{
     return <RRadioButton {...this.props}/>
   }
   Render_checklist(){
-    let {icon = {},options,onChange} = this.props;
+    let {icon = {},options} = this.props;
     return (
       <RRadioButton 
         {...this.props} 
         icon={{round:false,...icon}}
-        value={undefined}
-        onChange={(value,index)=>onChange(!value,options[index],index)}
+        onChange={(value,index)=>options[index].onChange(!value)}
       />
     )
   }
@@ -137,7 +136,7 @@ class RRadioButton extends Component {
   }
   getOptionStyle(style = {}){
     var {optionStyle = {},optionWidth} = this.props;
-    return {width:optionWidth || 'fit-content',...optionStyle,...style}
+    return {width:optionWidth || '100%',...optionStyle,...style}
   }
   getColor(color){
     let Color = color || [];
@@ -178,7 +177,7 @@ class RRadioButton extends Component {
     
   }
   render(){
-    var {id,className,gap = 6,options,value = true,onChange,rtl,disabled} = this.props;
+    var {id,className,gap = 6,options,value = true,onChange,rtl} = this.props;
     return (
       <div 
         className={'r-radio-button' + (rtl?' rtl':'') + (className?' ' + className:'')} 
@@ -190,9 +189,7 @@ class RRadioButton extends Component {
             let active = option.value === value ?' active':'';
             return (
               <Fragment key={i}>
-                <div className={'r-radio-button-option' + active + (disabled?' disabled':'')} title={option.title} onClick={()=>{
-                  if(!disabled && !option.disabled){onChange(option.value,i)}
-                }} style={this.getOptionStyle(option.style)}>
+                <div className={'r-radio-button-option' + active} title={option.title} onClick={()=>onChange(option.value,i)} style={this.getOptionStyle(option.style)}>
                   {this.getIcon(active,i,option)}
                   <div className='r-radio-button-gap' style={{width:gap}}></div>  
                   <div className='r-radio-button-text' style={option.style}>
@@ -588,24 +585,20 @@ function AIOBTNrender(actions){
       )
     },
     multiselect(){
-      let {rtl,style = {},onClick,checks,tagStyle} = actions.getProps()
+      let {rtl,style = {},onClick,checks,showTags} = actions.getProps()
       return (
         <div className='aio-button-multiselect' style={{width:style.width}}>
           {$$.button()}
           {
-            checks.length !== 0 &&
+            showTags !== false && checks.length !== 0 &&
             <div className={'aio-button-checkeds' + (rtl?' rtl':'')}>
               {
-                checks.map((check,i)=>{
-                  let style = {...tagStyle,...check.style};
-                  return (
-                    <div key={i} className='aio-button-checked' style={style} onClick={()=>onClick(check)}>
-                      <div className='aio-button-checked-close'></div>
-                      <div className='aio-button-checked-text'>{check.text}</div>
-                    </div>
-                  )
-                })
-              }
+                checks.map((check,i)=>{return (
+                  <div key={i} className='aio-button-checked' onClick={()=>onClick(check)}>
+                    <div className='aio-button-checked-close'></div>
+                    <div className='aio-button-checked-text'>{check.text}</div>
+                  </div>
+                )})}
             </div>
           }
         </div>
@@ -684,7 +677,7 @@ function AIOBTNrender(actions){
       var Text = <div className='aio-button-text' title={item._title || item._text}>{item._text}</div>;  
       var props = {
         className:`aio-button-list-item${item._className?' ' + item._className:''}${item._disabled?' disabled':''}`,
-        style:item._style,onClick:(e)=>actions.itemClick(item,e),title:'',dataindex:index,tabIndex:0,
+        style:item._style,onClick:(e)=>actions.itemClick(item,e),title:'',dataindex:index,tabIndex:0,key:index,
         
       }
       if(onSwap){
@@ -694,7 +687,7 @@ function AIOBTNrender(actions){
         props.draggable = true;
       }
       return(
-        <Fragment key={index}>
+        <>
           {item.splitter &&<div className={'aio-button-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
           <div {...props}>
             {$$.checkIcon(item)}
@@ -702,7 +695,7 @@ function AIOBTNrender(actions){
             {Text}
             {item._after}
           </div>
-        </Fragment>
+        </>
       );
     }
   }
