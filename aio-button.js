@@ -107,16 +107,26 @@ export default class AIOButton extends Component{
     let {popOver} = this.props;
     return <AIOButtonBase caret={popOver?true:false} {...this.props}/>;
   }
-  Render_radio(){
+  Render_radio(){ 
     return <RRadioButton {...this.props}/>
   }
   Render_checklist(){
-    let {icon = {},options} = this.props;
+    let {icon = {},options,values = [],onChange = ()=>{}} = this.props;
     return (
       <RRadioButton 
         {...this.props} 
+        options={options.map((o,i)=>{
+          return {text:o.text,value:values.indexOf(o.value) !== -1} 
+        })}
         icon={{round:false,...icon}}
-        onChange={(value,index)=>options[index].onChange(!value)}
+        onChange={(value,index)=>{
+          if(value){ 
+            onChange(values.filter((o)=>o !== options[index].value)) 
+          }
+          else {
+            onChange(values.concat(options[index].value))
+          }
+        }}
       />
     )
   }

@@ -260,14 +260,31 @@ var AIOButton = /*#__PURE__*/function (_Component) {
       var _this$props5 = this.props,
           _this$props5$icon = _this$props5.icon,
           icon = _this$props5$icon === void 0 ? {} : _this$props5$icon,
-          options = _this$props5.options;
+          options = _this$props5.options,
+          _this$props5$values = _this$props5.values,
+          values = _this$props5$values === void 0 ? [] : _this$props5$values,
+          _this$props5$onChange = _this$props5.onChange,
+          _onChange = _this$props5$onChange === void 0 ? function () {} : _this$props5$onChange;
+
       return /*#__PURE__*/_react.default.createElement(RRadioButton, _extends({}, this.props, {
+        options: options.map(function (o, i) {
+          return {
+            text: o.text,
+            value: values.indexOf(o.value) !== -1
+          };
+        }),
         icon: {
           round: false,
           ...icon
         },
         onChange: function onChange(value, index) {
-          return options[index].onChange(!value);
+          if (value) {
+            _onChange(values.filter(function (o) {
+              return o !== options[index].value;
+            }));
+          } else {
+            _onChange(values.concat(options[index].value));
+          }
         }
       }));
     }
@@ -1205,7 +1222,7 @@ function AIOBTNrender(actions) {
         }, check.text));
       })));
     },
-    searchBox: function searchBox(searchValue, _onChange) {
+    searchBox: function searchBox(searchValue, _onChange2) {
       var _actions$getProps7 = actions.getProps(),
           search = _actions$getProps7.search,
           placeHolder = _actions$getProps7.placeHolder;
@@ -1219,7 +1236,7 @@ function AIOBTNrender(actions) {
       }, /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-search-icon' + (searchValue ? ' aio-button-search-icon-filled' : ''),
         onClick: function onClick() {
-          _onChange({
+          _onChange2({
             searchValue: ''
           });
         }
@@ -1228,7 +1245,7 @@ function AIOBTNrender(actions) {
         value: searchValue,
         placeholder: placeHolder,
         onChange: function onChange(e) {
-          return _onChange({
+          return _onChange2({
             searchValue: e.target.value
           });
         }
