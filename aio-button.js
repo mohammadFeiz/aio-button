@@ -111,22 +111,14 @@ export default class AIOButton extends Component{
     return <RRadioButton {...this.props}/>
   }
   Render_checklist(){
-    let {icon = {},options,values = [],onChange = ()=>{}} = this.props;
+    let {icon = {},value = [],onChange = ()=>{}} = this.props;
     return (
       <RRadioButton 
         {...this.props} 
-        options={options.map((o,i)=>{
-          return {text:o.text,value:values.indexOf(o.value) !== -1} 
-        })}
+        options={value}
+        value={true}
         icon={{round:false,...icon}}
-        onChange={(value,index)=>{
-          if(value){ 
-            onChange(values.filter((o)=>o !== options[index].value)) 
-          }
-          else {
-            onChange(values.concat(options[index].value))
-          }
-        }}
+        onChange={(val,index)=>onChange(!val,index)}
       />
     )
   }
