@@ -260,14 +260,15 @@ var AIOButton = /*#__PURE__*/function (_Component) {
       var _this$props5 = this.props,
           _this$props5$icon = _this$props5.icon,
           icon = _this$props5$icon === void 0 ? {} : _this$props5$icon,
-          _this$props5$value = _this$props5.value,
-          value = _this$props5$value === void 0 ? [] : _this$props5$value,
+          _this$props5$options = _this$props5.options,
+          options = _this$props5$options === void 0 ? [] : _this$props5$options,
           _this$props5$onChange = _this$props5.onChange,
-          _onChange = _this$props5$onChange === void 0 ? function () {} : _this$props5$onChange;
+          _onChange = _this$props5$onChange === void 0 ? function () {} : _this$props5$onChange,
+          value = _this$props5.value;
 
       return /*#__PURE__*/_react.default.createElement(RRadioButton, _extends({}, this.props, {
-        options: value,
-        value: true,
+        options: options,
+        value: value,
         icon: {
           round: false,
           ...icon
