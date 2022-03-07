@@ -274,7 +274,7 @@ var AIOButton = /*#__PURE__*/function (_Component) {
           ...icon
         },
         onChange: function onChange(val, index) {
-          return _onChange(!val, index);
+          return _onChange(val, index);
         }
       }));
     }
@@ -451,20 +451,27 @@ var RRadioButton = /*#__PURE__*/function (_Component2) {
           _this$props8$value = _this$props8.value,
           value = _this$props8$value === void 0 ? true : _this$props8$value,
           onChange = _this$props8.onChange,
-          rtl = _this$props8.rtl;
+          rtl = _this$props8.rtl,
+          _this$props8$disabled = _this$props8.disabled,
+          disabled = _this$props8$disabled === void 0 ? false : _this$props8$disabled;
       return /*#__PURE__*/_react.default.createElement("div", {
         className: 'r-radio-button' + (rtl ? ' rtl' : '') + (className ? ' ' + className : ''),
         style: this.getStyle(),
         id: id
       }, options.map(function (option, i) {
         var active = option.value === value ? ' active' : '';
+        var disabledClass = disabled ? ' disabled' : '';
         return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
           key: i
         }, /*#__PURE__*/_react.default.createElement("div", {
-          className: 'r-radio-button-option' + active,
+          className: 'r-radio-button-option' + active + disabledClass,
           title: option.title,
           onClick: function onClick() {
-            return onChange(option.value, i);
+            if (disabled) {
+              return;
+            }
+
+            onChange(option.value, i);
           },
           style: _this2.getOptionStyle(option.style)
         }, _this2.getIcon(active, i, option), /*#__PURE__*/_react.default.createElement("div", {

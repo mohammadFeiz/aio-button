@@ -118,7 +118,7 @@ export default class AIOButton extends Component{
         options={options}
         value={value}
         icon={{round:false,...icon}}
-        onChange={(val,index)=>onChange(!val,index)}
+        onChange={(val,index)=>onChange(val,index)}
       />
     )
   }
@@ -179,7 +179,7 @@ class RRadioButton extends Component {
     
   }
   render(){
-    var {id,className,gap = 6,options,value = true,onChange,rtl} = this.props;
+    var {id,className,gap = 6,options,value = true,onChange,rtl,disabled = false} = this.props;
     return (
       <div 
         className={'r-radio-button' + (rtl?' rtl':'') + (className?' ' + className:'')} 
@@ -189,9 +189,13 @@ class RRadioButton extends Component {
         {
           options.map((option,i)=>{
             let active = option.value === value ?' active':'';
+            let disabledClass = disabled?' disabled':'';
             return (
               <Fragment key={i}>
-                <div className={'r-radio-button-option' + active} title={option.title} onClick={()=>onChange(option.value,i)} style={this.getOptionStyle(option.style)}>
+                <div className={'r-radio-button-option' + active + disabledClass} title={option.title} 
+                  onClick={()=>{if(disabled){return} onChange(option.value,i)}} 
+                  style={this.getOptionStyle(option.style)}
+                >
                   {this.getIcon(active,i,option)}
                   <div className='r-radio-button-gap' style={{width:gap}}></div>  
                   <div className='r-radio-button-text' style={option.style}>
