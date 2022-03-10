@@ -358,15 +358,8 @@ var RRadioButton = /*#__PURE__*/function (_Component2) {
           round = _ref2$round === void 0 ? true : _ref2$round,
           _ref2$size = _ref2.size,
           size = _ref2$size === void 0 ? [] : _ref2$size;
-
-      var _size = _slicedToArray(size, 3),
-          _size$ = _size[0],
-          outer = _size$ === void 0 ? 16 : _size$,
-          _size$2 = _size[1],
-          inner = _size$2 === void 0 ? 12 : _size$2,
-          _size$3 = _size[2],
-          stroke = _size$3 === void 0 ? 2 : _size$3;
-
+      var outer = size[0] === undefined ? 16 : size[0];
+      var stroke = size[2] === undefined ? 2 : size[2];
       var style = {
         color: color[0],
         width: outer,
@@ -387,15 +380,7 @@ var RRadioButton = /*#__PURE__*/function (_Component2) {
           round = _ref3$round === void 0 ? true : _ref3$round,
           _ref3$size = _ref3.size,
           size = _ref3$size === void 0 ? [] : _ref3$size;
-
-      var _size2 = _slicedToArray(size, 3),
-          _size2$ = _size2[0],
-          outer = _size2$ === void 0 ? 16 : _size2$,
-          _size2$2 = _size2[1],
-          inner = _size2$2 === void 0 ? 12 : _size2$2,
-          _size2$3 = _size2[2],
-          stroke = _size2$3 === void 0 ? 2 : _size2$3;
-
+      var inner = size[1] === undefined ? 12 : size[1];
       var style = {
         background: color[1],
         width: inner,
@@ -1386,8 +1371,7 @@ function AIOBTNrender(actions) {
         },
         title: '',
         dataindex: index,
-        tabIndex: 0,
-        key: index
+        tabIndex: 0
       };
 
       if (onSwap) {
@@ -1406,7 +1390,9 @@ function AIOBTNrender(actions) {
         props.draggable = true;
       }
 
-      return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
+      return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
+        key: index
+      }, item.splitter && /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
       }, item.splitter), /*#__PURE__*/_react.default.createElement("div", props, $$.checkIcon(item), item._before, Text, item._after));
     }

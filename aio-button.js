@@ -147,13 +147,14 @@ class RRadioButton extends Component {
     return [outerColor,innerColor]
   }
   getOuterStyle(color,{round = true,size = []}){
-    let [outer = 16,inner = 12,stroke = 2] = size;
+    let outer = size[0] === undefined?16:size[0];
+    let stroke = size[2] === undefined?2:size[2];
     var style = {color:color[0],width:outer,height:outer,border:`${stroke}px solid`}
     if(round === false){style.borderRadius = 0;}
     return style;
   }
   getInnerIconStyle(color,{round = true,size = []}){
-    let [outer = 16,inner = 12,stroke = 2] = size;
+    let inner = size[1] === undefined?12:size[1];
     let style = {background:color[1],width:inner,height:inner}
     if(round === false){style.borderRadius = 0;}
     return style;
@@ -683,7 +684,7 @@ function AIOBTNrender(actions){
       var Text = <div className='aio-button-text' title={item._title || item._text}>{item._text}</div>;  
       var props = {
         className:`aio-button-list-item${item._className?' ' + item._className:''}${item._disabled?' disabled':''}`,
-        style:item._style,onClick:(e)=>actions.itemClick(item,e),title:'',dataindex:index,tabIndex:0,key:index,
+        style:item._style,onClick:(e)=>actions.itemClick(item,e),title:'',dataindex:index,tabIndex:0,
         
       }
       if(onSwap){
@@ -693,7 +694,7 @@ function AIOBTNrender(actions){
         props.draggable = true;
       }
       return(
-        <>
+        <Fragment key={index}>
           {item.splitter &&<div className={'aio-button-splitter ' + (rtl?'rtl':'ltr')}>{item.splitter}</div>}
           <div {...props}>
             {$$.checkIcon(item)}
@@ -701,7 +702,7 @@ function AIOBTNrender(actions){
             {Text}
             {item._after}
           </div>
-        </>
+        </Fragment>
       );
     }
   }
