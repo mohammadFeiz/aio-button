@@ -1182,7 +1182,10 @@ function AIOBTNrender(actions) {
           _onClick = _actions$getProps6.onClick,
           checks = _actions$getProps6.checks,
           showTags = _actions$getProps6.showTags,
-          tagContainerStyle = _actions$getProps6.tagContainerStyle;
+          _actions$getProps6$ta = _actions$getProps6.tagContainerStyle,
+          tagContainerStyle = _actions$getProps6$ta === void 0 ? {} : _actions$getProps6$ta,
+          _actions$getProps6$ta2 = _actions$getProps6.tagStyle,
+          tagStyle = _actions$getProps6$ta2 === void 0 ? {} : _actions$getProps6$ta2;
 
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-multiselect",
@@ -1199,7 +1202,9 @@ function AIOBTNrender(actions) {
           onClick: function onClick() {
             return _onClick(check);
           },
-          style: check.style
+          style: { ...check.style,
+            ...tagStyle
+          }
         }, /*#__PURE__*/_react.default.createElement("div", {
           className: "aio-button-checked-close"
         }), /*#__PURE__*/_react.default.createElement("div", {

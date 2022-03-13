@@ -592,7 +592,7 @@ function AIOBTNrender(actions){
       )
     },
     multiselect(){
-      let {rtl,style = {},onClick,checks,showTags,tagContainerStyle} = actions.getProps()
+      let {rtl,style = {},onClick,checks,showTags,tagContainerStyle = {},tagStyle = {}} = actions.getProps()
       return (
         <div className='aio-button-multiselect' style={{width:style.width}}>
           {$$.button()}
@@ -601,7 +601,7 @@ function AIOBTNrender(actions){
             <div className={'aio-button-checkeds' + (rtl?' rtl':'')} style={tagContainerStyle}>
               {
                 checks.map((check,i)=>{return (
-                  <div key={i} className='aio-button-checked' onClick={()=>onClick(check)} style={check.style}>
+                  <div key={i} className='aio-button-checked' onClick={()=>onClick(check)} style={{...check.style,...tagStyle}}>
                     <div className='aio-button-checked-close'></div>
                     <div className='aio-button-checked-text'>{check.text}</div>
                   </div>
