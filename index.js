@@ -1181,7 +1181,8 @@ function AIOBTNrender(actions) {
           style = _actions$getProps6$st === void 0 ? {} : _actions$getProps6$st,
           _onClick = _actions$getProps6.onClick,
           checks = _actions$getProps6.checks,
-          showTags = _actions$getProps6.showTags;
+          showTags = _actions$getProps6.showTags,
+          tagContainerStyle = _actions$getProps6.tagContainerStyle;
 
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-multiselect",
@@ -1189,14 +1190,16 @@ function AIOBTNrender(actions) {
           width: style.width
         }
       }, $$.button(), showTags !== false && checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
-        className: 'aio-button-checkeds' + (rtl ? ' rtl' : '')
+        className: 'aio-button-checkeds' + (rtl ? ' rtl' : ''),
+        style: tagContainerStyle
       }, checks.map(function (check, i) {
         return /*#__PURE__*/_react.default.createElement("div", {
           key: i,
           className: "aio-button-checked",
           onClick: function onClick() {
             return _onClick(check);
-          }
+          },
+          style: check.style
         }, /*#__PURE__*/_react.default.createElement("div", {
           className: "aio-button-checked-close"
         }), /*#__PURE__*/_react.default.createElement("div", {
