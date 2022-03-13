@@ -274,7 +274,7 @@ a.aio-button-list-item{
 .aio-button-multiselect .aio-button{
   width:100% !important;
 }
-.aio-button-checkeds{
+.aio-button-tags{
   top:100%;
   width:100%;
   left:0;
@@ -286,17 +286,16 @@ a.aio-button-list-item{
   overflow:hidden;
   cursor: auto;
 }
-.aio-button-checkeds.rtl{
+.aio-button-tags.rtl{
   direction:rtl;
 }
-.aio-button-checked{
+.aio-button-tag{
   border-radius:36px;
   color:#fff;
   width:fit-content;
   display: flex;
   align-items: center;
   margin:2px;
-  padding:0px 6px;
   overflow:hidden;
   white-space: nowrap;
   max-width:100%;
@@ -304,41 +303,18 @@ a.aio-button-list-item{
   background:dodgerblue;
   font-size:12px;
 }
-.aio-button-checked-close{
-  width:16px;
+.aio-button-tag-icon{
+  width:20px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
   height:16px;
   color:inherit;
   position: relative;
 }
-.aio-button-checked-text{
+.aio-button-tag-text{
   flex:1;
   overflow:hidden;
-}
-.aio-button-checked-close:before{
-  position:absolute;
-  content:'';
-  width:0px;
-  border:2px solid;
-  border-width:0px 0px 0px 2px;
-  height:12px;
-  top:2px;
-  right:7px;
-  border-radius:0;
-  transform:rotate(-45deg);
-  color:inherit;
-
-}
-.aio-button-checked-close:after{
-  position:absolute;
-  content:'';
-  width:0px;
-  border:2px solid;
-  border-width:0px 2px 0px 0px;
-  height:12px;
-  top:2px;
-  right:7px;
-  border-radius:0;
-  transform:rotate(45deg);
 }
 .r-radio-button{
 display:flex;

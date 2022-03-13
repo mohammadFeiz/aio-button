@@ -1,4 +1,6 @@
 import React,{Component,createRef,Fragment} from 'react';
+import {Icon} from '@mdi/react';
+import {mdiClose,mdiCircleMedium} from '@mdi/js';
 import $ from 'jquery'
 import './index.css';
 export default class AIOButton extends Component{
@@ -442,7 +444,7 @@ function AIOBTNFN(getProps,getState,setState){
       return $$.items.map((item, i)=>$$.render.listItem(item,i))
     },
     onClick(e){
-      if($(e.target).parents('.aio-button-checkeds').length !== 0){return;}
+      if($(e.target).parents('.aio-button-tags').length !== 0){return;}
       var {items,popOver,onClick = ()=>{}} = getProps();
       if(items || popOver){$$.toggle(true);}
       else{onClick(getProps());}
@@ -598,12 +600,17 @@ function AIOBTNrender(actions){
           {$$.button()}
           {
             showTags !== false && checks.length !== 0 &&
-            <div className={'aio-button-checkeds' + (rtl?' rtl':'')} style={tagContainerStyle}>
+            <div className={'aio-button-tags' + (rtl?' rtl':'')} style={tagContainerStyle}>
               {
-                checks.map((check,i)=>{return (
-                  <div key={i} className='aio-button-checked' onClick={()=>onClick(check)} style={{...check.style,...tagStyle}}>
-                    <div className='aio-button-checked-close'></div>
-                    <div className='aio-button-checked-text'>{check.text}</div>
+                checks.map((check,i)=>{
+                  let {before = <Icon path={mdiCircleMedium} size={0.6}/>} = check;
+                  return (
+                  <div key={i} className='aio-button-tag' onClick={()=>onClick(check)} style={{...check.style,...tagStyle}}>
+                    <div className='aio-button-tag-icon'>{before}</div>
+                    <div className='aio-button-tag-text'>{check.text}</div>
+                    <div className='aio-button-tag-icon'>
+                      <Icon path={mdiClose} size={0.6}/>
+                    </div>
                   </div>
                 )})}
             </div>

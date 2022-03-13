@@ -9,6 +9,10 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _react2 = require("@mdi/react");
+
+var _js = require("@mdi/js");
+
 var _jquery = _interopRequireDefault(require("jquery"));
 
 require("./index.css");
@@ -887,7 +891,7 @@ function AIOBTNFN(_getProps10, getState, setState) {
       });
     },
     onClick: function onClick(e) {
-      if ((0, _jquery.default)(e.target).parents('.aio-button-checkeds').length !== 0) {
+      if ((0, _jquery.default)(e.target).parents('.aio-button-tags').length !== 0) {
         return;
       }
 
@@ -1193,12 +1197,17 @@ function AIOBTNrender(actions) {
           width: style.width
         }
       }, $$.button(), showTags !== false && checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
-        className: 'aio-button-checkeds' + (rtl ? ' rtl' : ''),
+        className: 'aio-button-tags' + (rtl ? ' rtl' : ''),
         style: tagContainerStyle
       }, checks.map(function (check, i) {
+        var _check$before = check.before,
+            before = _check$before === void 0 ? /*#__PURE__*/_react.default.createElement(_react2.Icon, {
+          path: _js.mdiCircleMedium,
+          size: 0.6
+        }) : _check$before;
         return /*#__PURE__*/_react.default.createElement("div", {
           key: i,
-          className: "aio-button-checked",
+          className: "aio-button-tag",
           onClick: function onClick() {
             return _onClick(check);
           },
@@ -1206,10 +1215,15 @@ function AIOBTNrender(actions) {
             ...tagStyle
           }
         }, /*#__PURE__*/_react.default.createElement("div", {
-          className: "aio-button-checked-close"
-        }), /*#__PURE__*/_react.default.createElement("div", {
-          className: "aio-button-checked-text"
-        }, check.text));
+          className: "aio-button-tag-icon"
+        }, before), /*#__PURE__*/_react.default.createElement("div", {
+          className: "aio-button-tag-text"
+        }, check.text), /*#__PURE__*/_react.default.createElement("div", {
+          className: "aio-button-tag-icon"
+        }, /*#__PURE__*/_react.default.createElement(_react2.Icon, {
+          path: _js.mdiClose,
+          size: 0.6
+        })));
       })));
     },
     searchBox: function searchBox(searchValue, _onChange2) {
