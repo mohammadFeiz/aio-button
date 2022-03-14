@@ -14,9 +14,10 @@ export default class AIOButton extends Component{
     }
     else {console.error('values must be array or object');}
     let Options = options.map((o)=>{
-      o.checked = Values.indexOf(o.value) !== -1;
-      if(o.checked){checks.push(o)}      
-      return {...o,text:editOptionText(o.text)}
+      let a = {...o};
+      a.checked = Values.indexOf(a.value) !== -1;
+      if(a.checked){checks.push(a)}      
+      return {...a,text:editOptionText(a.text)}
     })
     if(selectAll){
       let text = editOptionText(options.length === Values.length?'Remove All':'Select All');

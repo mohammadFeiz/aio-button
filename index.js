@@ -102,14 +102,16 @@ var AIOButton = /*#__PURE__*/function (_Component) {
       }
 
       var Options = options.map(function (o) {
-        o.checked = Values.indexOf(o.value) !== -1;
+        var a = { ...o
+        };
+        a.checked = Values.indexOf(a.value) !== -1;
 
-        if (o.checked) {
-          checks.push(o);
+        if (a.checked) {
+          checks.push(a);
         }
 
-        return { ...o,
-          text: editOptionText(o.text)
+        return { ...a,
+          text: editOptionText(a.text)
         };
       });
 
