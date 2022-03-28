@@ -149,9 +149,8 @@ a.aio-button-list-item{
   position:relative;
   display:flex;
   flex-direction: column;
-  border : 1px solid #ddd;
   background : #fff;
-  box-shadow : 4px 4px 8px 0px rgba(0,0,0,.2);
+  box-shadow : 3px 3px 8px 0px rgba(0,0,0,.2);
   user-select:none;
   -webkit-user-select:none;
 }

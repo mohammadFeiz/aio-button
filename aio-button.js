@@ -568,10 +568,10 @@ function AIOBTNrender(actions){
       if(platform === 'jquery'){return `<div style='flex:1;'></div>${caret}`}
     },
     after(platform = 'react'){
-      let {after} = actions.getProps();
+      let {after,gap} = actions.getProps();
       if(after === undefined){return ''}
       if(platform === 'react'){
-        return (<><div style={{flex:1}}></div>{after}</>)
+        return (<><div style={{flex:1,minWidth:gap}}></div>{after}</>)
       }
       if(platform === 'jquery'){
         return `<div style='flex:1;'></div>${after}`
@@ -588,10 +588,16 @@ function AIOBTNrender(actions){
       }
     },
     button(){
-      let {before,text} = actions.getProps()
+      let {before,text,gap} = actions.getProps()
       let config = actions.getButtonConfig();
+      let Before = '';
+      if(before){
+        if(gap){Before = <>{before}<div style={{width:gap}}></div></>}
+        else {Before = before}
+      }
+
       return (
-        <button {...config}>{before} {text} {$$.caret('react')} {$$.after('react')} {$$.badge('react')}</button>
+        <button {...config}>{Before} {text} {$$.caret('react')} {$$.after('react')} {$$.badge('react')}</button>
       )
     },
     multiselect(){

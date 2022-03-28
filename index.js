@@ -1,7 +1,5 @@
 "use strict";
 
-function _instanceof(left, right) { if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) { return !!right[Symbol.hasInstance](left); } else { return left instanceof right; } }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -19,554 +17,429 @@ require("./index.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+class AIOButton extends _react.Component {
+  getMultiselectDetails() {
+    let {
+      options = [],
+      values,
+      selectAll,
+      editOptionText = value => value
+    } = this.props;
+    let type,
+        Values = [],
+        checks = [];
 
-function _classCallCheck(instance, Constructor) { if (!_instanceof(instance, Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    if (Array.isArray(values)) {
+      type = 'array';
+      Values = values;
+    } else if (typeof values === 'object') {
+      type = 'object';
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+      for (let prop in values) {
+        if (values[prop] === true) {
+          Values.push(prop);
+        }
+      }
+    } else {
+      console.error('values must be array or object');
+    }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+    let Options = options.map(o => {
+      let a = { ...o
+      };
+      a.checked = Values.indexOf(a.value) !== -1;
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+      if (a.checked) {
+        checks.push(a);
+      }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+      return { ...a,
+        text: editOptionText(a.text)
+      };
+    });
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+    if (selectAll) {
+      let text = editOptionText(options.length === Values.length ? 'Remove All' : 'Select All');
+      Options.splice(0, 0, {
+        text,
+        value: 'multiselect_selectAll',
+        close: false
+      });
+    }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-var AIOButton = /*#__PURE__*/function (_Component) {
-  _inherits(AIOButton, _Component);
-
-  var _super = _createSuper(AIOButton);
-
-  function AIOButton() {
-    _classCallCheck(this, AIOButton);
-
-    return _super.apply(this, arguments);
+    return {
+      type,
+      options: Options,
+      checks,
+      values: Values
+    };
   }
 
-  _createClass(AIOButton, [{
-    key: "getMultiselectDetails",
-    value: function getMultiselectDetails() {
-      var _this$props = this.props,
-          _this$props$options = _this$props.options,
-          options = _this$props$options === void 0 ? [] : _this$props$options,
-          values = _this$props.values,
-          selectAll = _this$props.selectAll,
-          _this$props$editOptio = _this$props.editOptionText,
-          editOptionText = _this$props$editOptio === void 0 ? function (value) {
-        return value;
-      } : _this$props$editOptio;
-      var type,
-          Values = [],
-          checks = [];
+  Render_multiselect() {
+    let details = this.getMultiselectDetails();
+    let {
+      options = [],
+      onChange,
+      values
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
+      popupWidth: 'fit',
+      caret: true
+    }, this.props, {
+      type: 'multiselect',
+      popOver: false,
+      items: details.options,
+      checks: details.checks,
+      onClick: ({
+        value
+      }) => {
+        let list, type;
 
-      if (Array.isArray(values)) {
-        type = 'array';
-        Values = values;
-      } else if (_typeof(values) === 'object') {
-        type = 'object';
-
-        for (var prop in values) {
-          if (values[prop] === true) {
-            Values.push(prop);
-          }
-        }
-      } else {
-        console.error('values must be array or object');
-      }
-
-      var Options = options.map(function (o) {
-        var a = { ...o
-        };
-        a.checked = Values.indexOf(a.value) !== -1;
-
-        if (a.checked) {
-          checks.push(a);
-        }
-
-        return { ...a,
-          text: editOptionText(a.text)
-        };
-      });
-
-      if (selectAll) {
-        var text = editOptionText(options.length === Values.length ? 'Remove All' : 'Select All');
-        Options.splice(0, 0, {
-          text: text,
-          value: 'multiselect_selectAll',
-          close: false
-        });
-      }
-
-      return {
-        type: type,
-        options: Options,
-        checks: checks,
-        values: Values
-      };
-    }
-  }, {
-    key: "Render_multiselect",
-    value: function Render_multiselect() {
-      var details = this.getMultiselectDetails();
-      var _this$props2 = this.props,
-          _this$props2$options = _this$props2.options,
-          options = _this$props2$options === void 0 ? [] : _this$props2$options,
-          onChange = _this$props2.onChange,
-          values = _this$props2.values;
-      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
-        popupWidth: 'fit',
-        caret: true
-      }, this.props, {
-        type: 'multiselect',
-        popOver: false,
-        items: details.options,
-        checks: details.checks,
-        onClick: function onClick(_ref) {
-          var value = _ref.value;
-          var list, type;
-
-          if (value === 'multiselect_selectAll') {
-            list = options.length === details.values.length ? [] : options.map(function (o) {
-              return o.value;
-            });
-          } else {
-            var index = details.values.indexOf(value);
-
-            if (index !== -1) {
-              list = details.values.filter(function (o, i) {
-                return i !== index;
-              });
-              type = 'remove';
-            } else {
-              list = details.values.concat(value);
-              type = 'add';
-            }
-          }
-
-          if (details.type === 'array') {
-            onChange(list, value, type);
-          } else {
-            var obj = {};
-
-            for (var prop in values) {
-              obj[prop] = list.indexOf(prop) !== -1;
-            }
-
-            onChange(obj);
-          }
-        }
-      }));
-    }
-  }, {
-    key: "getSelectText",
-    value: function getSelectText() {
-      var _this$props3 = this.props,
-          options = _this$props3.options,
-          value = _this$props3.value,
-          text = _this$props3.text;
-
-      if (text === false) {
-        return '';
-      }
-
-      if (text !== undefined) {
-        return text;
-      }
-
-      if (this.text && this.value === value) {
-        return this.text;
-      } else {
-        var option = options.filter(function (o) {
-          return o.value === value;
-        })[0];
-
-        if (!option) {
-          if (!options[0]) {
-            this.text = '';
-            this.value = undefined;
-            return '';
-          } else {
-            this.text = options[0].text;
-            this.value = options[0].value;
-            return options[0].text;
-          }
+        if (value === 'multiselect_selectAll') {
+          list = options.length === details.values.length ? [] : options.map(o => o.value);
         } else {
-          this.text = option.text;
-          this.value = option.value;
-          return option.text;
+          let index = details.values.indexOf(value);
+
+          if (index !== -1) {
+            list = details.values.filter((o, i) => i !== index);
+            type = 'remove';
+          } else {
+            list = details.values.concat(value);
+            type = 'add';
+          }
+        }
+
+        if (details.type === 'array') {
+          onChange(list, value, type);
+        } else {
+          let obj = {};
+
+          for (let prop in values) {
+            obj[prop] = list.indexOf(prop) !== -1;
+          }
+
+          onChange(obj);
         }
       }
-    }
-  }, {
-    key: "Render_select",
-    value: function Render_select() {
-      var _this = this;
+    }));
+  }
 
-      var _this$props4 = this.props,
-          _this$props4$options = _this$props4.options,
-          options = _this$props4$options === void 0 ? [] : _this$props4$options,
-          _this$props4$onChange = _this$props4.onChange,
-          onChange = _this$props4$onChange === void 0 ? function () {} : _this$props4$onChange;
-      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
-        text: this.getSelectText(),
-        caret: true
-      }, this.props, {
-        popOver: false,
-        items: options,
-        onClick: function onClick(obj) {
-          _this.text = obj.text;
-          _this.value = obj.value;
-          onChange(obj.value, obj);
+  getSelectText() {
+    let {
+      options,
+      value,
+      text
+    } = this.props;
+
+    if (text === false) {
+      return '';
+    }
+
+    if (text !== undefined) {
+      return text;
+    }
+
+    if (this.text && this.value === value) {
+      return this.text;
+    } else {
+      let option = options.filter(o => o.value === value)[0];
+
+      if (!option) {
+        if (!options[0]) {
+          this.text = '';
+          this.value = undefined;
+          return '';
+        } else {
+          this.text = options[0].text;
+          this.value = options[0].value;
+          return options[0].text;
         }
-      }));
+      } else {
+        this.text = option.text;
+        this.value = option.value;
+        return option.text;
+      }
     }
-  }, {
-    key: "Render_button",
-    value: function Render_button() {
-      var popOver = this.props.popOver;
-      return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
-        caret: popOver ? true : false
-      }, this.props));
-    }
-  }, {
-    key: "Render_radio",
-    value: function Render_radio() {
-      return /*#__PURE__*/_react.default.createElement(RRadioButton, this.props);
-    }
-  }, {
-    key: "Render_checklist",
-    value: function Render_checklist() {
-      var _this$props5 = this.props,
-          _this$props5$icon = _this$props5.icon,
-          icon = _this$props5$icon === void 0 ? {} : _this$props5$icon,
-          _this$props5$options = _this$props5.options,
-          options = _this$props5$options === void 0 ? [] : _this$props5$options,
-          _this$props5$onChange = _this$props5.onChange,
-          _onChange = _this$props5$onChange === void 0 ? function () {} : _this$props5$onChange,
-          value = _this$props5.value;
+  }
 
-      return /*#__PURE__*/_react.default.createElement(RRadioButton, _extends({}, this.props, {
-        options: options,
-        value: value,
-        icon: {
-          round: false,
-          ...icon
-        },
-        onChange: function onChange(val, index) {
-          return _onChange(val, index);
-        }
-      }));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props$type = this.props.type,
-          type = _this$props$type === void 0 ? 'button' : _this$props$type;
-      return this["Render_".concat(type)]();
-    }
-  }]);
+  Render_select() {
+    let {
+      options = [],
+      onChange = () => {}
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
+      text: this.getSelectText(),
+      caret: true
+    }, this.props, {
+      popOver: false,
+      items: options,
+      onClick: obj => {
+        this.text = obj.text;
+        this.value = obj.value;
+        onChange(obj.value, obj);
+      }
+    }));
+  }
 
-  return AIOButton;
-}(_react.Component);
+  Render_button() {
+    let {
+      popOver
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement(AIOButtonBase, _extends({
+      caret: popOver ? true : false
+    }, this.props));
+  }
+
+  Render_radio() {
+    return /*#__PURE__*/_react.default.createElement(RRadioButton, this.props);
+  }
+
+  Render_checklist() {
+    let {
+      icon = {},
+      options = [],
+      onChange = () => {},
+      value
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement(RRadioButton, _extends({}, this.props, {
+      options: options,
+      value: value,
+      icon: {
+        round: false,
+        ...icon
+      },
+      onChange: (val, index) => onChange(val, index)
+    }));
+  }
+
+  render() {
+    let {
+      type = 'button'
+    } = this.props;
+    return this[`Render_${type}`]();
+  }
+
+}
 
 exports.default = AIOButton;
 
-var RRadioButton = /*#__PURE__*/function (_Component2) {
-  _inherits(RRadioButton, _Component2);
+class RRadioButton extends _react.Component {
+  getStyle() {
+    var {
+      justify,
+      style = {}
+    } = this.props;
+    var Style = {};
 
-  var _super2 = _createSuper(RRadioButton);
+    if (justify) {
+      Style.justifyContent = 'center';
+    }
 
-  function RRadioButton() {
-    _classCallCheck(this, RRadioButton);
-
-    return _super2.apply(this, arguments);
+    return { ...Style,
+      ...style
+    };
   }
 
-  _createClass(RRadioButton, [{
-    key: "getStyle",
-    value: function getStyle() {
-      var _this$props6 = this.props,
-          justify = _this$props6.justify,
-          _this$props6$style = _this$props6.style,
-          style = _this$props6$style === void 0 ? {} : _this$props6$style;
-      var Style = {};
+  getOptionStyle(style = {}) {
+    var {
+      optionStyle = {},
+      optionWidth
+    } = this.props;
+    return {
+      width: optionWidth || '100%',
+      ...optionStyle,
+      ...style
+    };
+  }
 
-      if (justify) {
-        Style.justifyContent = 'center';
+  getColor(color) {
+    let Color = color || [];
+
+    if (!Array.isArray(Color)) {
+      Color = [Color];
+    }
+
+    let [outerColor, innerColor = outerColor] = Color;
+    return [outerColor, innerColor];
+  }
+
+  getOuterStyle(color, {
+    round = true,
+    size = []
+  }) {
+    let outer = size[0] === undefined ? 16 : size[0];
+    let stroke = size[2] === undefined ? 2 : size[2];
+    var style = {
+      color: color[0],
+      width: outer,
+      height: outer,
+      border: `${stroke}px solid`
+    };
+
+    if (round === false) {
+      style.borderRadius = 0;
+    }
+
+    return style;
+  }
+
+  getInnerIconStyle(color, {
+    round = true,
+    size = []
+  }) {
+    let inner = size[1] === undefined ? 12 : size[1];
+    let style = {
+      background: color[1],
+      width: inner,
+      height: inner
+    };
+
+    if (round === false) {
+      style.borderRadius = 0;
+    }
+
+    return style;
+  }
+
+  getIcon(active, i, option) {
+    let icon = option.icon || this.props.icon || {};
+    let color = this.getColor(icon.color);
+
+    if (active) {
+      if (icon.active) {
+        return icon.active;
       }
 
-      return { ...Style,
-        ...style
-      };
-    }
-  }, {
-    key: "getOptionStyle",
-    value: function getOptionStyle() {
-      var style = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var _this$props7 = this.props,
-          _this$props7$optionSt = _this$props7.optionStyle,
-          optionStyle = _this$props7$optionSt === void 0 ? {} : _this$props7$optionSt,
-          optionWidth = _this$props7.optionWidth;
-      return {
-        width: optionWidth || '100%',
-        ...optionStyle,
-        ...style
-      };
-    }
-  }, {
-    key: "getColor",
-    value: function getColor(color) {
-      var Color = color || [];
-
-      if (!Array.isArray(Color)) {
-        Color = [Color];
-      }
-
-      var _Color = Color,
-          _Color2 = _slicedToArray(_Color, 2),
-          outerColor = _Color2[0],
-          _Color2$ = _Color2[1],
-          innerColor = _Color2$ === void 0 ? outerColor : _Color2$;
-
-      return [outerColor, innerColor];
-    }
-  }, {
-    key: "getOuterStyle",
-    value: function getOuterStyle(color, _ref2) {
-      var _ref2$round = _ref2.round,
-          round = _ref2$round === void 0 ? true : _ref2$round,
-          _ref2$size = _ref2.size,
-          size = _ref2$size === void 0 ? [] : _ref2$size;
-      var outer = size[0] === undefined ? 16 : size[0];
-      var stroke = size[2] === undefined ? 2 : size[2];
-      var style = {
-        color: color[0],
-        width: outer,
-        height: outer,
-        border: "".concat(stroke, "px solid")
-      };
-
-      if (round === false) {
-        style.borderRadius = 0;
-      }
-
-      return style;
-    }
-  }, {
-    key: "getInnerIconStyle",
-    value: function getInnerIconStyle(color, _ref3) {
-      var _ref3$round = _ref3.round,
-          round = _ref3$round === void 0 ? true : _ref3$round,
-          _ref3$size = _ref3.size,
-          size = _ref3$size === void 0 ? [] : _ref3$size;
-      var inner = size[1] === undefined ? 12 : size[1];
-      var style = {
-        background: color[1],
-        width: inner,
-        height: inner
-      };
-
-      if (round === false) {
-        style.borderRadius = 0;
-      }
-
-      return style;
-    }
-  }, {
-    key: "getIcon",
-    value: function getIcon(active, i, option) {
-      var icon = option.icon || this.props.icon || {};
-      var color = this.getColor(icon.color);
-
-      if (active) {
-        if (icon.active) {
-          return icon.active;
-        }
-
-        return /*#__PURE__*/_react.default.createElement("div", {
-          className: 'r-radio-button-outer' + active,
-          style: this.getOuterStyle(color, icon)
-        }, /*#__PURE__*/_react.default.createElement("div", {
-          className: "r-radio-button-inner",
-          style: this.getInnerIconStyle(color, icon)
-        }));
-      } else {
-        if (icon.deactive) {
-          return icon.deactive;
-        }
-
-        return /*#__PURE__*/_react.default.createElement("div", {
-          className: 'r-radio-button-outer' + active,
-          style: this.getOuterStyle(color, icon)
-        });
-      }
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-
-      var _this$props8 = this.props,
-          id = _this$props8.id,
-          className = _this$props8.className,
-          _this$props8$gap = _this$props8.gap,
-          gap = _this$props8$gap === void 0 ? 6 : _this$props8$gap,
-          options = _this$props8.options,
-          _this$props8$value = _this$props8.value,
-          value = _this$props8$value === void 0 ? true : _this$props8$value,
-          onChange = _this$props8.onChange,
-          rtl = _this$props8.rtl,
-          _this$props8$disabled = _this$props8.disabled,
-          disabled = _this$props8$disabled === void 0 ? false : _this$props8$disabled;
       return /*#__PURE__*/_react.default.createElement("div", {
-        className: 'r-radio-button' + (rtl ? ' rtl' : '') + (className ? ' ' + className : ''),
-        style: this.getStyle(),
-        id: id
-      }, options.map(function (option, i) {
-        var active = option.value === value ? ' active' : '';
-        var disabledClass = disabled ? ' disabled' : '';
-        return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
-          key: i
-        }, /*#__PURE__*/_react.default.createElement("div", {
-          className: 'r-radio-button-option' + active + disabledClass,
-          title: option.title,
-          onClick: function onClick() {
-            if (disabled) {
-              return;
-            }
-
-            onChange(option.value, i);
-          },
-          style: _this2.getOptionStyle(option.style)
-        }, _this2.getIcon(active, i, option), /*#__PURE__*/_react.default.createElement("div", {
-          className: "r-radio-button-gap",
-          style: {
-            width: gap
-          }
-        }), /*#__PURE__*/_react.default.createElement("div", {
-          className: "r-radio-button-text",
-          style: option.style
-        }, /*#__PURE__*/_react.default.createElement("div", {
-          className: "r-radio-button-uptext",
-          style: option.style
-        }, option.text), /*#__PURE__*/_react.default.createElement("div", {
-          className: "r-radio-button-subtext",
-          style: option.style
-        }, option.subtext))));
+        className: 'r-radio-button-outer' + active,
+        style: this.getOuterStyle(color, icon)
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: "r-radio-button-inner",
+        style: this.getInnerIconStyle(color, icon)
       }));
+    } else {
+      if (icon.deactive) {
+        return icon.deactive;
+      }
+
+      return /*#__PURE__*/_react.default.createElement("div", {
+        className: 'r-radio-button-outer' + active,
+        style: this.getOuterStyle(color, icon)
+      });
     }
-  }]);
+  }
 
-  return RRadioButton;
-}(_react.Component);
+  render() {
+    var {
+      id,
+      className,
+      gap = 6,
+      options,
+      value = true,
+      onChange,
+      rtl,
+      disabled = false
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement("div", {
+      className: 'r-radio-button' + (rtl ? ' rtl' : '') + (className ? ' ' + className : ''),
+      style: this.getStyle(),
+      id: id
+    }, options.map((option, i) => {
+      let active = option.value === value ? ' active' : '';
+      let disabledClass = disabled ? ' disabled' : '';
+      return /*#__PURE__*/_react.default.createElement(_react.Fragment, {
+        key: i
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: 'r-radio-button-option' + active + disabledClass,
+        title: option.title,
+        onClick: () => {
+          if (disabled) {
+            return;
+          }
 
-var AIOButtonBase = /*#__PURE__*/function (_Component3) {
-  _inherits(AIOButtonBase, _Component3);
+          onChange(option.value, i);
+        },
+        style: this.getOptionStyle(option.style)
+      }, this.getIcon(active, i, option), /*#__PURE__*/_react.default.createElement("div", {
+        className: "r-radio-button-gap",
+        style: {
+          width: gap
+        }
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "r-radio-button-text",
+        style: option.style
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: "r-radio-button-uptext",
+        style: option.style
+      }, option.text), /*#__PURE__*/_react.default.createElement("div", {
+        className: "r-radio-button-subtext",
+        style: option.style
+      }, option.subtext))));
+    }));
+  }
 
-  var _super3 = _createSuper(AIOButtonBase);
+}
 
-  function AIOButtonBase(props) {
-    var _this3;
-
-    _classCallCheck(this, AIOButtonBase);
-
-    _this3 = _super3.call(this, props);
-    _this3.fn = new AIOBTNFN(function () {
-      return _this3.props;
-    }, function () {
-      return _this3.state;
-    }, function (obj) {
-      _this3.setState(obj);
+class AIOButtonBase extends _react.Component {
+  constructor(props) {
+    super(props);
+    this.fn = new AIOBTNFN(() => this.props, () => this.state, obj => {
+      this.setState(obj);
     });
-    _this3.state = {
-      open: _this3.props.open || false,
+    this.state = {
+      open: this.props.open || false,
       touch: 'ontouchstart' in document.documentElement
     };
-    return _this3;
   }
 
-  _createClass(AIOButtonBase, [{
-    key: "render",
-    value: function render() {
-      var open = this.state.open;
-      return this.fn.render.base(open);
-    }
-  }]);
+  render() {
+    let {
+      open
+    } = this.state;
+    return this.fn.render.base(open);
+  }
 
-  return AIOButtonBase;
-}(_react.Component);
+}
 
-var Popup = /*#__PURE__*/function (_Component4) {
-  _inherits(Popup, _Component4);
-
-  var _super4 = _createSuper(Popup);
-
-  function Popup(props) {
-    var _this4;
-
-    _classCallCheck(this, Popup);
-
-    _this4 = _super4.call(this, props);
-    _this4.dom = /*#__PURE__*/(0, _react.createRef)();
-    _this4.state = {
+class Popup extends _react.Component {
+  constructor(props) {
+    super(props);
+    this.dom = /*#__PURE__*/(0, _react.createRef)();
+    this.state = {
       searchValue: ''
     };
-    return _this4;
   }
 
-  _createClass(Popup, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var fn = this.props.fn;
-      fn.update((0, _jquery.default)(this.dom.current));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this5 = this;
+  componentDidMount() {
+    let {
+      fn
+    } = this.props;
+    fn.update((0, _jquery.default)(this.dom.current));
+  }
 
-      var fn = this.props.fn;
-      var searchValue = this.state.searchValue;
-      return fn.render.popup(searchValue, function (obj) {
-        return _this5.setState(obj);
-      }, this.dom);
-    }
-  }]);
+  render() {
+    var {
+      fn
+    } = this.props;
+    let {
+      searchValue
+    } = this.state;
+    return fn.render.popup(searchValue, obj => this.setState(obj), this.dom);
+  }
 
-  return Popup;
-}(_react.Component);
+}
 
-function AIOBTNFN(_getProps10, getState, setState) {
-  var $$ = {
+function AIOBTNFN(getProps, getState, setState) {
+  let $$ = {
     activeIndex: false,
-    getLimit: function getLimit(dom) {
+
+    getLimit(dom) {
       var offset = dom.offset();
       var left = offset.left - window.pageXOffset;
       var top = offset.top - window.pageYOffset;
@@ -575,23 +448,24 @@ function AIOBTNFN(_getProps10, getState, setState) {
       var right = left + width;
       var bottom = top + height;
       return {
-        left: left,
-        top: top,
-        right: right,
-        bottom: bottom,
-        width: width,
-        height: height
+        left,
+        top,
+        right,
+        bottom,
+        width,
+        height
       };
     },
-    update: function update(popup) {
-      var _getProps = _getProps10(),
-          rtl = _getProps.rtl,
-          openRelatedTo = _getProps.openRelatedTo,
-          animate = _getProps.animate,
-          dropdownType = _getProps.dropdownType,
-          type = _getProps.type,
-          popupWidth = _getProps.popupWidth;
 
+    update(popup) {
+      var {
+        rtl,
+        openRelatedTo,
+        animate,
+        dropdownType,
+        type,
+        popupWidth
+      } = getProps();
       var button = type === 'multiselect' ? popup.prev().find('.aio-button') : popup.prev();
       var parent = openRelatedTo ? popup.parents(openRelatedTo) : undefined;
       parent = Array.isArray(parent) && parent.length === 0 ? undefined : parent;
@@ -683,54 +557,35 @@ function AIOBTNFN(_getProps10, getState, setState) {
       popup.focus();
       (0, _jquery.default)('body').addClass('aio-button-open');
     },
-    getOptions: function getOptions(items, searchValue) {
-      var _getProps2 = _getProps10(),
-          _getProps2$getOptionT = _getProps2.getOptionText,
-          getOptionText = _getProps2$getOptionT === void 0 ? function () {} : _getProps2$getOptionT,
-          _getProps2$getOptionD = _getProps2.getOptionDisabled,
-          getOptionDisabled = _getProps2$getOptionD === void 0 ? function () {} : _getProps2$getOptionD,
-          _getProps2$getOptionB = _getProps2.getOptionBefore,
-          getOptionBefore = _getProps2$getOptionB === void 0 ? function () {} : _getProps2$getOptionB,
-          _getProps2$getOptionA = _getProps2.getOptionAfter,
-          getOptionAfter = _getProps2$getOptionA === void 0 ? function () {} : _getProps2$getOptionA,
-          _getProps2$getOptionC = _getProps2.getOptionChecked,
-          getOptionChecked = _getProps2$getOptionC === void 0 ? function () {} : _getProps2$getOptionC,
-          _getProps2$getOptionC2 = _getProps2.getOptionClassName,
-          getOptionClassName = _getProps2$getOptionC2 === void 0 ? function () {} : _getProps2$getOptionC2,
-          _getProps2$getOptionS = _getProps2.getOptionStyle,
-          getOptionStyle = _getProps2$getOptionS === void 0 ? function () {} : _getProps2$getOptionS,
-          _getProps2$getOptionI = _getProps2.getOptionId,
-          getOptionId = _getProps2$getOptionI === void 0 ? function () {} : _getProps2$getOptionI,
-          _getProps2$getOptionS2 = _getProps2.getOptionShow,
-          getOptionShow = _getProps2$getOptionS2 === void 0 ? function () {} : _getProps2$getOptionS2,
-          _getProps2$getOptionH = _getProps2.getOptionHref,
-          getOptionHref = _getProps2$getOptionH === void 0 ? function () {} : _getProps2$getOptionH,
-          _getProps2$getOptionT2 = _getProps2.getOptionTitle,
-          getOptionTitle = _getProps2$getOptionT2 === void 0 ? function () {} : _getProps2$getOptionT2;
 
-      return items.filter(function (item, i) {
-        var _item$text = item.text,
-            text = _item$text === void 0 ? getOptionText(item, i) : _item$text,
-            _item$disabled = item.disabled,
-            disabled = _item$disabled === void 0 ? getOptionDisabled(item, i) : _item$disabled,
-            _item$before = item.before,
-            before = _item$before === void 0 ? getOptionBefore(item, i) : _item$before,
-            _item$after = item.after,
-            after = _item$after === void 0 ? getOptionAfter(item, i) : _item$after,
-            _item$checked = item.checked,
-            checked = _item$checked === void 0 ? getOptionChecked(item, i) : _item$checked,
-            _item$className = item.className,
-            className = _item$className === void 0 ? getOptionClassName(item, i) : _item$className,
-            _item$style = item.style,
-            style = _item$style === void 0 ? getOptionStyle(item, i) : _item$style,
-            _item$id = item.id,
-            id = _item$id === void 0 ? getOptionId(item, i) : _item$id,
-            _item$show = item.show,
-            show = _item$show === void 0 ? getOptionShow(item, i) : _item$show,
-            _item$href = item.href,
-            href = _item$href === void 0 ? getOptionHref(item, i) : _item$href,
-            _item$title = item.title,
-            title = _item$title === void 0 ? getOptionTitle(item, i) : _item$title;
+    getOptions(items, searchValue) {
+      let {
+        getOptionText = () => {},
+        getOptionDisabled = () => {},
+        getOptionBefore = () => {},
+        getOptionAfter = () => {},
+        getOptionChecked = () => {},
+        getOptionClassName = () => {},
+        getOptionStyle = () => {},
+        getOptionId = () => {},
+        getOptionShow = () => {},
+        getOptionHref = () => {},
+        getOptionTitle = () => {}
+      } = getProps();
+      return items.filter((item, i) => {
+        let {
+          text = getOptionText(item, i),
+          disabled = getOptionDisabled(item, i),
+          before = getOptionBefore(item, i),
+          after = getOptionAfter(item, i),
+          checked = getOptionChecked(item, i),
+          className = getOptionClassName(item, i),
+          style = getOptionStyle(item, i),
+          id = getOptionId(item, i),
+          show = getOptionShow(item, i),
+          href = getOptionHref(item, i),
+          title = getOptionTitle(item, i)
+        } = item;
         item._text = text;
         item._index = i;
         item._disabled = disabled;
@@ -759,12 +614,13 @@ function AIOBTNFN(_getProps10, getState, setState) {
         return text.indexOf(searchValue) !== -1;
       });
     },
-    getPopupClassName: function getPopupClassName() {
-      var _getProps3 = _getProps10(),
-          popupClassName = _getProps3.popupClassName,
-          rtl = _getProps3.rtl;
 
-      var className = 'aio-button-popup-container';
+    getPopupClassName() {
+      let {
+        popupClassName,
+        rtl
+      } = getProps();
+      let className = 'aio-button-popup-container';
       className += rtl ? ' rtl' : ' ltr';
 
       if (popupClassName) {
@@ -773,16 +629,18 @@ function AIOBTNFN(_getProps10, getState, setState) {
 
       return className;
     },
-    toggle: function toggle(state, isBackdrop) {
-      var _getState = getState(),
-          open = _getState.open;
+
+    toggle(state, isBackdrop) {
+      let {
+        open
+      } = getState();
 
       if (state === undefined) {
         state = !open;
       }
 
       clearTimeout($$.timeOut);
-      $$.timeOut = setTimeout(function () {
+      $$.timeOut = setTimeout(() => {
         if (state === open) {
           return;
         }
@@ -797,12 +655,13 @@ function AIOBTNFN(_getProps10, getState, setState) {
           (0, _jquery.default)('body').removeClass('aio-button-open');
         }
 
-        var _getProps4 = _getProps10(),
-            onBackdropClick = _getProps4.onBackdropClick,
-            onToggle = _getProps4.onToggle;
+        var {
+          onBackdropClick,
+          onToggle
+        } = getProps();
 
         if (onBackdropClick && isBackdrop) {
-          onBackdropClick(_getProps10());
+          onBackdropClick(getProps());
         }
 
         if (onToggle) {
@@ -810,9 +669,11 @@ function AIOBTNFN(_getProps10, getState, setState) {
         }
       }, 100);
     },
-    itemClick: function itemClick(item, e) {
-      var _getProps5 = _getProps10(),
-          onClick = _getProps5.onClick;
+
+    itemClick(item, e) {
+      var {
+        onClick
+      } = getProps();
 
       if (item._disabled) {
         return;
@@ -828,7 +689,8 @@ function AIOBTNFN(_getProps10, getState, setState) {
         $$.toggle();
       }
     },
-    keyDown: function keyDown(e, dom) {
+
+    keyDown(e, dom) {
       if (e.keyCode === 40) {
         e.preventDefault();
         var items = dom.find('.aio-button-list-item');
@@ -838,7 +700,7 @@ function AIOBTNFN(_getProps10, getState, setState) {
           $$.activeIndex = 0;
           items.eq(0).addClass('active');
         } else {
-          var index = active.attr('dataindex');
+          let index = active.attr('dataindex');
           index++;
 
           if (index >= items.length) {
@@ -858,17 +720,16 @@ function AIOBTNFN(_getProps10, getState, setState) {
           $$.activeIndex = items.length - 1;
           items.eq(items.length - 1).addClass('active');
         } else {
-          var _index = active.attr('dataindex');
+          let index = active.attr('dataindex');
+          index--;
 
-          _index--;
-
-          if (_index < 0) {
-            _index = items.length - 1;
+          if (index < 0) {
+            index = items.length - 1;
           }
 
           items.removeClass('active');
-          $$.activeIndex = _index;
-          items.eq(_index).addClass('active').focus();
+          $$.activeIndex = index;
+          items.eq(index).addClass('active').focus();
         }
       } else if (e.keyCode === 13) {
         if ($$.activeIndex !== false) {
@@ -878,41 +739,44 @@ function AIOBTNFN(_getProps10, getState, setState) {
         $$.toggle();
       }
     },
-    getPopupContent: function getPopupContent(searchValue) {
-      var _getProps6 = _getProps10(),
-          items = _getProps6.items,
-          popOver = _getProps6.popOver;
+
+    getPopupContent(searchValue) {
+      let {
+        items,
+        popOver
+      } = getProps();
 
       if (popOver) {
-        return typeof popOver === 'function' ? popOver(_getProps10()) : popOver;
+        return typeof popOver === 'function' ? popOver(getProps()) : popOver;
       }
 
       $$.items = $$.getOptions(items, searchValue);
-      return $$.items.map(function (item, i) {
-        return $$.render.listItem(item, i);
-      });
+      return $$.items.map((item, i) => $$.render.listItem(item, i));
     },
-    onClick: function onClick(e) {
+
+    onClick(e) {
       if ((0, _jquery.default)(e.target).parents('.aio-button-tags').length !== 0) {
         return;
       }
 
-      var _getProps7 = _getProps10(),
-          items = _getProps7.items,
-          popOver = _getProps7.popOver,
-          _getProps7$onClick = _getProps7.onClick,
-          onClick = _getProps7$onClick === void 0 ? function () {} : _getProps7$onClick;
+      var {
+        items,
+        popOver,
+        onClick = () => {}
+      } = getProps();
 
       if (items || popOver) {
         $$.toggle(true);
       } else {
-        onClick(_getProps10());
+        onClick(getProps());
       }
     },
-    showPopup: function showPopup(open) {
-      var _getProps8 = _getProps10(),
-          items = _getProps8.items,
-          popOver = _getProps8.popOver;
+
+    showPopup(open) {
+      var {
+        items,
+        popOver
+      } = getProps();
 
       if (!open) {
         return false;
@@ -928,33 +792,35 @@ function AIOBTNFN(_getProps10, getState, setState) {
 
       return false;
     },
-    getHoverEnabled: function getHoverEnabled() {
-      var _getState2 = getState(),
-          touch = _getState2.touch;
+
+    getHoverEnabled() {
+      let {
+        touch
+      } = getState();
 
       if (touch) {
         return false;
       }
 
-      var _getProps9 = _getProps10(),
-          hover = _getProps9.hover;
-
-      return typeof hover === 'function' ? hover(_getProps10()) : hover;
+      let {
+        hover
+      } = getProps();
+      return typeof hover === 'function' ? hover(getProps()) : hover;
     },
-    getValue: function getValue(value) {
-      return typeof value === 'function' ? value(_getProps10()) : value;
-    },
-    getProps: function getProps() {
-      var props = _getProps10();
 
-      var type = props.type,
-          _props$before = props.before,
-          before = _props$before === void 0 ? '' : _props$before,
-          _props$text = props.text,
-          text = _props$text === void 0 ? '' : _props$text,
-          checks = props.checks,
-          _props$onClick = props.onClick,
-          onClick = _props$onClick === void 0 ? function () {} : _props$onClick;
+    getValue(value) {
+      return typeof value === 'function' ? value(getProps()) : value;
+    },
+
+    getProps() {
+      let props = getProps();
+      let {
+        type,
+        before = '',
+        text = '',
+        checks,
+        onClick = () => {}
+      } = props;
       var id = $$.getValue(props.id);
       var disabled = $$.getValue(props.disabled);
       var title = $$.getValue(props.title);
@@ -963,79 +829,75 @@ function AIOBTNFN(_getProps10, getState, setState) {
       var style = $$.getValue(props.style);
       var hover = $$.getHoverEnabled();
       return { ...props,
-        type: type,
-        before: before,
-        text: text,
-        checks: checks,
-        onClick: onClick,
-        id: id,
-        disabled: disabled,
-        title: title,
-        className: className,
-        rtl: rtl,
-        style: style,
-        hover: hover
+        type,
+        before,
+        text,
+        checks,
+        onClick,
+        id,
+        disabled,
+        title,
+        className,
+        rtl,
+        style,
+        hover
       };
     },
-    getButtonConfig: function getButtonConfig() {
-      var _$$$getProps = $$.getProps(),
-          id = _$$$getProps.id,
-          disabled = _$$$getProps.disabled,
-          title = _$$$getProps.title,
-          className = _$$$getProps.className,
-          rtl = _$$$getProps.rtl,
-          style = _$$$getProps.style,
-          hover = _$$$getProps.hover;
 
+    getButtonConfig() {
+      let {
+        id,
+        disabled,
+        title,
+        className,
+        rtl,
+        style,
+        hover
+      } = $$.getProps();
       return {
-        id: id,
-        className: "aio-button ".concat(rtl ? 'rtl' : 'ltr').concat(className ? ' ' + className : ''),
+        id,
+        className: `aio-button ${rtl ? 'rtl' : 'ltr'}${className ? ' ' + className : ''}`,
         style: _jquery.default.extend({}, {
           direction: rtl ? 'rtl' : 'ltr'
         }, $$.getValue(style)),
-        disabled: disabled,
-        title: title,
-        onClick: function onClick(e) {
-          return $$.onClick(e);
-        },
-        onMouseEnter: hover ? function () {
-          return $$.toggle(true);
-        } : undefined,
-        onMouseLeave: hover ? function () {
-          return $$.toggle(false);
-        } : undefined,
+        disabled,
+        title,
+        onClick: e => $$.onClick(e),
+        onMouseEnter: hover ? () => $$.toggle(true) : undefined,
+        onMouseLeave: hover ? () => $$.toggle(false) : undefined,
         tabIndex: 0
       };
     },
-    dragStart: function dragStart(e) {
-      var index = parseInt((0, _jquery.default)(e.target).attr('dataindex'));
+
+    dragStart(e) {
+      let index = parseInt((0, _jquery.default)(e.target).attr('dataindex'));
       $$.dragIndex = index;
     },
-    dragOver: function dragOver(e) {
+
+    dragOver(e) {
       e.preventDefault();
     },
-    swap: function swap(arr, from, to) {
-      var Arr = arr.map(function (o, i) {
+
+    swap(arr, from, to) {
+      let Arr = arr.map((o, i) => {
         o._testswapindex = i;
         return o;
       });
-      var fromIndex = Arr[from]._testswapindex;
+      let fromIndex = Arr[from]._testswapindex;
       Arr.splice(to, 0, { ...Arr[from],
         _testswapindex: false
       });
-      return Arr.filter(function (o) {
-        return o._testswapindex !== fromIndex;
-      });
+      return Arr.filter(o => o._testswapindex !== fromIndex);
     },
-    drop: function drop(e) {
+
+    drop(e) {
       e.stopPropagation();
-
-      var _getProps11 = _getProps10(),
-          onSwap = _getProps11.onSwap,
-          options = _getProps11.options;
-
-      var from = $$.dragIndex;
-      var dom = (0, _jquery.default)(e.target);
+      let {
+        onSwap,
+        options
+      } = getProps();
+      let from = $$.dragIndex;
+      let dom = (0, _jquery.default)(e.target);
 
       if (!dom.hasClass('aio-button-list-item')) {
         dom = dom.parents('.aio-button-list-item');
@@ -1048,7 +910,7 @@ function AIOBTNFN(_getProps10, getState, setState) {
       }
 
       ;
-      var to = parseInt(dom.attr('dataindex'));
+      let to = parseInt(dom.attr('dataindex'));
 
       if (from === to) {
         return;
@@ -1056,6 +918,7 @@ function AIOBTNFN(_getProps10, getState, setState) {
 
       onSwap(from, to, $$.swap);
     }
+
   };
   $$.render = new AIOBTNrender($$);
   return {
@@ -1077,27 +940,27 @@ function AIOBTNFN(_getProps10, getState, setState) {
 }
 
 function AIOBTNrender(actions) {
-  var $$ = {
-    base: function base(open) {
-      var _actions$getProps = actions.getProps(),
-          type = _actions$getProps.type;
-
+  let $$ = {
+    base(open) {
+      let {
+        type
+      } = actions.getProps();
       return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, type === 'multiselect' && $$.multiselect(), type !== 'multiselect' && $$.button(), actions.showPopup(open) && /*#__PURE__*/_react.default.createElement(Popup, {
         fn: actions
       }));
     },
-    caret: function caret() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _actions$getProps2 = actions.getProps(),
-          caret = _actions$getProps2.caret,
-          caretStyle = _actions$getProps2.caretStyle;
+    caret(platform = 'react') {
+      var {
+        caret,
+        caretStyle
+      } = actions.getProps();
 
       if (caret === false) {
         return '';
       }
 
-      var cls = 'aio-button-caret';
+      let cls = 'aio-button-caret';
 
       if (caret === true) {
         if (platform === 'react') {
@@ -1112,7 +975,7 @@ function AIOBTNrender(actions) {
         }
 
         if (platform === 'jquery') {
-          return "<div style='flex:1;'></div><div class='".concat(cls, "' style='").concat(caretStyle, "'></div>");
+          return `<div style='flex:1;'></div><div class='${cls}' style='${caretStyle}'></div>`;
         }
       }
 
@@ -1125,14 +988,15 @@ function AIOBTNrender(actions) {
       }
 
       if (platform === 'jquery') {
-        return "<div style='flex:1;'></div>".concat(caret);
+        return `<div style='flex:1;'></div>${caret}`;
       }
     },
-    after: function after() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _actions$getProps3 = actions.getProps(),
-          after = _actions$getProps3.after;
+    after(platform = 'react') {
+      let {
+        after,
+        gap
+      } = actions.getProps();
 
       if (after === undefined) {
         return '';
@@ -1141,21 +1005,22 @@ function AIOBTNrender(actions) {
       if (platform === 'react') {
         return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
           style: {
-            flex: 1
+            flex: 1,
+            minWidth: gap
           }
         }), after);
       }
 
       if (platform === 'jquery') {
-        return "<div style='flex:1;'></div>".concat(after);
+        return `<div style='flex:1;'></div>${after}`;
       }
     },
-    badge: function badge() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _actions$getProps4 = actions.getProps(),
-          badge = _actions$getProps4.badge,
-          badgeStyle = _actions$getProps4.badgeStyle;
+    badge(platform = 'react') {
+      let {
+        badge,
+        badgeStyle
+      } = actions.getProps();
 
       if (badge === undefined) {
         return '';
@@ -1169,30 +1034,44 @@ function AIOBTNrender(actions) {
       }
 
       if (platform === 'jquery') {
-        return "<div class='aio-button-badge' style='".concat(badgeStyle, "'>").concat(badge, "</div>");
+        return `<div class='aio-button-badge' style='${badgeStyle}'>${badge}</div>`;
       }
     },
-    button: function button() {
-      var _actions$getProps5 = actions.getProps(),
-          before = _actions$getProps5.before,
-          text = _actions$getProps5.text;
 
-      var config = actions.getButtonConfig();
-      return /*#__PURE__*/_react.default.createElement("button", config, before, " ", text, " ", $$.caret('react'), " ", $$.after('react'), " ", $$.badge('react'));
+    button() {
+      let {
+        before,
+        text,
+        gap
+      } = actions.getProps();
+      let config = actions.getButtonConfig();
+      let Before = '';
+
+      if (before) {
+        if (gap) {
+          Before = /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, before, /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              width: gap
+            }
+          }));
+        } else {
+          Before = before;
+        }
+      }
+
+      return /*#__PURE__*/_react.default.createElement("button", config, Before, " ", text, " ", $$.caret('react'), " ", $$.after('react'), " ", $$.badge('react'));
     },
-    multiselect: function multiselect() {
-      var _actions$getProps6 = actions.getProps(),
-          rtl = _actions$getProps6.rtl,
-          _actions$getProps6$st = _actions$getProps6.style,
-          style = _actions$getProps6$st === void 0 ? {} : _actions$getProps6$st,
-          _onClick = _actions$getProps6.onClick,
-          checks = _actions$getProps6.checks,
-          showTags = _actions$getProps6.showTags,
-          _actions$getProps6$ta = _actions$getProps6.tagContainerStyle,
-          tagContainerStyle = _actions$getProps6$ta === void 0 ? {} : _actions$getProps6$ta,
-          _actions$getProps6$ta2 = _actions$getProps6.tagStyle,
-          tagStyle = _actions$getProps6$ta2 === void 0 ? {} : _actions$getProps6$ta2;
 
+    multiselect() {
+      let {
+        rtl,
+        style = {},
+        onClick,
+        checks,
+        showTags,
+        tagContainerStyle = {},
+        tagStyle = {}
+      } = actions.getProps();
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-multiselect",
         style: {
@@ -1201,18 +1080,17 @@ function AIOBTNrender(actions) {
       }, $$.button(), showTags !== false && checks.length !== 0 && /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-tags' + (rtl ? ' rtl' : ''),
         style: tagContainerStyle
-      }, checks.map(function (check, i) {
-        var _check$before = check.before,
-            before = _check$before === void 0 ? /*#__PURE__*/_react.default.createElement(_react2.Icon, {
-          path: _js.mdiCircleMedium,
-          size: 0.6
-        }) : _check$before;
+      }, checks.map((check, i) => {
+        let {
+          before = /*#__PURE__*/_react.default.createElement(_react2.Icon, {
+            path: _js.mdiCircleMedium,
+            size: 0.6
+          })
+        } = check;
         return /*#__PURE__*/_react.default.createElement("div", {
           key: i,
           className: "aio-button-tag",
-          onClick: function onClick() {
-            return _onClick(check);
-          },
+          onClick: () => onClick(check),
           style: { ...check.style,
             ...tagStyle
           }
@@ -1228,10 +1106,12 @@ function AIOBTNrender(actions) {
         })));
       })));
     },
-    searchBox: function searchBox(searchValue, _onChange2) {
-      var _actions$getProps7 = actions.getProps(),
-          search = _actions$getProps7.search,
-          placeHolder = _actions$getProps7.placeHolder;
+
+    searchBox(searchValue, onChange) {
+      var {
+        search,
+        placeHolder
+      } = actions.getProps();
 
       if (!search) {
         return '';
@@ -1241,8 +1121,8 @@ function AIOBTNrender(actions) {
         className: "aio-button-search"
       }, /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-search-icon' + (searchValue ? ' aio-button-search-icon-filled' : ''),
-        onClick: function onClick() {
-          _onChange2({
+        onClick: () => {
+          onChange({
             searchValue: ''
           });
         }
@@ -1250,22 +1130,20 @@ function AIOBTNrender(actions) {
         type: "text",
         value: searchValue,
         placeholder: placeHolder,
-        onChange: function onChange(e) {
-          return _onChange2({
-            searchValue: e.target.value
-          });
-        }
+        onChange: e => onChange({
+          searchValue: e.target.value
+        })
       }));
     },
-    getPopupStyle: function getPopupStyle() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _actions$getProps8 = actions.getProps(),
-          rtl = _actions$getProps8.rtl,
-          dropdownType = _actions$getProps8.dropdownType;
+    getPopupStyle(platform = 'react') {
+      var {
+        rtl,
+        dropdownType
+      } = actions.getProps();
 
       if (platform === 'react') {
-        var style = {
+        let style = {
           direction: rtl ? 'rtl' : 'ltr'
         };
 
@@ -1285,20 +1163,20 @@ function AIOBTNrender(actions) {
       }
 
       if (platform === 'jquery') {
-        var _style = "direction:".concat(rtl ? 'rtl' : 'ltr', ";");
+        let style = `direction:${rtl ? 'rtl' : 'ltr'};`;
 
         if (dropdownType === 'center') {
-          _style += "left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;";
+          style += `left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;`;
         }
 
-        return _style;
+        return style;
       }
     },
-    getBackDropStyle: function getBackDropStyle() {
-      var platform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'react';
 
-      var _actions$getProps9 = actions.getProps(),
-          backdropStyle = _actions$getProps9.backdropStyle;
+    getBackDropStyle(platform = 'react') {
+      var {
+        backdropStyle
+      } = actions.getProps();
 
       if (platform === 'react') {
         return {
@@ -1313,39 +1191,36 @@ function AIOBTNrender(actions) {
       }
 
       if (platform === 'jquery') {
-        return "height:100%;width:100%;right:0;top:0;position:fixed;background:rgba(0,0,0,0);".concat(backdropStyle);
+        return `height:100%;width:100%;right:0;top:0;position:fixed;background:rgba(0,0,0,0);${backdropStyle}`;
       }
     },
-    popup: function popup(searchValue, onChange, ref) {
-      var _actions$getProps10 = actions.getProps(),
-          hover = _actions$getProps10.hover,
-          popupWidth = _actions$getProps10.popupWidth,
-          popupStyle = _actions$getProps10.popupStyle;
 
+    popup(searchValue, onChange, ref) {
+      var {
+        hover,
+        popupWidth,
+        popupStyle
+      } = actions.getProps();
       var PopupStyle = actions.getValue(popupStyle);
       return /*#__PURE__*/_react.default.createElement("div", {
         className: actions.getPopupClassName(),
         ref: ref,
         style: $$.getPopupStyle(),
-        onMouseEnter: function onMouseEnter() {
+        onMouseEnter: () => {
           if (hover) {
             actions.toggle(true);
           }
         },
-        onMouseLeave: function onMouseLeave() {
+        onMouseLeave: () => {
           if (hover) {
             actions.toggle(false);
           }
         },
-        onKeyDown: function onKeyDown(e) {
-          return actions.keyDown(e, (0, _jquery.default)(ref.current));
-        },
+        onKeyDown: e => actions.keyDown(e, (0, _jquery.default)(ref.current)),
         tabIndex: 0
       }, !hover && /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-backdrop",
-        onClick: function onClick() {
-          return actions.toggle(false, true);
-        },
+        onClick: () => actions.toggle(false, true),
         style: $$.getBackDropStyle()
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-popup",
@@ -1353,21 +1228,19 @@ function AIOBTNrender(actions) {
           width: popupWidth === 'fit' ? undefined : popupWidth,
           ...PopupStyle
         }
-      }, $$.searchBox(searchValue, function (obj) {
-        return onChange(obj);
-      }), /*#__PURE__*/_react.default.createElement("div", {
+      }, $$.searchBox(searchValue, obj => onChange(obj)), /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-items"
       }, actions.getPopupContent(searchValue))));
     },
-    checkIcon: function checkIcon(item) {
+
+    checkIcon(item) {
       if (item._checked === undefined) {
         return '';
       }
 
-      var _actions$getProps11 = actions.getProps(),
-          _actions$getProps11$g = _actions$getProps11.gap,
-          gap = _actions$getProps11$g === void 0 ? 8 : _actions$getProps11$g;
-
+      let {
+        gap = 8
+      } = actions.getProps();
       return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
         className: 'aio-button-check-icon' + (item._checked ? ' checked' : '')
       }), /*#__PURE__*/_react.default.createElement("div", {
@@ -1377,10 +1250,12 @@ function AIOBTNrender(actions) {
         }
       }));
     },
-    listItem: function listItem(item, index) {
-      var _actions$getProps12 = actions.getProps(),
-          rtl = _actions$getProps12.rtl,
-          onSwap = _actions$getProps12.onSwap;
+
+    listItem(item, index) {
+      var {
+        rtl,
+        onSwap
+      } = actions.getProps();
 
       var Text = /*#__PURE__*/_react.default.createElement("div", {
         className: "aio-button-text",
@@ -1388,26 +1263,20 @@ function AIOBTNrender(actions) {
       }, item._text);
 
       var props = {
-        className: "aio-button-list-item".concat(item._className ? ' ' + item._className : '').concat(item._disabled ? ' disabled' : ''),
+        className: `aio-button-list-item${item._className ? ' ' + item._className : ''}${item._disabled ? ' disabled' : ''}`,
         style: item._style,
-        onClick: function onClick(e) {
-          return actions.itemClick(item, e);
-        },
+        onClick: e => actions.itemClick(item, e),
         title: '',
         dataindex: index,
         tabIndex: 0
       };
 
       if (onSwap) {
-        props.onDragStart = function (e) {
-          return actions.dragStart(e);
-        };
+        props.onDragStart = e => actions.dragStart(e);
 
-        props.onDragOver = function (e) {
-          return actions.dragOver(e);
-        };
+        props.onDragOver = e => actions.dragOver(e);
 
-        props.onDrop = function (e) {
+        props.onDrop = e => {
           actions.drop(e);
         };
 
@@ -1420,6 +1289,7 @@ function AIOBTNrender(actions) {
         className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
       }, item.splitter), /*#__PURE__*/_react.default.createElement("div", props, $$.checkIcon(item), item._before, Text, item._after));
     }
+
   };
   return {
     base: $$.base,
