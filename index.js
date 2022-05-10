@@ -555,7 +555,6 @@ function AIOBTNFN(getProps, getState, setState) {
       }
 
       popup.focus();
-      (0, _jquery.default)('body').addClass('aio-button-open');
     },
 
     getOptions(items, searchValue) {

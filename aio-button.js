@@ -316,7 +316,6 @@ function AIOBTNFN(getProps,getState,setState){
         popup.css(style)
       }
       popup.focus();
-      $('body').addClass('aio-button-open');
     },
     getOptions(items,searchValue){
       let {
