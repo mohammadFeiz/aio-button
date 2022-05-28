@@ -277,3 +277,46 @@
   ...
 />  
 ```
+
+## Set option checked
+##### option.checked(boolean)
+```javascript
+<AIOButton
+  type='select'
+  text='Setting'
+  options={[
+    {text:'Option1',key:'opt1',checked:opt1},
+    {text:'Option2',key:'opt2',checked:opt2},
+    {text:'Option3',key:'opt3',checked:opt3}
+  ]}
+  onChange={(value,option)=>this.setState({[option.key]:!option.checked})}
+/>    
+```
+##### checkedField props(string)
+```javascript
+<AIOButton
+  type='select'
+  text='Setting'
+  checkedField='option.value'
+  options={[
+    {text:'Option1',value:opt1,key:'opt1'},
+    {text:'Option2',value:opt2,key:'opt2'},
+    {text:'Option3',value:opt3,key:'opt3'}
+  ]}
+  onChange={(value,option)=>this.setState({[option.key]:!value})}
+/>    
+```
+##### checkedField props(function)
+```javascript
+<AIOButton
+  type='select'
+  text='Setting'
+  checkedField={(option)=>this.state[option.key]}
+  options={[
+    {text:'Option1',key:'opt1'},
+    {text:'Option2',key:'opt2'},
+    {text:'Option3',key:'opt3'}
+  ]}
+  onChange={(value,option)=>this.setState({[option.key]:!this.state[option.key]})}
+/>  
+```
