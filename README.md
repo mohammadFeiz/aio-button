@@ -1,4 +1,20 @@
 # aio-button
+
+## option prperties
+Property  | Type                   | Default     | Required | Description
+--------- | ---------------------- | ----------- | -------- | -----------
+value     | any                    | -           | no       | option value
+text      | number - string - html | -           | yes      | option text or html
+disabled  | boolean                | false       | no       | set option disabled
+show      | boolean                | true        | no       | set option visible or not
+before    | number - string - html | -           | no       | set option before 
+after     | number - string - html | -           | no       | set option after
+checked   | boolean                | undefined   | no       | set option checkbox
+style     | object                 | -           | no       | set option div style
+className | string                 | -           | no       | set option div className
+title     | string                 | option text | no       | set option title(tooltip)
+onClick   | function               | -           | no       | set option onClick(will prevent calling onChange by clicking on option)
+
 ## Set option value
 ##### option.value(any)
 ```javascript
