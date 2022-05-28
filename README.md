@@ -320,3 +320,102 @@
   onChange={(value,option)=>this.setState({[option.key]:!this.state[option.key]})}
 />  
 ```
+
+## Set option before
+##### option.before(boolean)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  options={[
+    {text:'Option1',value:'opt1',before:<Icon path={mdiAccount} size={0.8}/>},
+    {text:'Option2',value:'opt2',before:<Icon path={mdiTag} size={0.8}/>},
+    {text:'Option3',value:'opt3',before:<Icon path={mdiAttachment} size={0.8}/>}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/>  
+```
+##### beforeField props(string)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  beforeField='option.value + " - "'
+  options={[
+    {text:'Option1',value:'opt1'},
+    {text:'Option2',value:'opt2'},
+    {text:'Option3',value:'opt3'}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/> 
+```
+##### beforeField props(function)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  beforeField={(option)=>{
+    if(option.type === 'account'){return <Icon path={mdiAccount} size={0.8}/>}
+    if(option.type === 'tag'){return <Icon path={mdiTag} size={0.8}/>}
+    if(option.type === 'attachment'){return <Icon path={mdiAttachment} size={0.8}/>}
+  }}
+  options={[
+    {text:'Option1',value:'opt1',type:'account'},
+    {text:'Option2',value:'opt2',type:'tag'},
+    {text:'Option3',value:'opt3',type:'attachment'}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/>  
+```
+
+## Set option after
+##### option.after(boolean)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  options={[
+    {text:'Option1',value:'opt1',after:<div className='after'>account</div>},
+    {text:'Option2',value:'opt2',after:<div className='after'>tag</div>},
+    {text:'Option3',value:'opt3',after:<div className='after'>attachment</div>}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/>  
+```
+##### afterField props(string)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  afterField='" - " + option.value'
+  options={[
+    {text:'Option1',value:'opt1'},
+    {text:'Option2',value:'opt2'},
+    {text:'Option3',value:'opt3'}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/>   
+```
+##### afterField props(function)
+```javascript
+<AIOButton
+  type='select'
+  open={true}
+  className='button'
+  afterField={(option)=>{ 
+    return <div className='after'>{option.type}</div>
+  }}
+  options={[
+    {text:'Option1',value:'opt1',type:'account'},
+    {text:'Option2',value:'opt2',type:'tag'},
+    {text:'Option3',value:'opt3',type:'attachment'}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/>    
+```
