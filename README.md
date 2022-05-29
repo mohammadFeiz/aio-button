@@ -24,7 +24,9 @@ onClick       | function                          | -           | select        
 - ### instead of value property in option object, you can set optionValue props (function or string) in root props of component
 - ### for example (value => optionValue , text => optionText , disabled => optionDisabled)
 
-## aio button props for setting options config
+## props for setting options properties
+##### instead of set properties of each option you can user these functional props
+##### these functions get option object and index of option as parameters and returns property value of options
 Props               | Type                                           | Used in type             | Description
 ------------------- | ---------------------------------------------- | ------------------------ | -----------
 optionValue         | function(option,index){return any}             | select,multiselect,radio | returns value of option
@@ -55,25 +57,11 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2'},
     {text:'Option3',value:'opt3'}
   ]}
-  value={'opt2'}
+  value='opt2'
   ...
 />  
 ```
-##### optionValue props(string)
-```javascript
-<AIOButton
-  ...
-  type='select'
-  valueField='option.id'
-  options={[
-    {text:'Option1',id:'opt1'},
-    {text:'Option2',id:'opt2'},
-    {text:'Option3',id:'opt3'}
-  ]}
-  ...
-/>  
-```
-##### valueField props(function)
+##### optionValue props(function)
 ```javascript
 <AIOButton
   ...
@@ -84,12 +72,29 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',id:'opt2'},
     {text:'Option3',id:'opt3'}
   ]}
+  value='opt2'
+  ...
+/>  
+```
+
+##### optionValue shorthand (string)
+```javascript
+<AIOButton
+  ...
+  type='select'
+  optionValue='option.id'
+  options={[
+    {text:'Option1',id:'opt1'},
+    {text:'Option2',id:'opt2'},
+    {text:'Option3',id:'opt3'}
+  ]}
+  value='opt2'
   ...
 />  
 ```
 
 ## Set option text
-##### option.text(string)
+##### option.text
 ```javascript
 <AIOButton
   ...
@@ -102,26 +107,12 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
   ...
 />  
 ```
-##### textField props(string)
+##### optionsText props
 ```javascript
 <AIOButton
   ...
   type='select'
-  textField='option.name'
-  options={[
-    {name:'Option1',value:'opt1'},
-    {name:'Option2',value:'opt2'},
-    {name:'Option3',value:'opt3'}
-  ]}
-  ...
-/>  
-```
-##### textField props(function)
-```javascript
-<AIOButton
-  ...
-  type='select'
-  textField={(option)=>{
+  optionText={(option)=>{
     let {priority = 0} = option;
     if(priority < 5){
       return `${option.name} (low priority)`
@@ -138,11 +129,28 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {name:'Option2',value:'opt2',priority:6},
     {name:'Option3',value:'opt3',priority:2}
   ]}
+  value='opt2'
+  ...
+/>  
+```
+
+##### optionText shorthand (string)
+```javascript
+<AIOButton
+  ...
+  type='select'
+  optionText='option.name'
+  options={[
+    {name:'Option1',value:'opt1'},
+    {name:'Option2',value:'opt2'},
+    {name:'Option3',value:'opt3'}
+  ]}
+  value='opt2'
   ...
 />  
 ```
 ## Set option className
-##### option.className(string)
+##### option.className (string)
 ```javascript
 <AIOButton
   ...
@@ -152,29 +160,16 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2',className:'medium-priority'},
     {text:'Option3',value:'opt3',className:'low-priority'}
   ]}
+  value='opt2'
   ...
 />  
 ```
-##### classNameField props(string)
+##### optionClassName props (function)
 ```javascript
 <AIOButton
   ...
   type='select'
-  classNameField='option.state + "-priority"'
-  options={[
-    {text:'Option1',value:'opt1',state:'low'},
-    {text:'Option2',value:'opt2',state:'medium'},
-    {text:'Option3',value:'opt3',state:'high'}
-  ]}
-  ...
-/>  
-```
-##### classNameField props(function)
-```javascript
-<AIOButton
-  ...
-  type='select'
-  classNameField={(option)=>{
+  optionClassName={(option)=>{
     let {priority = 0} = option;
     if(priority < 5){return 'low-priority'}
     if(priority < 7){return 'medium-priority'}
@@ -185,12 +180,29 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2',priority:6},
     {text:'Option3',value:'opt3',priority:2}
   ]}
+  value='opt2'
+  ...
+/>  
+```
+
+##### classNameField shorthand (string)
+```javascript
+<AIOButton
+  ...
+  type='select'
+  optionClassName='option.state + "-priority"'
+  options={[
+    {text:'Option1',value:'opt1',state:'low'},
+    {text:'Option2',value:'opt2',state:'medium'},
+    {text:'Option3',value:'opt3',state:'high'}
+  ]}
+  value='opt2'
   ...
 />  
 ```
 
 ## Set option style
-##### option.style(object)
+##### option.style (object)
 ```javascript
 <AIOButton
   ...
@@ -200,29 +212,16 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2',style:{color:'orange'}},
     {text:'Option3',value:'opt3',style:{color:'yellow'}}
   ]}
+  value='opt2'
   ...
 />  
 ```
-##### styleField props(string)
+##### optionStyle props (function)
 ```javascript
 <AIOButton
   ...
   type='select'
-  styleField='{color:option.color}'
-  options={[
-    {name:'Option1',value:'opt1',color:'red'},
-    {name:'Option2',value:'opt2',color:'orange'},
-    {name:'Option3',value:'opt3',color:'yellow'}
-  ]}
-  ...
-/>  
-```
-##### styleField props(function)
-```javascript
-<AIOButton
-  ...
-  type='select'
-  styleField={(option)=>{
+  optionStyle={(option)=>{
     let {priority = 0} = option;
     if(priority < 5){return {color:'yellow'}}
     if(priority < 7){return {color:'orange'}}
@@ -233,13 +232,27 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {name:'Option2',value:'opt2',priority:6},
     {name:'Option3',value:'opt3',priority:2}
   ]}
+  value='opt2'
   ...
 />  
 ```
-
-
+##### optionStyle shorthand (string)
+```javascript
+<AIOButton
+  ...
+  type='select'
+  optionStyle='{color:option.color}'
+  options={[
+    {name:'Option1',value:'opt1',color:'red'},
+    {name:'Option2',value:'opt2',color:'orange'},
+    {name:'Option3',value:'opt3',color:'yellow'}
+  ]}
+  value='opt2'
+  ...
+/>  
+```
 ## Set option disabled
-##### option.disabled(boolean)
+##### option.disabled (boolean)
 ```javascript
 <AIOButton
   ...
@@ -249,24 +262,11 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2',disabled:true},
     {text:'Option3',value:'opt3'}
   ]}
+  value='opt2'
   ...
 />  
 ```
-##### disabledField props(string)
-```javascript
-<AIOButton
-  ...
-  type='select'
-  disabledField='option.priority < 5'
-  options={[
-    {text:'Option1',value:'opt1',priority:10},
-    {text:'Option2',value:'opt2',priority:8},
-    {text:'Option3',value:'opt3',priority:4}
-  ]}
-  ...
-/>  
-```
-##### disabledField props(function)
+##### optionDisabled props (function)
 ```javascript
 <AIOButton
   ...
@@ -277,12 +277,27 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2',priority:8},
     {text:'Option3',value:'opt3',priority:4}
   ]}
+  value='opt2'
   ...
 />  
 ```
-
+##### optionDisabled shorthand (string)
+```javascript
+<AIOButton
+  ...
+  type='select'
+  optionDisabled='option.priority < 5'
+  options={[
+    {text:'Option1',value:'opt1',priority:10},
+    {text:'Option2',value:'opt2',priority:8},
+    {text:'Option3',value:'opt3',priority:4}
+  ]}
+  value='opt2'
+  ...
+/>  
+```
 ## Set option show
-##### option.show(boolean)
+##### option.show (boolean)
 ```javascript
 <AIOButton
   ...
@@ -292,40 +307,42 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',value:'opt2',show:false},
     {text:'Option3',value:'opt3'}
   ]}
+  value='opt2'
   ...
 />  
 ```
-##### showField props(string)
+##### optionShow props(function)
 ```javascript
 <AIOButton
   ...
   type='select'
-  showField='option.priority > 5'
+  optionShow={()=>option.priority > 5}}
   options={[
     {text:'Option1',value:'opt1',priority:10},
     {text:'Option2',value:'opt2',priority:8},
     {text:'Option3',value:'opt3',priority:4}
   ]}
+  value='opt2'
   ...
 />  
 ```
-##### showField props(function)
+##### optionShow shorthand (string)
 ```javascript
 <AIOButton
   ...
   type='select'
-  showField={()=>option.priority > 5}}
+  optionShow='option.priority > 5'
   options={[
     {text:'Option1',value:'opt1',priority:10},
     {text:'Option2',value:'opt2',priority:8},
     {text:'Option3',value:'opt3',priority:4}
   ]}
+  value='opt2'
   ...
 />  
 ```
-
 ## Set option checked
-##### option.checked(boolean)
+##### option.checked (boolean)
 ```javascript
 <AIOButton
   type='select'
@@ -335,29 +352,16 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
     {text:'Option2',key:'opt2',checked:opt2},
     {text:'Option3',key:'opt3',checked:opt3}
   ]}
+  value='opt2'
   onChange={(value,option)=>this.setState({[option.key]:!option.checked})}
 />    
 ```
-##### checkedField props(string)
+##### optionChecked props (function)
 ```javascript
 <AIOButton
   type='select'
   text='Setting'
-  checkedField='option.value'
-  options={[
-    {text:'Option1',value:opt1,key:'opt1'},
-    {text:'Option2',value:opt2,key:'opt2'},
-    {text:'Option3',value:opt3,key:'opt3'}
-  ]}
-  onChange={(value,option)=>this.setState({[option.key]:!value})}
-/>    
-```
-##### checkedField props(function)
-```javascript
-<AIOButton
-  type='select'
-  text='Setting'
-  checkedField={(option)=>this.state[option.key]}
+  optionChecked={(option)=>this.state[option.key]}
   options={[
     {text:'Option1',key:'opt1'},
     {text:'Option2',key:'opt2'},
@@ -366,7 +370,20 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
   onChange={(value,option)=>this.setState({[option.key]:!this.state[option.key]})}
 />  
 ```
-
+##### optionChecked shorthand (string)
+```javascript
+<AIOButton
+  type='select'
+  text='Setting'
+  optionChecked='option.value'
+  options={[
+    {text:'Option1',value:opt1,key:'opt1'},
+    {text:'Option2',value:opt2,key:'opt2'},
+    {text:'Option3',value:opt3,key:'opt3'}
+  ]}
+  onChange={(value,option)=>this.setState({[option.key]:!value})}
+/>    
+```
 ## Set option before
 ##### option.before(boolean)
 ```javascript
@@ -382,27 +399,12 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
   onChange={(value)=>this.setState({opt:value})}
 />  
 ```
-##### beforeField props(string)
+##### optionBefore props (function)
 ```javascript
 <AIOButton
   type='select'
   className='button'
-  beforeField='option.value + " - "'
-  options={[
-    {text:'Option1',value:'opt1'},
-    {text:'Option2',value:'opt2'},
-    {text:'Option3',value:'opt3'}
-  ]}
-  value={opt}
-  onChange={(value)=>this.setState({opt:value})}
-/> 
-```
-##### beforeField props(function)
-```javascript
-<AIOButton
-  type='select'
-  className='button'
-  beforeField={(option)=>{
+  optionBefore={(option)=>{
     if(option.type === 'account'){return <Icon path={mdiAccount} size={0.8}/>}
     if(option.type === 'tag'){return <Icon path={mdiTag} size={0.8}/>}
     if(option.type === 'attachment'){return <Icon path={mdiAttachment} size={0.8}/>}
@@ -416,9 +418,23 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
   onChange={(value)=>this.setState({opt:value})}
 />  
 ```
-
+##### optionBefore shorthand (string)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  optionBefore='option.value + " - "'
+  options={[
+    {text:'Option1',value:'opt1'},
+    {text:'Option2',value:'opt2'},
+    {text:'Option3',value:'opt3'}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/> 
+```
 ## Set option after
-##### option.after(boolean)
+##### option.after (boolean)
 ```javascript
 <AIOButton
   type='select'
@@ -432,28 +448,13 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
   onChange={(value)=>this.setState({opt:value})}
 />  
 ```
-##### afterField props(string)
-```javascript
-<AIOButton
-  type='select'
-  className='button'
-  afterField='" - " + option.value'
-  options={[
-    {text:'Option1',value:'opt1'},
-    {text:'Option2',value:'opt2'},
-    {text:'Option3',value:'opt3'}
-  ]}
-  value={opt}
-  onChange={(value)=>this.setState({opt:value})}
-/>   
-```
-##### afterField props(function)
+##### optionAfter props(function)
 ```javascript
 <AIOButton
   type='select'
   open={true}
   className='button'
-  afterField={(option)=>{ 
+  optionAfter={(option)=>{ 
     return <div className='after'>{option.type}</div>
   }}
   options={[
@@ -464,4 +465,19 @@ optionUncheckedIcon | function(option,index){return string}          | select,mu
   value={opt}
   onChange={(value)=>this.setState({opt:value})}
 />    
+```
+##### optionAfter shorthand (string)
+```javascript
+<AIOButton
+  type='select'
+  className='button'
+  optionAfter='" - " + option.value'
+  options={[
+    {text:'Option1',value:'opt1'},
+    {text:'Option2',value:'opt2'},
+    {text:'Option3',value:'opt3'}
+  ]}
+  value={opt}
+  onChange={(value)=>this.setState({opt:value})}
+/>   
 ```
