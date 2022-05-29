@@ -1,19 +1,48 @@
 # aio-button
 
 ## option prperties
-Property  | Type                   | Default     | Required | Description
---------- | ---------------------- | ----------- | -------- | -----------
-value     | any                    | -           | no       | option value
-text      | number - string - html | -           | yes      | option text or html
-disabled  | boolean                | false       | no       | set option disabled
-show      | boolean                | true        | no       | set option visible or not
-before    | number - string - html | -           | no       | set option before 
-after     | number - string - html | -           | no       | set option after
-checked   | boolean                | undefined   | no       | set option checkbox
-style     | object                 | -           | no       | set option div style
-className | string                 | -           | no       | set option div className
-title     | string                 | option text | no       | set option title(tooltip)
-onClick   | function               | -           | no       | set option onClick(will prevent calling onChange by clicking on option)
+Property      | Type                              | Default     | Used in type             | Description
+------------- | --------------------------------- | ----------- | ------------------------ | -----------
+value         | any                               | -           | select,multiselect,radio | option value
+text          | any                               | -           | select,multiselect,radio | option text or html
+subtext       | any                               | -           | select,multiselect,radio | option subtext
+disabled      | boolean                           | false       | select,multiselect,radio | set option disabled
+show          | boolean                           | true        | select,multiselect,radio | set option visible or not
+before        | any                               | -           | select,multiselect       | set option before 
+after         | any                               | -           | select,multiselect       | set option after
+checked       | boolean                           | undefined   | select                   | set option checkbox
+style         | object                            | -           | select,multiselect,radio | set option div style
+className     | string                            | -           | select,multiselect,radio | set option div className
+title         | string                            | option text | select,multiselect,radio | set option title(tooltip)
+iconSize      | array of 3 numbers                | option text | select,multiselect,radio | set option check icon size([outer size,inner size,stroke width])
+iconColor     | string or array of 2 color string | option text | select,multiselect,radio | set option check icon color (color or [outer color,inner color])
+checkedIcon   | html/jsx                          | option text | select,multiselect,radio | set option custom checked icon
+uncheckedIcon | html/jsx                          | option text | select,multiselect,radio | set option custom unchecked icon
+onClick       | function                          | -           | select                   | set option onClick(will prevent calling onChange by clicking on option)
+
+- ### All of options properties can set in props 1 time instead of set on each option object.
+- ### instead of value property in option object, you can set optionValue props (function or string) in root props of component
+- ### for example (value => optionValue , text => optionText , disabled => optionDisabled)
+
+## aio button props for setting options config
+Props               | Type                                           | Used in type             | Description
+------------------- | ---------------------------------------------- | ------------------------ | -----------
+optionValue         | function(option,index){return any}             | select,multiselect,radio | returns value of option
+optionText          | function(option,index){return any}             | select,multiselect,radio | returns text or html of option
+optionText          | function(option,index){return any}             | select,multiselect,radio | returns option subtext
+optionDisabled      | function(option,index){return boolean}         | select,multiselect,radio | returns a boolean to set option disabled
+optionShow          | function(option,index){return boolean}         | select,multiselect,radio | returns a boolean to set option visible or not
+optionBefore        | function(option,index){return any}             | select,multiselect       | returns option before 
+optionAfter         | function(option,index){return any}             | select,multiselect       | returns option after
+optionChecked       | function(option,index){return boolean}         | select                   | returns a boolean for check or uncheck option
+optionStyle         | function(option,index){return object}          | select,multiselect,radio | returns option css as object
+optionClassName     | function(option,index){return string}          | select,multiselect,radio | returns option div className
+optionTitle         | function(option,index){return string}          | select,multiselect,radio | returns option title(tooltip)
+optionIconSize      | function(option,index){return array}           | select,multiselect,radio | returns option check icon size
+optionIconColor     | function(option,index){return string or array} | select,multiselect,radio | returns option check icon color(s)
+optionCheckedIcon   | function(option,index){return string}          | select,multiselect,radio | returns option custom checked icon
+optionUncheckedIcon | function(option,index){return string}          | select,multiselect,radio | returns option custom unchecked icon 
+
 
 ## Set option value
 ##### option.value(any)
@@ -26,10 +55,11 @@ onClick   | function               | -           | no       | set option onClick
     {text:'Option2',value:'opt2'},
     {text:'Option3',value:'opt3'}
   ]}
+  value={'opt2'}
   ...
 />  
 ```
-##### valueField props(string)
+##### optionValue props(string)
 ```javascript
 <AIOButton
   ...
