@@ -20,18 +20,17 @@ checkedIcon   | html/jsx                          | option text | select,multise
 uncheckedIcon | html/jsx                          | option text | select,multiselect,radio | set option custom unchecked icon
 onClick       | function                          | -           | select                   | set option onClick(will prevent calling onChange by clicking on option)
 
-- ### All of options properties can set in props 1 time instead of set on each option object.
-- ### instead of value property in option object, you can set optionValue props (function or string) in root props of component
-- ### for example (value => optionValue , text => optionText , disabled => optionDisabled)
+- #### All of options properties can set in props 1 time instead of set on each option object.
+- #### for example instead of value property in option object, you can set optionValue props (function or string) in root props of component
+- #### for example (value => optionValue , text => optionText , disabled => optionDisabled)
 
 ## props for setting options properties
-##### instead of set properties of each option you can user these functional props
-##### these functions get option object and index of option as parameters and returns property value of options
+- #### these functions get option object and index of option as parameters and returns property value of options
 Props               | Type                                           | Used in type             | Description
 ------------------- | ---------------------------------------------- | ------------------------ | -----------
 optionValue         | function(option,index){return any}             | select,multiselect,radio | returns value of option
 optionText          | function(option,index){return any}             | select,multiselect,radio | returns text or html of option
-optionText          | function(option,index){return any}             | select,multiselect,radio | returns option subtext
+optionSubext        | function(option,index){return any}             | select,multiselect,radio | returns option subtext
 optionDisabled      | function(option,index){return boolean}         | select,multiselect,radio | returns a boolean to set option disabled
 optionShow          | function(option,index){return boolean}         | select,multiselect,radio | returns a boolean to set option visible or not
 optionBefore        | function(option,index){return any}             | select,multiselect       | returns option before 
@@ -45,7 +44,9 @@ optionIconColor     | function(option,index){return string or array} | select,mu
 optionCheckedIcon   | function(option,index){return string}          | select,multiselect,radio | returns option custom checked icon
 optionUncheckedIcon | function(option,index){return string}          | select,multiselect,radio | returns option custom unchecked icon 
 
-
+- #### all of these props can get an string eval as shorthand that can read option object 
+- #### for example optionText='option.name' returns name property of option object as option text
+- #### for example optionShow='option.priority > 5' will set true for show property of options that have priority property greater than 5
 ## Set option value
 ##### option.value(any)
 ```javascript
