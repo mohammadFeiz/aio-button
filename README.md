@@ -20,24 +20,21 @@ poupOver      | function(props){return html}      | -       | button            
 search        | boolean                           | true    | select,multiselect                 | search options
 animate       | boolean or css object             | false   | select,multiselect                 | popup animation
 
-## option prperties
+## options prperties
 Property      | Type                              | Default     | Used in type             | Description
 ------------- | --------------------------------- | ----------- | ------------------------ | -----------
 value         | any                               | -           | select,multiselect,radio | option value
 text          | any                               | -           | select,multiselect,radio | option text or html
 subtext       | any                               | -           | select,multiselect,radio | option subtext
-disabled      | boolean                           | false       | select,multiselect,radio | set option disabled
 show          | boolean                           | true        | select,multiselect,radio | set option visible or not
+attrs         | object attributes                 | -           | all                      | set option attributes (className,style,disabled,...)
 before        | any                               | -           | select,multiselect       | set option before 
 after         | any                               | -           | select,multiselect       | set option after
 checked       | boolean                           | undefined   | select                   | set option checkbox
-style         | object                            | -           | select,multiselect,radio | set option div style
-className     | string                            | -           | select,multiselect,radio | set option div className
 title         | string                            | option text | select,multiselect,radio | set option title(tooltip)
 iconSize      | array of 3 numbers                | option text | select,multiselect,radio | set option check icon size([outer size,inner size,stroke width])
 iconColor     | string or array of 2 color string | option text | select,multiselect,radio | set option check icon color (color or [outer color,inner color])
-checkedIcon   | html/jsx                          | option text | select,multiselect,radio | set option custom checked icon
-uncheckedIcon | html/jsx                          | option text | select,multiselect,radio | set option custom unchecked icon
+checkIcon     | html/jsx                          | default check icon | select,multiselect,radio | set option custom check icon
 onClick       | function                          | -           | select                   | set option onClick(will prevent calling onChange by clicking on option)
 
 - #### All of options properties can set in props 1 time instead of set on each option object.
