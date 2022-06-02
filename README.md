@@ -1,4 +1,24 @@
 # aio-button
+## props
+props         | Type                              | Default | Used in type                       | Description
+------------- | --------------------------------- | ------- | ---------------------------------- | -----------
+type          | 'button', 'select', 'multiselect', 'checkbox', 'radio', 'checklist' | required | all | component type
+attrs         | object(attributes)                | -       | all                                | attributes(style,className,disabled,....)
+show          | boolean                           | true    | all                                | visible or not
+text          | any                               | -       | select,multiselect,button,checkbox | html as text
+onChange      | function(value,option){void} | -       | select,multiselect,button,checkbox | onChange event
+onClick       | function(){void} | -       | button | onClick event
+before        | any                               | -       | select,multiselect,button          | before html
+after         | any                               | -       | select,multiselect,button          | after html
+badge         | number                            | -       | select,multiselect,button          | badge number
+caret         | boolean or html/jsx               | true    | select,multiselect    | caret icon, true(default caret), false (without caret),html/jsx(custom caret)
+caretAttrs    | object(attributes)                | true    | select,multiselect                 | default caret attributes(style,className,....)
+badgeAttrs    | object(attributes)                | -       | select,multiselect,button          | badge attributes(style,className,disabled,....)
+popupAttrs    | object(attributes)                | -       | select,multiselect                 | popup attributes(style,className,disabled,....)
+poupWidth     | 'fit' or number                   | -       | select                             | popup width, 'fit' means popup width set to button width
+poupOver      | function(props){return html}      | -       | button                             | open custom popup under button by clicking button
+search        | boolean                           | true    | select,multiselect                 | search options
+animate       | boolean or css object             | false   | select,multiselect                 | popup animation
 
 ## option prperties
 Property      | Type                              | Default     | Used in type             | Description
