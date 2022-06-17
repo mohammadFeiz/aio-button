@@ -1,1 +1,1459 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _react=_interopRequireWildcard(require("react")),_jquery=_interopRequireDefault(require("jquery"));function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj}}function _getRequireWildcardCache(nodeInterop){if("function"!=typeof WeakMap)return null;var cacheBabelInterop=new WeakMap,cacheNodeInterop=new WeakMap;return(_getRequireWildcardCache=function(a){return a?cacheNodeInterop:cacheBabelInterop})(nodeInterop)}function _interopRequireWildcard(obj,nodeInterop){if(!nodeInterop&&obj&&obj.__esModule)return obj;if(null===obj||"object"!=typeof obj&&"function"!=typeof obj)return{default:obj};var cache=_getRequireWildcardCache(nodeInterop);if(cache&&cache.has(obj))return cache.get(obj);var newObj={},hasPropertyDescriptor=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var key in obj)if("default"!==key&&Object.prototype.hasOwnProperty.call(obj,key)){var desc=hasPropertyDescriptor?Object.getOwnPropertyDescriptor(obj,key):null;desc&&(desc.get||desc.set)?Object.defineProperty(newObj,key,desc):newObj[key]=obj[key]}return newObj.default=obj,cache&&cache.set(obj,newObj),newObj}function _extends(){return(_extends=Object.assign?Object.assign.bind():function(d){for(var a=1;a<arguments.length;a++){var b=arguments[a];for(var c in b)Object.prototype.hasOwnProperty.call(b,c)&&(d[c]=b[c])}return d}).apply(this,arguments)}function _defineProperty(obj,key,value){return key in obj?Object.defineProperty(obj,key,{value:value,enumerable:!0,configurable:!0,writable:!0}):obj[key]=value,obj}require("./index.css");let aioButtonContext=(0,_react.createContext)();class Radio extends _react.Component{render(){let{className:a,justify:b,rtl:c,style:d,gap:g}=this.context;var{options:e=[],attrs:f={}}=this.props;return _react.default.createElement("div",_extends({},f,{className:"r-radio-button"+(c?" rtl":"")+(a?" "+a:""),style:{justifyContent:b?"center":void 0,...d}}),e.map((b,a)=>_react.default.createElement(Option,_extends({key:a},b,{renderIndex:a,gap:g,rtl:c}))))}}_defineProperty(Radio,"contextType",aioButtonContext);class AIOButton extends _react.Component{constructor(a){super(a),this.activeIndex=!1,this.state={open:this.props.open||!1,touch:"ontouchstart"in document.documentElement}}getPropfromProps({option,index,field}){let prop=this.props["option"+field[0].toUpperCase()+field.slice(1,field.length)],value;if("string"==typeof prop)try{eval("value = "+prop)}catch{value=void 0}else"function"==typeof prop?value=prop(option,index):void 0!==prop&&(value=prop);return value}getProp({option:d,index:g,field:e,def:h,type:a,readFrom:f}){if("props"!==f){let b=d[e];if(void 0!==b&&(!a||this.getType(b)===a))return b}if("option"!==f){let c=this.getPropfromProps({option:d,index:g,field:e});if(void 0!==c&&(!a||this.getType(c)===a))return c}return h}getType(a){return"object"==typeof a?Array.isArray(a)?"array":"object":typeof a}dragStart(a){this.dragIndex=parseInt((0,_jquery.default)(a.target).attr("datarealindex"))}dragOver(a){a.preventDefault()}drop(b){b.stopPropagation();let{onSwap:e}=this.props,c=this.dragIndex,a=(0,_jquery.default)(b.target);if(a.hasClass("aio-button-option")||(a=a.parents(".aio-button-option")),!a.hasClass("aio-button-option"))return;let d=parseInt(a.attr("datarealindex"));c!==d&&e(c,d,this.swap)}swap(c,b,d){let a=c.map((a,b)=>(a._testswapindex=b,a)),e=a[b]._testswapindex;return a.splice(d,0,{...a[b],_testswapindex:!1}),a.filter(a=>a._testswapindex!==e)}arrow(f,g,e){f.preventDefault();let b=g.find(".aio-button-option"),c=b.filter(".active");if(0===c.length){let d=b.eq(0),h=+d.attr("datarealindex"),i=+d.attr("datarenderindex");this.activeIndex={real:h,render:i},d.addClass("active")}else{let j=+c.attr("datarealindex"),a=+c.attr("datarenderindex");a+=e,console.log(a,b.length),1===e?a>=b.length&&(a=0):a<0&&(a=b.length-1),b.removeClass("active"),this.activeIndex={real:j,render:a},b.eq(a).addClass("active").focus()}}enter(a){!1!==this.activeIndex&&this.optionClick(this.props.options[this.activeIndex.real],a)}keyDown(a,b){40===a.keyCode?this.arrow(a,b,1):38===a.keyCode?this.arrow(a,b,-1):13===a.keyCode?this.enter(a):27===a.keyCode&&this.toggle()}optionClick(a,b){this.getProp({option:a,index:b,field:"disabled"})||(a.onClick?a.onClick(a,b):this.props.onClick&&this.props.onClick(a),!1!==this.getProp({option:a,index:b,field:"close",def:!0})&& void 0===this.getProp({option:a,index:b,field:"checked",def:void 0})&&this.toggle())}onButtonClick(a){if(0===(0,_jquery.default)(a.target).parents(".aio-button-tags").length){var{options:b,popOver:c,onClick:d=()=>{}}=this.props;b||c?this.toggle(!0):d(this.props)}}showPopup(c,b){let{popOver:d,type:a}=this.props;return"radio"!==a&&"checkbox"!==a&&"checklist"!==a&&!!c&&(!!d|| !!b&&!!b.length)}toggle(a,c){let{open:b}=this.state,{onBackdropClick:d,onToggle:e}=this.props;void 0===a&&(a=!b),clearTimeout(this.timeOut),this.timeOut=setTimeout(()=>{a!==b&&(this.setState({open:a}),a?(0,_jquery.default)("body").addClass("aio-button-open"):(0,_jquery.default)("body").removeClass("aio-button-open"),d&&c&&d(this.props),e&&e(a))},100)}getOptions(){let{options:m,type:c="button",text:t}=this.props;if("button"===c||"checkbox"===c||"select"===c&&t&&!this.state.open)return;this.tags=[],this.text=void 0;let n=[];for(let a=0;a<m.length;a++){let b=m[a],f=this.getProp({option:b,index:a,field:"value",def:void 0});if(void 0===f)continue;let o=this.getProp({option:b,index:a,field:"text",def:void 0}),d,i,e,g,j,k,h;"select"===c?(e="aio-button-option",d=this.getProp({option:b,index:a,field:"checked",def:void 0}),f===this.props.value&& void 0===this.text&&(this.text=o),j=this.getProp({option:b,index:a,field:"before",def:void 0}),k=this.getProp({option:b,index:a,field:"after",def:void 0}),g=!1,h=this.getProp({option:b,index:a,field:"close",def:void 0===d})):"multiselect"===c?(e="aio-button-option",d=-1!==(this.props.value||[]).indexOf(f),i=this.getProp({option:b,index:a,field:"tagAttrs",def:i}),j=this.getProp({option:b,index:a,field:"before",def:void 0}),k=this.getProp({option:b,index:a,field:"after",def:void 0}),g=!1,h=this.getProp({option:b,index:a,field:"close",def:void 0===d})):"radio"===c?(e="r-radio-button-option",d=this.props.value===f,g=!0,h=!1):"checklist"===c&&(e="r-radio-button-option",d=!0===f,g=!1,h=!1);let p=this.getProp({option:b,index:a,field:"show",def:!0});if(!p)continue;let u=this.getProp({option:b,index:a,field:"checkIcon",def:void 0}),v=this.getProp({option:b,index:a,field:"iconColor",def:void 0}),w=this.getProp({option:b,index:a,field:"iconSize",def:void 0}),x=this.getProp({option:b,index:a,field:"subtext",def:void 0}),q=this.getProp({option:b,index:a,field:"disabled",def:!1})||this.props.disabled,y=this.getProp({option:b,index:a,field:"attrs",def:{}}),r=this.getProp({option:b,index:a,field:"className",readFrom:"option",def:void 0}),s=this.getProp({option:b,index:a,field:"className",readFrom:"props",def:void 0});r&&(e+=" "+r),s&&(e+=" "+s),q&&(e+=" disabled");let z=this.getProp({option:b,index:a,field:"style",readFrom:"option",def:{}}),A={...this.getProp({option:b,index:a,field:"style",readFrom:"props",def:{}}),...z},l={option:b,value:f,show:p,text:o,subtext:x,checked:d,close:h,before:j,after:k,disabled:q,attrs:y,className:e,style:A,realIndex:a,tagAttrs:i,iconColor:v,iconSize:w,checkIcon:u,round:g};l.onClick=()=>{!l.disabled&&(b.onClick?b.onClick(l):b.onChange?b.onChange(f,l):"select"===c||"radio"===c?this.props.onChange(f,l):"multiselect"===c&&(-1===this.props.value.indexOf(f)?this.props.onChange(this.props.value.concat(f),f,"add"):this.props.onChange(this.props.value.filter(a=>a!==f),f,"remove")),h&& void 0===d&&this.toggle())},n.push(l),"multiselect"===c&&d&&this.tags.push(l)}return n}getText(){let{type:b,text:a}=this.props;return"select"===b?"function"==typeof a?a(this.text):void 0===a?this.text:a:"button"===b||"multiselect"===b?"function"==typeof a?a():a:void 0}getSubtext(){let{type:b,subtext:a,value:c}=this.props;return"button"===b?"function"==typeof a?a():a:"select"===b||"multiselect"===b?"function"==typeof a?a(c):a:void 0}render(){let{type:a,popOver:g,caret:b,className:l,style:h}=this.props,{open:i,touch:j}=this.state,k={...this.props,touch:j,optionClick:this.optionClick.bind(this),onButtonClick:this.onButtonClick.bind(this),toggle:this.toggle.bind(this),dragStart:this.dragStart.bind(this),dragOver:this.dragOver.bind(this),drop:this.drop.bind(this),keyDown:this.keyDown.bind(this)},c="aiobutton"+Math.round(1e7*Math.random()),d=this.getOptions(),e=this.getText(),f=this.getSubtext();return _react.default.createElement(aioButtonContext.Provider,{value:k},"multiselect"===a&&_react.default.createElement(Multiselect,{dataUniqId:c,tags:this.tags,text:e,subtext:f,caret:void 0===b||b,style:h}),"button"===a&&_react.default.createElement(Button,{dataUniqId:c,text:e,subtext:f,caret:void 0===b?!!g:b}),"select"===a&&_react.default.createElement(Button,{dataUniqId:c,text:e,subtext:f,caret:void 0===b||b}),("radio"===a||"checklist"===a)&&_react.default.createElement(Radio,{options:d}),"checkbox"===a&&_react.default.createElement(Checkbox,this.props),this.showPopup(i,d)&&_react.default.createElement(Popup,{dataUniqId:c,options:d}))}}exports.default=AIOButton,AIOButton.defaultProps={gap:6};class Checkbox extends _react.Component{getText(){let{text:a}=this.props;return"function"==typeof a?a():a}getSubtext(){let{subtext:a}=this.props;return"function"==typeof a?a():a}render(){let{className:a,disabled:b,onChange:f,value:c,gap:d,rtl:e}=this.props;return _react.default.createElement(Option,_extends({},this.props,{gap:d,rtl:e,text:this.getText(),subtext:this.getSubtext(),className:"r-radio-button-option"+(b?" disabled":"")+(a?" "+a:""),checked:!!c,onClick:()=>{b||f(!!c,this.props)},round:!1}))}}class Button extends _react.Component{render(){let{onButtonClick:g,before:a,gap:b,attrs:h={},rtl:i,caretAttrs:j,badge:c,badgeAttrs:k,after:d,disabled:l,className:e,style:m}=this.context,{dataUniqId:n,text:o,subtext:p,caret:f}=this.props,q={...h,style:m,tabIndex:0,onClick:g,"data-uniq-id":n,disabled:l,className:`aio-button ${i?"rtl":"ltr"}${e?" "+e:""}`};return _react.default.createElement("button",q,void 0!==a&&_react.default.createElement(Before,{before:a,gap:b}),_react.default.createElement(Text,{text:o,subtext:p}),!1!==f&&_react.default.createElement(Caret,{caret:f,attrs:j}),void 0!==d&&_react.default.createElement(After,{after:d,gap:b}),void 0!==c&&_react.default.createElement(Badge,{badge:c,attrs:k}))}}function Text(props){return _react.default.createElement("div",{className:"aio-button-text"},void 0!==props.text&&props.text,void 0!==props.subtext&&_react.default.createElement("div",{className:"r-radio-button-subtext"},props.subtext))}function Before(props){return _react.default.createElement(_react.default.Fragment,null,props.before,_react.default.createElement("div",{className:"aio-button-gap",style:{width:props.gap}}))}function Caret(props){let{attrs={}}=props,icon=!0===props.caret?_react.default.createElement("div",_extends({className:"aio-button-caret"},attrs)):props.caret;return _react.default.createElement(_react.default.Fragment,null,_react.default.createElement("div",{style:{flex:1}}),icon)}function After(props){return _react.default.createElement(_react.default.Fragment,null,_react.default.createElement("div",{style:{flex:1,minWidth:props.gap}}),props.after)}function Badge({badge,attrs={}}){return _react.default.createElement("div",_extends({},attrs,{className:"aio-button-badge"+(attrs.className?" "+attrs.className:"")}),badge)}function SearchBox(props){return _react.default.createElement("div",{className:"aio-button-search"},_react.default.createElement("div",{className:"aio-button-icon",onClick(){props.onChange("")}},props.value&&_react.default.createElement("svg",{viewBox:"0 0 24 24",role:"presentation",style:{width:"1.2rem",height:"1.2rem"}},_react.default.createElement("path",{d:"M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",style:{fill:"currentcolor"}})),!props.value&&_react.default.createElement("svg",{viewBox:"0 0 24 24",role:"presentation",style:{width:"1.2rem",height:"1.2rem"}},_react.default.createElement("path",{d:"M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z",style:{fill:"currentcolor"}}))),_react.default.createElement("input",{type:"text",value:props.value,placeholder:props.placeholder,onChange:a=>props.onChange(a.target.value)}))}function AddBox(props){return props.exact?null:_react.default.createElement("div",{className:"aio-button-add",onClick(){props.onClick()}},props.placeholder)}_defineProperty(Button,"contextType",aioButtonContext);class Popup extends _react.Component{constructor(a){super(a),this.dom=(0,_react.createRef)(),this.state={searchValue:"",addValue:""}}componentDidMount(){this.update((0,_jquery.default)(this.dom.current))}getLimit(a){var b=a.offset(),c=b.left-window.pageXOffset,d=b.top-window.pageYOffset,e=a.outerWidth(),f=a.outerHeight(),g=c+e,h=d+f;return{left:c,top:d,right:g,bottom:h,width:e,height:f}}update(e){let{dataUniqId:r}=this.props;var{rtl:s,openRelatedTo:n,animate:i,popupWidth:j,popupAttrs:t={},popupPosition:z}=this.context,u=(0,_jquery.default)(`.aio-button[data-uniq-id = ${r}]`),f=n?e.parents(n):void 0;f=Array.isArray(f)&&0===f.length?void 0:f;var k=window.innerWidth,l=window.innerHeight,a=f?this.getLimit(f):{left:0,top:0,right:k,bottom:l};a.left<0&&(a.left=0),a.right>k&&(a.right=k),a.top<0&&(a.top=0),a.bottom>l&&(a.bottom=l);var h,o,v,p,c=this.getLimit(u),d=this.getLimit(e),b={};p=(v=c.bottom)+d.height,j?(b.left=c.left,b.width="fit"===j?c.width:j):s?(h=(o=c.right)-d.width)<a.left?b.left=a.left:b.left=h:(o=(h=c.left)+d.width)>a.right?b.left=a.right-d.width:b.left=h,p>a.bottom?d.height>c.top-a.top?b.top=a.bottom-d.height:b.top=c.top-d.height:b.top=c.bottom;let q=t.style;if(i){let g={...b,...q},w=g.top+90,x=g.top,m;!0===i?(g.top=w,g.opacity=0,m={top:x,opacity:1}):m=i,e.css(g),e.animate(m,{duration:100})}else{let y={...b,...q};e.css(y)}e.focus()}getOptions(){let{searchValue:c}=this.state,{gap:h,dragStart:i,dragOver:j,drop:k,rtl:l,onSwap:m}=this.context,{options:d}=this.props,e=[],f=!1,g=0;for(let a=0;a<d.length;a++){let b=d[a];void 0!==b.text&&(!c|| -1!==b.text.indexOf(c))&&(b.text===c&&(f=!0),e.push(_react.default.createElement(Option,_extends({key:a},b,{renderIndex:g,gap:h,dragStart:i,dragOver:j,drop:k,rtl:l,onSwap:m}))),g++)}return this.exact=f,e}renderPopOver(){return this.context.popOver?this.context.popOver(this.context):null}renderOptions(){let{popOver:e,searchText:f="Search",addText:g="Add",search:h,popupHeader:c,popupFooter:d,onAdd:i}=this.context,{searchValue:a}=this.state;if(e)return null;let b=this.getOptions();return _react.default.createElement(_react.default.Fragment,null,c&&c,(""!==a||b.length>10)&& !1!==h&&_react.default.createElement(SearchBox,{value:a,onChange:a=>this.setState({searchValue:a}),placeholder:f}),i&&a&&_react.default.createElement(AddBox,{value:a,onClick:()=>i(a),placeholder:g,options:b,exact:this.exact}),_react.default.createElement("div",{className:"aio-button-options"},b),d&&d)}getClassName(){let{rtl:c,popupAttrs:d={}}=this.context,{className:b}=d,a="aio-button-popup";return c&&(a+=" rtl"),b&&(a+=" "+b),a}render(){var{toggle:e,popupAttrs:a={},keyDown:f,backColor:b}=this.context;let{dataUniqId:c}=this.props,d={className:"aio-button-popup-container",style:{background:b},onClick(a){a.stopPropagation(),(0,_jquery.default)(a.target).attr("data-uniq-id")===c||(0,_jquery.default)(a.target).parents(`[data-uniq-id=${c}]`).length||e(!1,!0)}};return _react.default.createElement("div",d,_react.default.createElement("div",_extends({},a,{ref:this.dom,"data-uniq-id":c,className:this.getClassName(),tabIndex:0,onKeyDown:a=>f(a,(0,_jquery.default)(this.dom.current))}),this.renderPopOver(),this.renderOptions()))}}_defineProperty(Popup,"contextType",aioButtonContext);class Multiselect extends _react.Component{render(){let{showTags:b,style:c={}}=this.context,{dataUniqId:d,tags:a,text:e,subtext:f,caret:g}=this.props;return _react.default.createElement("div",{className:"aio-button-multiselect",style:{width:c.width}},_react.default.createElement(Button,{dataUniqId:d,text:e,subtext:f,caret:g}),!1!==b&&0!==a.length&&_react.default.createElement(Tags,{tags:a}))}}_defineProperty(Multiselect,"contextType",aioButtonContext);class Tags extends _react.Component{render(){let{tagsContainerClassName:a,tagsContainerStyle:b,rtl:c}=this.context,{tags:d}=this.props,e=d.map((a,b)=>_react.default.createElement(Tag,_extends({},a,{attrs:a.tagAttrs})));return _react.default.createElement("div",{className:"aio-button-tags"+(c?" rtl":"")+(a?" "+a:""),style:b},e)}}function Tag(props){let{text,onClick,disabled,attrs={},before=_react.default.createElement("svg",{viewBox:"0 0 24 24",role:"presentation",style:{width:"0.9rem",height:"0.9rem"}},_react.default.createElement("path",{d:"M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z",style:{fill:"currentcolor"}}))}=props;return _react.default.createElement("div",{className:"aio-button-tag"+(attrs.className?" "+attrs.className:"")+(disabled?" disabled":""),onClick:onClick,style:attrs.style},_react.default.createElement("div",{className:"aio-button-tag-icon"},before),_react.default.createElement("div",{className:"aio-button-tag-text"},text),_react.default.createElement("div",{className:"aio-button-tag-icon"},_react.default.createElement("svg",{viewBox:"0 0 24 24",role:"presentation",style:{width:"0.9rem"}},_react.default.createElement("path",{d:"M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",style:{fill:"currentcolor"}}))))}function CheckIcon(props){let{checked,iconColor,iconSize,checkIcon,round,gap}=props;if(void 0===checked)return null;if(void 0!==checkIcon)return _react.default.createElement(_react.default.Fragment,null,checkIcon,_react.default.createElement("div",{className:"aio-button-gap",style:{width:gap}}));Array.isArray(iconColor)||(iconColor=[iconColor]);let[outerColor,innerColor=outerColor]=iconColor;iconColor=[outerColor,innerColor],Array.isArray(iconSize)||(iconSize=[]);let[outerSize,innerSize,stroke]=iconSize;return iconSize=[outerSize,innerSize,stroke],_react.default.createElement(_react.default.Fragment,null,_react.default.createElement("div",{className:"aio-button-check-out"+(checked?" checked":"")+(round?" round":""),style:{color:iconColor[0],width:iconSize[0],height:iconSize[0],border:`${iconSize[2]}px solid`}},checked&&_react.default.createElement("div",{className:"aio-button-check-in"+(round?" round":""),style:{background:iconColor[1],width:iconSize[1],height:iconSize[1]}})),_react.default.createElement("div",{className:"aio-button-gap",style:{width:gap}}))}_defineProperty(Tags,"contextType",aioButtonContext);class Option extends _react.Component{render(){let{option:b,realIndex:f,renderIndex:g,checked:h,before:d,after:e,text:i,subtext:j,className:k,style:l,onClick:m,title:n,round:o=!0,iconSize:p,iconColor:q,checkIcon:r,gap:c=6,dragStart:s,dragOver:t,drop:u,rtl:v,onSwap:w}=this.props,a={className:k,title:n,style:l,onClick:m,datarenderindex:g,datarealindex:f,tabIndex:0},x={checked:h,iconColor:q,iconSize:p,checkIcon:r,round:o,gap:c};return w&&(a.onDragStart=s,a.onDragOver=t,a.onDrop=u,a.draggable=!0),_react.default.createElement(_react.default.Fragment,null,b&&b.splitter&&_react.default.createElement("div",{className:"aio-button-splitter "+(v?"rtl":"ltr")},b.splitter),_react.default.createElement("div",a,_react.default.createElement(CheckIcon,x),d&&_react.default.createElement(Before,{before:d,gap:c}),_react.default.createElement(Text,{text:i,subtext:j}),e&&_react.default.createElement(After,{after:e,gap:c})))}}
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _jquery = _interopRequireDefault(require("jquery"));
+
+require("./index.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+let aioButtonContext = /*#__PURE__*/(0, _react.createContext)();
+
+class Radio extends _react.Component {
+  render() {
+    let {
+      className,
+      justify,
+      rtl,
+      style,
+      gap
+    } = this.context;
+    var {
+      options = [],
+      attrs = {}
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement("div", _extends({}, attrs, {
+      className: 'r-radio-button' + (rtl ? ' rtl' : '') + (className ? ' ' + className : ''),
+      style: {
+        justifyContent: justify ? 'center' : undefined,
+        ...style
+      }
+    }), options.map((option, i) => {
+      return /*#__PURE__*/_react.default.createElement(Option, _extends({
+        key: i
+      }, option, {
+        renderIndex: i,
+        gap: gap,
+        rtl: rtl
+      }));
+    }));
+  }
+
+}
+
+_defineProperty(Radio, "contextType", aioButtonContext);
+
+class AIOButton extends _react.Component {
+  constructor(props) {
+    super(props);
+    this.activeIndex = false;
+    this.state = {
+      open: this.props.open || false,
+      touch: 'ontouchstart' in document.documentElement
+    };
+  }
+
+  getPropfromProps({
+    option,
+    index,
+    field
+  }) {
+    let prop = this.props['option' + field[0].toUpperCase() + field.slice(1, field.length)];
+    let value;
+
+    if (typeof prop === 'string') {
+      try {
+        eval('value = ' + prop);
+      } catch {
+        value = undefined;
+      }
+    } else if (typeof prop === 'function') {
+      value = prop(option, index);
+    } else if (prop !== undefined) {
+      value = prop;
+    }
+
+    return value;
+  }
+
+  getProp({
+    option,
+    index,
+    field,
+    def,
+    type,
+    readFrom
+  }) {
+    if (readFrom !== 'props') {
+      let optionResult = option[field];
+
+      if (optionResult !== undefined) {
+        if (type) {
+          if (this.getType(optionResult) === type) {
+            return optionResult;
+          }
+        } else {
+          return optionResult;
+        }
+      }
+    }
+
+    if (readFrom !== 'option') {
+      let propsResult = this.getPropfromProps({
+        option,
+        index,
+        field
+      });
+
+      if (propsResult !== undefined) {
+        if (type) {
+          if (this.getType(propsResult) === type) {
+            return propsResult;
+          }
+        } else {
+          return propsResult;
+        }
+      }
+    }
+
+    return def;
+  }
+
+  getType(a) {
+    if (typeof a === 'object') {
+      if (Array.isArray(a)) {
+        return 'array';
+      }
+
+      return 'object';
+    }
+
+    return typeof a;
+  }
+
+  dragStart(e) {
+    this.dragIndex = parseInt((0, _jquery.default)(e.target).attr('datarealindex'));
+  }
+
+  dragOver(e) {
+    e.preventDefault();
+  }
+
+  drop(e) {
+    e.stopPropagation();
+    let {
+      onSwap
+    } = this.props,
+        from = this.dragIndex,
+        dom = (0, _jquery.default)(e.target);
+
+    if (!dom.hasClass('aio-button-option')) {
+      dom = dom.parents('.aio-button-option');
+    }
+
+    ;
+
+    if (!dom.hasClass('aio-button-option')) {
+      return;
+    }
+
+    ;
+    let to = parseInt(dom.attr('datarealindex'));
+
+    if (from === to) {
+      return;
+    }
+
+    onSwap(from, to, this.swap);
+  }
+
+  swap(arr, from, to) {
+    if (to === from + 1) {
+      let a = to;
+      to = from;
+      from = a;
+    }
+
+    let Arr = arr.map((o, i) => {
+      o._testswapindex = i;
+      return o;
+    });
+    let fromIndex = Arr[from]._testswapindex;
+    Arr.splice(to, 0, { ...Arr[from],
+      _testswapindex: false
+    });
+    return Arr.filter(o => o._testswapindex !== fromIndex);
+  }
+
+  arrow(e, dom, dir) {
+    e.preventDefault();
+    let options = dom.find('.aio-button-option');
+    let active = options.filter('.active');
+
+    if (active.length === 0) {
+      let first = options.eq(0);
+      let realIndex = +first.attr('datarealindex');
+      let renderIndex = +first.attr('datarenderindex');
+      this.activeIndex = {
+        real: realIndex,
+        render: renderIndex
+      };
+      first.addClass('active');
+    } else {
+      let realIndex = +active.attr('datarealindex');
+      let renderIndex = +active.attr('datarenderindex');
+      renderIndex += dir;
+      console.log(renderIndex, options.length);
+
+      if (dir === 1) {
+        if (renderIndex >= options.length) {
+          renderIndex = 0;
+        }
+      } else {
+        if (renderIndex < 0) {
+          renderIndex = options.length - 1;
+        }
+      }
+
+      options.removeClass('active');
+      this.activeIndex = {
+        real: realIndex,
+        render: renderIndex
+      };
+      options.eq(renderIndex).addClass('active').focus();
+    }
+  }
+
+  enter(e) {
+    if (this.activeIndex !== false) {
+      this.optionClick(this.props.options[this.activeIndex.real], e);
+    }
+  }
+
+  keyDown(e, dom) {
+    if (e.keyCode === 40) {
+      this.arrow(e, dom, 1);
+    } else if (e.keyCode === 38) {
+      this.arrow(e, dom, -1);
+    } else if (e.keyCode === 13) {
+      this.enter(e);
+    } else if (e.keyCode === 27) {
+      this.toggle();
+    }
+  }
+
+  optionClick(option, realIndex) {
+    if (this.getProp({
+      option,
+      index: realIndex,
+      field: 'disabled'
+    })) {
+      return;
+    }
+
+    if (option.onClick) {
+      option.onClick(option, realIndex);
+    } else if (this.props.onClick) {
+      this.props.onClick(option);
+    }
+
+    if (this.getProp({
+      option,
+      index: realIndex,
+      field: 'close',
+      def: true
+    }) !== false && this.getProp({
+      option,
+      index: realIndex,
+      field: 'checked',
+      def: undefined
+    }) === undefined) {
+      this.toggle();
+    }
+  }
+
+  onButtonClick(e) {
+    if ((0, _jquery.default)(e.target).parents('.aio-button-tags').length !== 0) {
+      return;
+    }
+
+    var {
+      options,
+      popOver,
+      onClick = () => {}
+    } = this.props;
+
+    if (options || popOver) {
+      this.toggle(true);
+    } else {
+      onClick(this.props);
+    }
+  }
+
+  showPopup(open, options) {
+    let {
+      popOver,
+      type
+    } = this.props;
+
+    if (type === 'radio' || type === 'checkbox' || type === 'checklist') {
+      return false;
+    }
+
+    if (!open) {
+      return false;
+    }
+
+    if (popOver) {
+      return true;
+    }
+
+    if (options && options.length) {
+      return true;
+    }
+
+    return false;
+  }
+
+  toggle(state, isBackdrop) {
+    let {
+      open
+    } = this.state;
+    let {
+      onBackdropClick,
+      onToggle
+    } = this.props;
+
+    if (state === undefined) {
+      state = !open;
+    }
+
+    clearTimeout(this.timeOut);
+    this.timeOut = setTimeout(() => {
+      if (state === open) {
+        return;
+      }
+
+      this.setState({
+        open: state
+      });
+
+      if (state) {
+        (0, _jquery.default)('body').addClass('aio-button-open');
+      } else {
+        (0, _jquery.default)('body').removeClass('aio-button-open');
+      }
+
+      if (onBackdropClick && isBackdrop) {
+        onBackdropClick(this.props);
+      }
+
+      if (onToggle) {
+        onToggle(state);
+      }
+    }, 100);
+  }
+
+  getOptions() {
+    let {
+      options,
+      type = 'button',
+      text
+    } = this.props;
+
+    if (type === 'button' || type === 'checkbox') {
+      return;
+    }
+
+    if (type === 'select' && text && !this.state.open) {
+      return;
+    }
+
+    this.tags = [];
+    this.text = undefined;
+    let result = [];
+
+    for (let realIndex = 0; realIndex < options.length; realIndex++) {
+      let option = options[realIndex];
+      let value = this.getProp({
+        option,
+        index: realIndex,
+        field: 'value',
+        def: undefined
+      });
+      let text = this.getProp({
+        option,
+        index: realIndex,
+        field: 'text',
+        def: undefined
+      });
+      let checked, tagAttrs, className, round, before, after, close;
+
+      if (type === 'select') {
+        className = 'aio-button-option';
+        checked = this.getProp({
+          option,
+          index: realIndex,
+          field: 'checked',
+          def: undefined
+        });
+
+        if (value !== undefined && value === this.props.value && this.text === undefined) {
+          this.text = text;
+        }
+
+        before = this.getProp({
+          option,
+          index: realIndex,
+          field: 'before',
+          def: undefined
+        });
+        after = this.getProp({
+          option,
+          index: realIndex,
+          field: 'after',
+          def: undefined
+        });
+        round = false;
+        close = this.getProp({
+          option,
+          index: realIndex,
+          field: 'close',
+          def: checked === undefined
+        });
+      } else if (type === 'multiselect') {
+        className = 'aio-button-option';
+        checked = (this.props.value || []).indexOf(value) !== -1;
+        tagAttrs = this.getProp({
+          option,
+          index: realIndex,
+          field: 'tagAttrs',
+          def: tagAttrs
+        });
+        before = this.getProp({
+          option,
+          index: realIndex,
+          field: 'before',
+          def: undefined
+        });
+        after = this.getProp({
+          option,
+          index: realIndex,
+          field: 'after',
+          def: undefined
+        });
+        round = false;
+        close = this.getProp({
+          option,
+          index: realIndex,
+          field: 'close',
+          def: checked === undefined
+        });
+      } else if (type === 'radio') {
+        className = 'r-radio-button-option';
+        checked = this.props.value === value;
+        round = true;
+        close = false;
+      } else if (type === 'checklist') {
+        className = 'r-radio-button-option';
+        checked = value === true;
+        round = false;
+        close = false;
+      }
+
+      let show = this.getProp({
+        option,
+        index: realIndex,
+        field: 'show',
+        def: true
+      });
+
+      if (!show) {
+        continue;
+      }
+
+      let checkIcon = this.getProp({
+        option,
+        index: realIndex,
+        field: 'checkIcon',
+        def: undefined
+      });
+      let iconColor = this.getProp({
+        option,
+        index: realIndex,
+        field: 'iconColor',
+        def: undefined
+      });
+      let iconSize = this.getProp({
+        option,
+        index: realIndex,
+        field: 'iconSize',
+        def: undefined
+      });
+      let subtext = this.getProp({
+        option,
+        index: realIndex,
+        field: 'subtext',
+        def: undefined
+      });
+      let disabled = this.getProp({
+        option,
+        index: realIndex,
+        field: 'disabled',
+        def: false
+      }) || this.props.disabled;
+      let attrs = this.getProp({
+        option,
+        index: realIndex,
+        field: 'attrs',
+        def: {}
+      });
+      let optionClassName = this.getProp({
+        option,
+        index: realIndex,
+        field: 'className',
+        readFrom: 'option',
+        def: undefined
+      });
+      let propsClassName = this.getProp({
+        option,
+        index: realIndex,
+        field: 'className',
+        readFrom: 'props',
+        def: undefined
+      });
+
+      if (optionClassName) {
+        className += ' ' + optionClassName;
+      }
+
+      if (propsClassName) {
+        className += ' ' + propsClassName;
+      }
+
+      if (disabled) {
+        className += ' disabled';
+      }
+
+      let optionStyle = this.getProp({
+        option,
+        index: realIndex,
+        field: 'style',
+        readFrom: 'option',
+        def: {}
+      });
+      let propsStyle = this.getProp({
+        option,
+        index: realIndex,
+        field: 'style',
+        readFrom: 'props',
+        def: {}
+      });
+      let style = { ...propsStyle,
+        ...optionStyle
+      };
+      let props = {
+        option,
+        value,
+        show,
+        text,
+        subtext,
+        checked,
+        close,
+        before,
+        after,
+        disabled,
+        attrs,
+        className,
+        style,
+        realIndex,
+        tagAttrs,
+        iconColor,
+        iconSize,
+        checkIcon,
+        round
+      };
+
+      props.onClick = () => {
+        if (props.disabled) {
+          return;
+        }
+
+        if (option.onClick) {
+          option.onClick(props);
+        } else if (option.onChange) {
+          option.onChange(value, props);
+        } else if (type === 'select' || type === 'radio') {
+          this.props.onChange(value, props);
+        } else if (type === 'multiselect') {
+          if (this.props.value.indexOf(value) === -1) {
+            this.props.onChange(this.props.value.concat(value), value, 'add');
+          } else {
+            this.props.onChange(this.props.value.filter(o => o !== value), value, 'remove');
+          }
+        }
+
+        if (close && checked === undefined) {
+          this.toggle();
+        }
+      };
+
+      result.push(props);
+
+      if (type === 'multiselect' && checked) {
+        this.tags.push(props);
+      }
+    }
+
+    return result;
+  }
+
+  getText() {
+    let {
+      type,
+      text
+    } = this.props;
+
+    if (type === 'select') {
+      return typeof text === 'function' ? text(this.text) : text === undefined ? this.text : text;
+    }
+
+    if (type === 'button') {
+      return typeof text === 'function' ? text() : text;
+    }
+
+    if (type === 'multiselect') {
+      return typeof text === 'function' ? text() : text;
+    }
+  }
+
+  getSubtext() {
+    let {
+      type,
+      subtext,
+      value
+    } = this.props;
+
+    if (type === 'button') {
+      return typeof subtext === 'function' ? subtext() : subtext;
+    }
+
+    if (type === 'select') {
+      return typeof subtext === 'function' ? subtext(value) : subtext;
+    }
+
+    if (type === 'multiselect') {
+      return typeof subtext === 'function' ? subtext(value) : subtext;
+    }
+  }
+
+  render() {
+    let {
+      type,
+      popOver,
+      caret,
+      className,
+      style
+    } = this.props;
+    let {
+      open,
+      touch
+    } = this.state;
+    let context = { ...this.props,
+      touch,
+      optionClick: this.optionClick.bind(this),
+      onButtonClick: this.onButtonClick.bind(this),
+      toggle: this.toggle.bind(this),
+      dragStart: this.dragStart.bind(this),
+      dragOver: this.dragOver.bind(this),
+      drop: this.drop.bind(this),
+      keyDown: this.keyDown.bind(this)
+    };
+    let dataUniqId = 'aiobutton' + Math.round(Math.random() * 10000000);
+    let options = this.getOptions();
+    let text = this.getText();
+    let subtext = this.getSubtext();
+    let show = typeof this.props.show === 'function' ? this.props.show({
+      options
+    }) : this.props.show;
+
+    if (show === false) {
+      return null;
+    }
+
+    return /*#__PURE__*/_react.default.createElement(aioButtonContext.Provider, {
+      value: context
+    }, type === 'multiselect' && /*#__PURE__*/_react.default.createElement(Multiselect, {
+      dataUniqId: dataUniqId,
+      tags: this.tags,
+      text: text,
+      subtext: subtext,
+      caret: caret === undefined ? true : caret,
+      style: style
+    }), type === 'button' && /*#__PURE__*/_react.default.createElement(Button, {
+      dataUniqId: dataUniqId,
+      text: text,
+      subtext: subtext,
+      caret: caret === undefined ? popOver ? true : false : caret
+    }), type === 'select' && /*#__PURE__*/_react.default.createElement(Button, {
+      dataUniqId: dataUniqId,
+      text: text,
+      subtext: subtext,
+      caret: caret === undefined ? true : caret
+    }), (type === 'radio' || type === 'checklist') && /*#__PURE__*/_react.default.createElement(Radio, {
+      options: options
+    }), type === 'checkbox' && /*#__PURE__*/_react.default.createElement(Checkbox, this.props), this.showPopup(open, options) && /*#__PURE__*/_react.default.createElement(Popup, {
+      dataUniqId: dataUniqId,
+      options: options
+    }));
+  }
+
+}
+
+exports.default = AIOButton;
+AIOButton.defaultProps = {
+  gap: 6
+};
+
+class Checkbox extends _react.Component {
+  getText() {
+    let {
+      text
+    } = this.props;
+    return typeof text === 'function' ? text() : text;
+  }
+
+  getSubtext() {
+    let {
+      subtext
+    } = this.props;
+    return typeof subtext === 'function' ? subtext() : subtext;
+  }
+
+  render() {
+    let {
+      className,
+      disabled,
+      onChange,
+      value,
+      gap,
+      rtl
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement(Option, _extends({}, this.props, {
+      gap: gap,
+      rtl: rtl,
+      text: this.getText(),
+      subtext: this.getSubtext(),
+      className: 'r-radio-button-option' + (disabled ? ' disabled' : '') + (className ? ' ' + className : ''),
+      checked: !!value,
+      onClick: () => {
+        if (!disabled) {
+          onChange(!!value, this.props);
+        }
+      },
+      round: false
+    }));
+  }
+
+}
+
+class Button extends _react.Component {
+  render() {
+    let {
+      onButtonClick,
+      before,
+      gap,
+      attrs = {},
+      rtl,
+      caretAttrs,
+      badge,
+      badgeAttrs,
+      after,
+      disabled,
+      className,
+      style
+    } = this.context;
+    let {
+      dataUniqId,
+      text,
+      subtext,
+      caret
+    } = this.props;
+    let props = { ...attrs,
+      style,
+      tabIndex: 0,
+      onClick: onButtonClick,
+      'data-uniq-id': dataUniqId,
+      disabled,
+      className: `aio-button ${rtl ? 'rtl' : 'ltr'}${className ? ' ' + className : ''}`
+    };
+    return /*#__PURE__*/_react.default.createElement("button", props, before !== undefined && /*#__PURE__*/_react.default.createElement(Before, {
+      before: before,
+      gap: gap
+    }), /*#__PURE__*/_react.default.createElement(Text, {
+      text: text,
+      subtext: subtext
+    }), caret !== false && /*#__PURE__*/_react.default.createElement(Caret, {
+      caret: caret,
+      attrs: caretAttrs
+    }), after !== undefined && /*#__PURE__*/_react.default.createElement(After, {
+      after: after,
+      gap: gap
+    }), badge !== undefined && /*#__PURE__*/_react.default.createElement(Badge, {
+      badge: badge,
+      attrs: badgeAttrs
+    }));
+  }
+
+}
+
+_defineProperty(Button, "contextType", aioButtonContext);
+
+function Text(props) {
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-text"
+  }, props.text !== undefined && props.text, props.subtext !== undefined && /*#__PURE__*/_react.default.createElement("div", {
+    className: "r-radio-button-subtext"
+  }, props.subtext));
+}
+
+function Before(props) {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, props.before, /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-gap",
+    style: {
+      width: props.gap
+    }
+  }));
+}
+
+function Caret(props) {
+  let {
+    attrs = {}
+  } = props;
+  let icon = props.caret === true ? /*#__PURE__*/_react.default.createElement("div", _extends({
+    className: 'aio-button-caret'
+  }, attrs)) : props.caret;
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }), icon);
+}
+
+function After(props) {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: props.gap
+    }
+  }), props.after);
+}
+
+function Badge({
+  badge,
+  attrs = {}
+}) {
+  return /*#__PURE__*/_react.default.createElement("div", _extends({}, attrs, {
+    className: 'aio-button-badge' + (attrs.className ? ' ' + attrs.className : '')
+  }), badge);
+}
+
+function SearchBox(props) {
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-search"
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: 'aio-button-icon',
+    onClick: () => {
+      props.onChange('');
+    }
+  }, props.value && /*#__PURE__*/_react.default.createElement("svg", {
+    viewBox: "0 0 24 24",
+    role: "presentation",
+    style: {
+      width: '1.2rem',
+      height: '1.2rem'
+    }
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    d: "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",
+    style: {
+      fill: 'currentcolor'
+    }
+  })), !props.value && /*#__PURE__*/_react.default.createElement("svg", {
+    viewBox: "0 0 24 24",
+    role: "presentation",
+    style: {
+      width: '1.2rem',
+      height: '1.2rem'
+    }
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    d: "M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z",
+    style: {
+      fill: 'currentcolor'
+    }
+  }))), /*#__PURE__*/_react.default.createElement("input", {
+    type: "text",
+    value: props.value,
+    placeholder: props.placeholder,
+    onChange: e => props.onChange(e.target.value)
+  }));
+}
+
+function AddBox(props) {
+  if (props.exact) {
+    return null;
+  }
+
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-add",
+    onClick: () => {
+      props.onClick();
+    }
+  }, props.placeholder);
+}
+
+class Popup extends _react.Component {
+  constructor(props) {
+    super(props);
+    this.dom = /*#__PURE__*/(0, _react.createRef)();
+    this.state = {
+      searchValue: '',
+      addValue: ''
+    };
+  }
+
+  componentDidMount() {
+    this.update((0, _jquery.default)(this.dom.current));
+  }
+
+  getLimit(dom) {
+    var offset = dom.offset();
+    var left = offset.left - window.pageXOffset;
+    var top = offset.top - window.pageYOffset;
+    var width = dom.outerWidth();
+    var height = dom.outerHeight();
+    var right = left + width;
+    var bottom = top + height;
+    return {
+      left,
+      top,
+      right,
+      bottom,
+      width,
+      height
+    };
+  }
+
+  update(popup) {
+    let {
+      dataUniqId
+    } = this.props;
+    var {
+      rtl,
+      openRelatedTo,
+      animate,
+      popupWidth,
+      popupAttrs = {},
+      popupPosition
+    } = this.context;
+    var button = (0, _jquery.default)(`.aio-button[data-uniq-id = ${dataUniqId}]`);
+    var parent = openRelatedTo ? popup.parents(openRelatedTo) : undefined;
+    parent = Array.isArray(parent) && parent.length === 0 ? undefined : parent;
+    var bodyWidth = window.innerWidth;
+    var bodyHeight = window.innerHeight;
+    var parentLimit = parent ? this.getLimit(parent) : {
+      left: 0,
+      top: 0,
+      right: bodyWidth,
+      bottom: bodyHeight
+    };
+
+    if (parentLimit.left < 0) {
+      parentLimit.left = 0;
+    }
+
+    if (parentLimit.right > bodyWidth) {
+      parentLimit.right = bodyWidth;
+    }
+
+    if (parentLimit.top < 0) {
+      parentLimit.top = 0;
+    }
+
+    if (parentLimit.bottom > bodyHeight) {
+      parentLimit.bottom = bodyHeight;
+    }
+
+    var buttonLimit = this.getLimit(button);
+    var popupLimit = this.getLimit(popup);
+    var left,
+        right,
+        top,
+        bottom,
+        style = {};
+    top = buttonLimit.bottom;
+    bottom = top + popupLimit.height;
+
+    if (popupWidth) {
+      style.left = buttonLimit.left;
+      style.width = popupWidth === 'fit' ? buttonLimit.width : popupWidth;
+    } else if (rtl) {
+      right = buttonLimit.right;
+      left = right - popupLimit.width;
+
+      if (left < parentLimit.left) {
+        style.left = parentLimit.left;
+      } else {
+        style.left = left;
+      }
+    } else {
+      left = buttonLimit.left;
+      right = left + popupLimit.width;
+
+      if (right > parentLimit.right) {
+        style.left = parentLimit.right - popupLimit.width;
+      } else {
+        style.left = left;
+      }
+    }
+
+    if (bottom > parentLimit.bottom) {
+      if (popupLimit.height > buttonLimit.top - parentLimit.top) {
+        style.top = parentLimit.bottom - popupLimit.height;
+      } else {
+        style.top = buttonLimit.top - popupLimit.height;
+      }
+    } else {
+      style.top = buttonLimit.bottom;
+    }
+
+    let attrsStyle = popupAttrs.style;
+
+    if (animate) {
+      let a = { ...style,
+        ...attrsStyle
+      };
+      let beforeTop = a.top + 90,
+          afterTop = a.top,
+          obj;
+
+      if (animate === true) {
+        a.top = beforeTop;
+        a.opacity = 0;
+        obj = {
+          top: afterTop,
+          opacity: 1
+        };
+      } else {
+        obj = animate;
+      }
+
+      popup.css(a);
+      popup.animate(obj, {
+        duration: 100
+      });
+    } else {
+      let a = { ...style,
+        ...attrsStyle
+      };
+      popup.css(a);
+    }
+
+    popup.focus();
+  }
+
+  getOptions() {
+    let {
+      searchValue
+    } = this.state;
+    let {
+      gap,
+      dragStart,
+      dragOver,
+      drop,
+      rtl,
+      onSwap
+    } = this.context;
+    let {
+      options
+    } = this.props;
+    let result = [];
+    let exact = false;
+    let renderIndex = 0;
+
+    for (let i = 0; i < options.length; i++) {
+      let option = options[i];
+
+      if (option.text === undefined) {
+        continue;
+      }
+
+      if (searchValue && option.text.indexOf(searchValue) === -1) {
+        continue;
+      }
+
+      if (option.text === searchValue) {
+        exact = true;
+      }
+
+      result.push( /*#__PURE__*/_react.default.createElement(Option, _extends({
+        key: i
+      }, option, {
+        renderIndex: renderIndex,
+        gap: gap,
+        dragStart: dragStart,
+        dragOver: dragOver,
+        drop: drop,
+        rtl: rtl,
+        onSwap: onSwap
+      })));
+      renderIndex++;
+    }
+
+    this.exact = exact;
+    return result;
+  }
+
+  renderPopOver() {
+    return this.context.popOver ? this.context.popOver(this.context) : null;
+  }
+
+  renderOptions() {
+    let {
+      popOver,
+      searchText = 'Search',
+      addText = 'Add',
+      search,
+      popupHeader,
+      popupFooter,
+      onAdd
+    } = this.context;
+    let {
+      searchValue
+    } = this.state;
+
+    if (popOver) {
+      return null;
+    }
+
+    let options = this.getOptions();
+    return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, popupHeader && popupHeader, (searchValue !== '' || options.length > 10) && search !== false && /*#__PURE__*/_react.default.createElement(SearchBox, {
+      value: searchValue,
+      onChange: text => this.setState({
+        searchValue: text
+      }),
+      placeholder: searchText
+    }), onAdd && searchValue && /*#__PURE__*/_react.default.createElement(AddBox, {
+      value: searchValue,
+      onClick: () => onAdd(searchValue),
+      placeholder: addText,
+      options: options,
+      exact: this.exact
+    }), /*#__PURE__*/_react.default.createElement("div", {
+      className: "aio-button-options"
+    }, options), popupFooter && popupFooter);
+  }
+
+  getClassName() {
+    let {
+      rtl,
+      popupAttrs = {}
+    } = this.context;
+    let {
+      className: popupClassName
+    } = popupAttrs;
+    let className = 'aio-button-popup';
+
+    if (rtl) {
+      className += ' rtl';
+    }
+
+    if (popupClassName) {
+      className += ' ' + popupClassName;
+    }
+
+    return className;
+  } //start
+
+
+  render() {
+    var {
+      toggle,
+      popupAttrs = {},
+      keyDown,
+      backColor
+    } = this.context;
+    let {
+      dataUniqId
+    } = this.props;
+    let props = {
+      className: 'aio-button-popup-container',
+      style: {
+        background: backColor
+      },
+      onClick: e => {
+        e.stopPropagation();
+
+        if ((0, _jquery.default)(e.target).attr('data-uniq-id') === dataUniqId) {
+          return;
+        }
+
+        if ((0, _jquery.default)(e.target).parents(`[data-uniq-id=${dataUniqId}]`).length) {
+          return;
+        }
+
+        toggle(false, true);
+      }
+    };
+    return /*#__PURE__*/_react.default.createElement("div", props, /*#__PURE__*/_react.default.createElement("div", _extends({}, popupAttrs, {
+      ref: this.dom,
+      "data-uniq-id": dataUniqId,
+      className: this.getClassName(),
+      tabIndex: 0,
+      onKeyDown: e => keyDown(e, (0, _jquery.default)(this.dom.current))
+    }), this.renderPopOver(), this.renderOptions()));
+  }
+
+}
+
+_defineProperty(Popup, "contextType", aioButtonContext);
+
+class Multiselect extends _react.Component {
+  render() {
+    let {
+      showTags,
+      style = {}
+    } = this.context;
+    let {
+      dataUniqId,
+      tags,
+      text,
+      subtext,
+      caret
+    } = this.props;
+    return /*#__PURE__*/_react.default.createElement("div", {
+      className: "aio-button-multiselect",
+      style: {
+        width: style.width
+      }
+    }, /*#__PURE__*/_react.default.createElement(Button, {
+      dataUniqId: dataUniqId,
+      text: text,
+      subtext: subtext,
+      caret: caret
+    }), showTags !== false && tags.length !== 0 && /*#__PURE__*/_react.default.createElement(Tags, {
+      tags: tags
+    }));
+  }
+
+}
+
+_defineProperty(Multiselect, "contextType", aioButtonContext);
+
+class Tags extends _react.Component {
+  render() {
+    let {
+      tagsContainerClassName: tcc,
+      tagsContainerStyle: tcs,
+      rtl
+    } = this.context;
+    let {
+      tags
+    } = this.props;
+    let Tags = tags.map((tag, i) => {
+      return /*#__PURE__*/_react.default.createElement(Tag, _extends({}, tag, {
+        attrs: tag.tagAttrs
+      }));
+    });
+    return /*#__PURE__*/_react.default.createElement("div", {
+      className: 'aio-button-tags' + (rtl ? ' rtl' : '') + (tcc ? ' ' + tcc : ''),
+      style: tcs
+    }, Tags);
+  }
+
+}
+
+_defineProperty(Tags, "contextType", aioButtonContext);
+
+function Tag(props) {
+  let {
+    text,
+    onClick,
+    disabled,
+    attrs = {},
+    before = /*#__PURE__*/_react.default.createElement("svg", {
+      viewBox: "0 0 24 24",
+      role: "presentation",
+      style: {
+        width: '0.9rem',
+        height: '0.9rem'
+      }
+    }, /*#__PURE__*/_react.default.createElement("path", {
+      d: "M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z",
+      style: {
+        fill: 'currentcolor'
+      }
+    }))
+  } = props;
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: 'aio-button-tag' + (attrs.className ? ' ' + attrs.className : '') + (disabled ? ' disabled' : ''),
+    onClick: onClick,
+    style: attrs.style
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-tag-icon"
+  }, before), /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-tag-text"
+  }, text), /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-tag-icon"
+  }, /*#__PURE__*/_react.default.createElement("svg", {
+    viewBox: "0 0 24 24",
+    role: "presentation",
+    style: {
+      width: '0.9rem'
+    }
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    d: "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",
+    style: {
+      fill: 'currentcolor'
+    }
+  }))));
+}
+
+function CheckIcon(props) {
+  let {
+    checked,
+    iconColor,
+    iconSize,
+    checkIcon,
+    round,
+    gap
+  } = props;
+
+  if (checked === undefined) {
+    return null;
+  }
+
+  if (checkIcon !== undefined) {
+    return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, checkIcon, /*#__PURE__*/_react.default.createElement("div", {
+      className: "aio-button-gap",
+      style: {
+        width: gap
+      }
+    }));
+  }
+
+  if (!Array.isArray(iconColor)) {
+    iconColor = [iconColor];
+  }
+
+  let [outerColor, innerColor = outerColor] = iconColor;
+  iconColor = [outerColor, innerColor];
+
+  if (!Array.isArray(iconSize)) {
+    iconSize = [];
+  }
+
+  let [outerSize, innerSize, stroke] = iconSize;
+  iconSize = [outerSize, innerSize, stroke];
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
+    className: 'aio-button-check-out' + (checked ? ' checked' : '') + (round ? ' round' : ''),
+    style: {
+      color: iconColor[0],
+      width: iconSize[0],
+      height: iconSize[0],
+      border: `${iconSize[2]}px solid`
+    }
+  }, checked && /*#__PURE__*/_react.default.createElement("div", {
+    className: 'aio-button-check-in' + (round ? ' round' : ''),
+    style: {
+      background: iconColor[1],
+      width: iconSize[1],
+      height: iconSize[1]
+    }
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "aio-button-gap",
+    style: {
+      width: gap
+    }
+  }));
+}
+
+class Option extends _react.Component {
+  render() {
+    let {
+      option,
+      realIndex,
+      renderIndex,
+      checked,
+      before,
+      after,
+      text,
+      subtext,
+      className,
+      style,
+      onClick,
+      title,
+      round = true,
+      iconSize,
+      iconColor,
+      checkIcon,
+      gap = 6,
+      dragStart,
+      dragOver,
+      drop,
+      rtl,
+      onSwap
+    } = this.props;
+    let props = {
+      className,
+      title,
+      style,
+      onClick,
+      datarenderindex: renderIndex,
+      datarealindex: realIndex,
+      tabIndex: 0
+    };
+    let checkIconProps = {
+      checked,
+      iconColor,
+      iconSize,
+      checkIcon,
+      round,
+      gap
+    };
+
+    if (onSwap) {
+      props.onDragStart = dragStart;
+      props.onDragOver = dragOver;
+      props.onDrop = drop;
+      props.draggable = true;
+    }
+
+    return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, option && option.splitter && /*#__PURE__*/_react.default.createElement("div", {
+      className: 'aio-button-splitter ' + (rtl ? 'rtl' : 'ltr')
+    }, option.splitter), /*#__PURE__*/_react.default.createElement("div", props, /*#__PURE__*/_react.default.createElement(CheckIcon, checkIconProps), before && /*#__PURE__*/_react.default.createElement(Before, {
+      before: before,
+      gap: gap
+    }), /*#__PURE__*/_react.default.createElement(Text, {
+      text: text,
+      subtext: subtext
+    }), after && /*#__PURE__*/_react.default.createElement(After, {
+      after: after,
+      gap: gap
+    })));
+  }
+
+}

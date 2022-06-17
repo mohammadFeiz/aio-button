@@ -77,6 +77,11 @@ export default class AIOButton extends Component {
       onSwap(from,to,this.swap)
     }
     swap(arr,from,to){
+      if(to === from + 1){
+        let a = to;
+        to = from;
+        from = a;
+      }
       let Arr = arr.map((o,i)=>{o._testswapindex = i; return o})
       let fromIndex = Arr[from]._testswapindex
       Arr.splice(to,0,{...Arr[from],_testswapindex:false})
@@ -157,13 +162,12 @@ export default class AIOButton extends Component {
       for(let realIndex = 0; realIndex < options.length; realIndex++){
         let option = options[realIndex];
         let value = this.getProp({option,index:realIndex,field:'value',def:undefined})
-        if(value === undefined){continue}
         let text = this.getProp({option,index:realIndex,field:'text',def:undefined});
         let checked,tagAttrs,className,round,before,after,close;
         if(type === 'select'){
           className = 'aio-button-option';
           checked = this.getProp({option,index:realIndex,field:'checked',def:undefined});
-          if(value === this.props.value && this.text === undefined){this.text = text}
+          if(value !== undefined && value === this.props.value && this.text === undefined){this.text = text}
           before = this.getProp({option,index:realIndex,field:'before',def:undefined});
           after = this.getProp({option,index:realIndex,field:'after',def:undefined});
           round = false;
@@ -258,6 +262,8 @@ export default class AIOButton extends Component {
       let options = this.getOptions();
       let text = this.getText();
       let subtext = this.getSubtext();
+      let show = typeof this.props.show === 'function'?this.props.show({options}):this.props.show;
+      if(show === false){return null}
       return (
         <aioButtonContext.Provider value={context}>
             {type === 'multiselect' && <Multiselect dataUniqId={dataUniqId} tags={this.tags} text={text} subtext={subtext} caret={caret === undefined?true:caret} style={style}/>}
