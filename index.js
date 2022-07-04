@@ -386,6 +386,7 @@ class AIOButton extends _react.Component {
     this.tags = [];
     this.text = undefined;
     let result = [];
+    options = [...options];
 
     for (let realIndex = 0; realIndex < options.length; realIndex++) {
       let option = options[realIndex];
@@ -401,7 +402,7 @@ class AIOButton extends _react.Component {
         field: 'text',
         def: undefined
       });
-      let checked, tagAttrs, className, round, before, after, close;
+      let checked, tagAttrs, className, round, before, after, close, tagBefore;
 
       if (type === 'select') {
         className = 'aio-button-option';
@@ -448,6 +449,12 @@ class AIOButton extends _react.Component {
           option,
           index: realIndex,
           field: 'before',
+          def: undefined
+        });
+        tagBefore = this.getProp({
+          option,
+          index: realIndex,
+          field: 'tagBefore',
           def: undefined
         });
         after = this.getProp({
@@ -585,7 +592,8 @@ class AIOButton extends _react.Component {
         iconColor,
         iconSize,
         checkIcon,
-        round
+        round,
+        tagBefore
       };
 
       props.onClick = () => {
@@ -1294,7 +1302,7 @@ function Tag(props) {
     onClick,
     disabled,
     attrs = {},
-    before = /*#__PURE__*/_react.default.createElement("svg", {
+    tagBefore = /*#__PURE__*/_react.default.createElement("svg", {
       viewBox: "0 0 24 24",
       role: "presentation",
       style: {
@@ -1314,7 +1322,7 @@ function Tag(props) {
     style: attrs.style
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "aio-button-tag-icon"
-  }, before), /*#__PURE__*/_react.default.createElement("div", {
+  }, tagBefore), /*#__PURE__*/_react.default.createElement("div", {
     className: "aio-button-tag-text"
   }, text), /*#__PURE__*/_react.default.createElement("div", {
     className: "aio-button-tag-icon"

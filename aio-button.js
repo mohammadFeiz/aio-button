@@ -159,11 +159,12 @@ export default class AIOButton extends Component {
       this.tags = [];
       this.text = undefined;
       let result = [];
+      options = [...options];
       for(let realIndex = 0; realIndex < options.length; realIndex++){
         let option = options[realIndex];
         let value = this.getProp({option,index:realIndex,field:'value',def:undefined})
         let text = this.getProp({option,index:realIndex,field:'text',def:undefined});
-        let checked,tagAttrs,className,round,before,after,close;
+        let checked,tagAttrs,className,round,before,after,close,tagBefore;
         if(type === 'select'){
           className = 'aio-button-option';
           checked = this.getProp({option,index:realIndex,field:'checked',def:undefined});
@@ -178,6 +179,7 @@ export default class AIOButton extends Component {
           checked = (this.props.value || []).indexOf(value) !== -1
           tagAttrs = this.getProp({option,index:realIndex,field:'tagAttrs',def:tagAttrs});
           before = this.getProp({option,index:realIndex,field:'before',def:undefined});
+          tagBefore = this.getProp({option,index:realIndex,field:'tagBefore',def:undefined});
           after = this.getProp({option,index:realIndex,field:'after',def:undefined});
           round = false;
           close = this.getProp({option,index:realIndex,field:'close',def:checked === undefined});
@@ -211,7 +213,7 @@ export default class AIOButton extends Component {
         let optionStyle = this.getProp({option,index:realIndex,field:'style',readFrom:'option',def:{}});
         let propsStyle = this.getProp({option,index:realIndex,field:'style',readFrom:'props',def:{}});
         let style = {...propsStyle,...optionStyle};
-        let props = {option,value,show,text,subtext,checked,close,before,after,disabled,attrs,className,style,realIndex,tagAttrs,iconColor,iconSize,checkIcon,round};
+        let props = {option,value,show,text,subtext,checked,close,before,after,disabled,attrs,className,style,realIndex,tagAttrs,iconColor,iconSize,checkIcon,round,tagBefore};
         props.onClick = ()=>{
           if(props.disabled){return}
           if(option.onClick){option.onClick(props)}
@@ -536,14 +538,14 @@ class Tags extends Component{
 function Tag(props){
   let {
     text,onClick,disabled,attrs = {},
-    before = (
+    tagBefore = (
       <svg viewBox="0 0 24 24" role="presentation" style={{width: '0.9rem',height: '0.9rem'}}>
         <path d="M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z" style={{fill: 'currentcolor'}}></path>
       </svg>
     )} = props;
   return (
     <div className={'aio-button-tag' + (attrs.className?' ' + attrs.className:'') + (disabled?' disabled':'')} onClick={onClick} style={attrs.style}>
-      <div className='aio-button-tag-icon'>{before}</div>
+      <div className='aio-button-tag-icon'>{tagBefore}</div>
       <div className='aio-button-tag-text'>{text}</div>
       <div className='aio-button-tag-icon'>
         <svg viewBox="0 0 24 24" role="presentation" style={{width:'0.9rem'}}>
