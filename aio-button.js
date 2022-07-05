@@ -589,7 +589,7 @@ class Option extends Component{
   render(){
     let {option,realIndex,renderIndex,checked,before,after,text,subtext,className,style,onClick,title,round = true,iconSize,iconColor,checkIcon,gap = 6,dragStart,dragOver,drop,rtl,onSwap} = this.props;
     let props = {className,title,style,onClick,datarenderindex:renderIndex,datarealindex:realIndex,tabIndex:0}
-    let checkIconProps = {checked,iconColor,iconSize,checkIcon,round,gap}
+    let checkIconProps = {checked,iconColor,iconSize,checkIcon,round,gap:!before && !text?0:gap}
     if(onSwap){
       props.onDragStart = dragStart;
       props.onDragOver = dragOver;

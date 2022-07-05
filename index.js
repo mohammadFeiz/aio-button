@@ -1440,7 +1440,7 @@ class Option extends _react.Component {
       iconSize,
       checkIcon,
       round,
-      gap
+      gap: !before && !text ? 0 : gap
     };
 
     if (onSwap) {
