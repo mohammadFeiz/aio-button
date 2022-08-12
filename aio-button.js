@@ -10,7 +10,7 @@ class Radio extends Component {
     var {options = [],attrs = {}} = this.props;
     return (
       <div 
-        {...attrs} className={'r-radio-button' + (rtl?' rtl':'') + (className?' ' + className:'')} 
+        {...attrs} className={'aio-button-radio' + (rtl?' rtl':'') + (className?' ' + className:'')} 
         style={{justifyContent:justify?'center':undefined,...style}}
       >
         {
@@ -22,6 +22,29 @@ class Radio extends Component {
     );
   }
 }
+
+class Tabs extends Component {
+  static contextType = aioButtonContext;
+  render(){
+    let {className,rtl,style,gap,before,after} = this.context;
+    var {options = [],attrs = {}} = this.props;
+    return (
+      <div 
+        {...attrs} className={'aio-button-tabs' + (rtl?' rtl':'') + (className?' ' + className:'')} 
+        style={{...style}}
+      >
+        {before !== undefined && before}
+        {
+          options.map((option,i)=>{
+            return <Option key={i} {...option} renderIndex={i} gap={gap} rtl={rtl}/>
+          })
+        }
+        {after !== undefined && after}
+      </div>
+    );
+  }
+}
+
 
 export default class AIOButton extends Component {
     constructor(props){
@@ -155,7 +178,7 @@ export default class AIOButton extends Component {
     getOptions(){
       let {options,type = 'button',text} = this.props;
       if(type === 'button' || type === 'checkbox'){return}
-      if(type === 'select' && text && !this.state.open){return;}
+      if(type === 'select' && !this.state.open){return;}
       this.tags = [];
       this.text = undefined;
       let result = [];
@@ -164,7 +187,7 @@ export default class AIOButton extends Component {
         let option = options[realIndex];
         let value = this.getProp({option,index:realIndex,field:'value',def:undefined})
         let text = this.getProp({option,index:realIndex,field:'text',def:undefined});
-        let checked,tagAttrs,className,round,before,after,close,tagBefore;
+        let checked,tagAttrs,className,round,before,after,close,tagBefore,active;
         if(type === 'select'){
           className = 'aio-button-option';
           checked = this.getProp({option,index:realIndex,field:'checked',def:undefined});
@@ -185,13 +208,20 @@ export default class AIOButton extends Component {
           close = this.getProp({option,index:realIndex,field:'close',def:checked === undefined});
         }
         else if(type === 'radio'){
-          className = 'r-radio-button-option';
+          className = 'aio-button-radio-option';
           checked = this.props.value === value;
           round = true;
           close = false;
         }
+        else if(type === 'tabs'){
+          active = this.props.value === value;
+          className = 'aio-button-tabs-option' + (active?' active':'');
+          before = this.getProp({option,index:realIndex,field:'before',def:undefined});
+          after = this.getProp({option,index:realIndex,field:'after',def:undefined});
+          close = false;
+        }
         else if(type === 'checklist'){
-          className = 'r-radio-button-option';
+          className = 'aio-button-radio-option';
           checked = value === true;
           round = false;
           close = false;
@@ -218,7 +248,7 @@ export default class AIOButton extends Component {
           if(props.disabled){return}
           if(option.onClick){option.onClick(props)}
           else if(option.onChange){option.onChange(value,props)}
-          else if(type === 'select' || type === 'radio'){this.props.onChange(value,props)}
+          else if(type === 'select' || type === 'radio' || type === 'tabs'){this.props.onChange(value,props)}
           else if(type === 'multiselect'){
             if(this.props.value.indexOf(value) === -1){
               this.props.onChange(this.props.value.concat(value),value,'add')
@@ -235,8 +265,24 @@ export default class AIOButton extends Component {
       return result;
     }
     getText(){
-      let {type,text} = this.props;
-      if(type === 'select'){return typeof text === 'function'?text(this.text):(text === undefined?this.text:text)}
+      let {type,text,options} = this.props;
+      if(type === 'select'){
+        if(text !== undefined && typeof text !== 'function'){return text}
+        if(this.state.open){
+          return typeof text === 'function'?text(this.text):(this.text === undefined?'':this.text);  
+        }
+        else{
+          for(let i = 0; i < options.length; i++){
+            let option = options[i];
+            let show = this.getProp({option,index:i,field:'show',def:true})
+            if(!show){continue}
+            let option_value = this.getProp({option,index:i,field:'value',def:undefined})
+            let option_text = this.getProp({option,index:i,field:'text',def:undefined});
+            if(option_value !== undefined && option_value === this.props.value){return typeof text === 'function'?text(option_text):option_text}
+          }
+          return ''
+        }
+      }
       if(type === 'button'){return typeof text === 'function'?text():text}
       if(type === 'multiselect'){return typeof text === 'function'?text():text}
     }
@@ -272,6 +318,7 @@ export default class AIOButton extends Component {
             {type === 'button' && <Button dataUniqId={dataUniqId} text={text} subtext={subtext} caret={caret === undefined?(popOver?true:false):caret}/>}
             {type === 'select' && <Button dataUniqId={dataUniqId} text={text} subtext={subtext} caret={caret === undefined?true:caret}/>}
             {(type === 'radio' || type === 'checklist') && <Radio options={options}/>}
+            {(type === 'tabs') && <Tabs options={options}/>}
             {type === 'checkbox' && <Checkbox {...this.props}/>}
             {this.showPopup(open,options) && <Popup dataUniqId={dataUniqId} options={options}/>}
         </aioButtonContext.Provider>
@@ -297,7 +344,7 @@ class Checkbox extends Component{
         rtl={rtl}
         text={this.getText()}
         subtext={this.getSubtext()}
-        className={'r-radio-button-option' + (disabled?' disabled': '') + (className?' ' + className:'')}
+        className={'aio-button-radio-option' + (disabled?' disabled': '') + (className?' ' + className:'')}
         checked={!!value}
         onClick={()=>{if(!disabled){onChange(!!value,this.props)}}}
         round={false}
@@ -329,7 +376,7 @@ function Text(props){
   return (
     <div className='aio-button-text'>
       {props.text !== undefined && props.text}
-      {props.subtext !== undefined && <div className='r-radio-button-subtext'>{props.subtext}</div>}  
+      {props.subtext !== undefined && <div className='aio-button-radio-subtext'>{props.subtext}</div>}  
     </div>
   )
 }
@@ -463,7 +510,7 @@ class Popup extends Component{
     this.exact = exact;
     return result;
   }
-  renderPopOver(){return this.context.popOver?this.context.popOver(this.context):null}
+  renderPopOver(){return this.context.popOver?this.context.popOver(this.context,()=>this.context.toggle(false)):null}
   renderOptions(){
     let {popOver,searchText = 'Search',addText ='Add',search,popupHeader,popupFooter,onAdd} = this.context;
     let {searchValue} = this.state;
