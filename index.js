@@ -93,6 +93,7 @@ _defineProperty(Tabs, "contextType", aioButtonContext);
 class AIOButton extends _react.Component {
   constructor(props) {
     super(props);
+    this.dom = /*#__PURE__*/(0, _react.createRef)();
     this.activeIndex = false;
     this.state = {
       open: this.props.open || false,
@@ -247,7 +248,6 @@ class AIOButton extends _react.Component {
       };
       first.addClass('active');
     } else {
-      let realIndex = +active.attr('datarealindex');
       let renderIndex = +active.attr('datarenderindex');
       renderIndex += dir;
       console.log(renderIndex, options.length);
@@ -263,17 +263,24 @@ class AIOButton extends _react.Component {
       }
 
       options.removeClass('active');
+      let activeOption = options.eq(renderIndex);
+      let realIndex = +activeOption.attr('datarealindex');
       this.activeIndex = {
         real: realIndex,
         render: renderIndex
       };
-      options.eq(renderIndex).addClass('active').focus();
+      activeOption.addClass('active').focus();
     }
   }
 
   enter(e) {
     if (this.activeIndex !== false) {
-      this.optionClick(this.props.options[this.activeIndex.real], e);
+      let props = this.options.filter(o => o.realIndex === this.activeIndex.real)[0];
+      props.onClick();
+      setTimeout(() => {
+        let dom = (0, _jquery.default)(this.dom.current);
+        dom.focus();
+      }, 0);
     }
   }
 
@@ -389,6 +396,7 @@ class AIOButton extends _react.Component {
         (0, _jquery.default)('body').addClass('aio-button-open');
       } else {
         (0, _jquery.default)('body').removeClass('aio-button-open');
+        setTimeout(() => (0, _jquery.default)(this.dom.current).focus(), 0);
       }
 
       if (onBackdropClick && isBackdrop) {
@@ -772,7 +780,6 @@ class AIOButton extends _react.Component {
     } = this.state;
     let context = { ...this.props,
       touch,
-      optionClick: this.optionClick.bind(this),
       onButtonClick: this.onButtonClick.bind(this),
       toggle: this.toggle.bind(this),
       dragStart: this.dragStart.bind(this),
@@ -782,6 +789,7 @@ class AIOButton extends _react.Component {
     };
     let dataUniqId = 'aiobutton' + Math.round(Math.random() * 10000000);
     let options = this.getOptions();
+    this.options = options;
     let text = this.getText();
     let subtext = this.getSubtext();
     let show = typeof this.props.show === 'function' ? this.props.show({
@@ -795,6 +803,7 @@ class AIOButton extends _react.Component {
     return /*#__PURE__*/_react.default.createElement(aioButtonContext.Provider, {
       value: context
     }, type === 'multiselect' && /*#__PURE__*/_react.default.createElement(Multiselect, {
+      dom: this.dom,
       dataUniqId: dataUniqId,
       tags: this.tags,
       text: text,
@@ -802,20 +811,26 @@ class AIOButton extends _react.Component {
       caret: caret === undefined ? true : caret,
       style: style
     }), type === 'button' && /*#__PURE__*/_react.default.createElement(Button, {
+      dom: this.dom,
       dataUniqId: dataUniqId,
       text: text,
       subtext: subtext,
       caret: caret === undefined ? popOver ? true : false : caret
     }), type === 'select' && /*#__PURE__*/_react.default.createElement(Button, {
+      dom: this.dom,
       dataUniqId: dataUniqId,
       text: text,
       subtext: subtext,
       caret: caret === undefined ? true : caret
     }), (type === 'radio' || type === 'checklist') && /*#__PURE__*/_react.default.createElement(Radio, {
+      dom: this.dom,
       options: options
     }), type === 'tabs' && /*#__PURE__*/_react.default.createElement(Tabs, {
+      dom: this.dom,
       options: options
-    }), type === 'checkbox' && /*#__PURE__*/_react.default.createElement(Checkbox, this.props), this.showPopup(open, options) && /*#__PURE__*/_react.default.createElement(Popup, {
+    }), type === 'checkbox' && /*#__PURE__*/_react.default.createElement(Checkbox, _extends({
+      dom: this.dom
+    }, this.props)), this.showPopup(open, options) && /*#__PURE__*/_react.default.createElement(Popup, {
       dataUniqId: dataUniqId,
       options: options
     }));
@@ -890,7 +905,8 @@ class Button extends _react.Component {
       dataUniqId,
       text,
       subtext,
-      caret
+      caret,
+      dom
     } = this.props;
     let props = { ...attrs,
       style,
@@ -898,6 +914,7 @@ class Button extends _react.Component {
       onClick: onButtonClick,
       'data-uniq-id': dataUniqId,
       disabled,
+      ref: dom,
       className: `aio-button ${rtl ? 'rtl' : 'ltr'}${className ? ' ' + className : ''}`
     };
     return /*#__PURE__*/_react.default.createElement("button", props, before !== undefined && /*#__PURE__*/_react.default.createElement(Before, {

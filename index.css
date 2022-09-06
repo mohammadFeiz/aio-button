@@ -96,6 +96,7 @@ body.aio-button-open{
   overflow-y:auto;
   display:flex;
   flex-direction: column;
+  outline:none;
 }
 .aio-button-popup-container{
   position:fixed;
@@ -130,6 +131,7 @@ a.aio-button-option{
   box-shadow : 3px 3px 8px 0px rgba(0,0,0,.2);
   user-select:none;
   -webkit-user-select:none;
+  outline:none;
 }
 .aio-button-options::-webkit-scrollbar {
     width: 10px !important;

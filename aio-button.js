@@ -49,6 +49,7 @@ class Tabs extends Component {
 export default class AIOButton extends Component {
     constructor(props){
       super(props);
+      this.dom = createRef()
       this.activeIndex = false;
       this.state = {open:this.props.open || false,touch:'ontouchstart' in document.documentElement}
     }
@@ -123,18 +124,28 @@ export default class AIOButton extends Component {
         first.addClass('active');
       }
       else{
-        let realIndex = +active.attr('datarealindex');
         let renderIndex = +active.attr('datarenderindex');
         renderIndex += dir;
         console.log(renderIndex,options.length)
         if(dir === 1){if(renderIndex >= options.length){renderIndex = 0;}}
         else{if(renderIndex < 0){renderIndex = options.length - 1;}}
         options.removeClass('active');
+        let activeOption = options.eq(renderIndex);
+        let realIndex = +activeOption.attr('datarealindex')
         this.activeIndex = {real:realIndex,render:renderIndex};
-        options.eq(renderIndex).addClass('active').focus();
+        activeOption.addClass('active').focus();
       }
     }
-    enter(e){if(this.activeIndex !== false){this.optionClick(this.props.options[this.activeIndex.real],e);}}
+    enter(e){
+      if(this.activeIndex !== false){
+        let props = this.options.filter((o)=>o.realIndex === this.activeIndex.real)[0]
+        props.onClick()
+        setTimeout(()=>{
+          let dom = $(this.dom.current)
+          dom.focus();
+        },0)
+      }
+    }
     keyDown(e,dom){
       if(e.keyCode === 40){this.arrow(e,dom,1)}
       else if(e.keyCode === 38){this.arrow(e,dom,-1)}
@@ -170,7 +181,10 @@ export default class AIOButton extends Component {
         if(state === open){return}
         this.setState({open:state});
         if(state){$('body').addClass('aio-button-open');}
-        else{$('body').removeClass('aio-button-open');}
+        else{
+          $('body').removeClass('aio-button-open');
+          setTimeout(()=>$(this.dom.current).focus(),0)
+        }
         if(onBackdropClick && isBackdrop){onBackdropClick(this.props)}
         if(onToggle){onToggle(state)}
       },100)
@@ -298,7 +312,6 @@ export default class AIOButton extends Component {
       let {open,touch} = this.state;
       let context = {
         ...this.props,touch,
-        optionClick:this.optionClick.bind(this),
         onButtonClick:this.onButtonClick.bind(this),
         toggle:this.toggle.bind(this),
         dragStart:this.dragStart.bind(this),
@@ -308,18 +321,19 @@ export default class AIOButton extends Component {
       }
       let dataUniqId = 'aiobutton' + (Math.round(Math.random() * 10000000));
       let options = this.getOptions();
+      this.options = options;
       let text = this.getText();
       let subtext = this.getSubtext();
       let show = typeof this.props.show === 'function'?this.props.show({options}):this.props.show;
       if(show === false){return null}
       return (
         <aioButtonContext.Provider value={context}>
-            {type === 'multiselect' && <Multiselect dataUniqId={dataUniqId} tags={this.tags} text={text} subtext={subtext} caret={caret === undefined?true:caret} style={style}/>}
-            {type === 'button' && <Button dataUniqId={dataUniqId} text={text} subtext={subtext} caret={caret === undefined?(popOver?true:false):caret}/>}
-            {type === 'select' && <Button dataUniqId={dataUniqId} text={text} subtext={subtext} caret={caret === undefined?true:caret}/>}
-            {(type === 'radio' || type === 'checklist') && <Radio options={options}/>}
-            {(type === 'tabs') && <Tabs options={options}/>}
-            {type === 'checkbox' && <Checkbox {...this.props}/>}
+            {type === 'multiselect' && <Multiselect dom={this.dom} dataUniqId={dataUniqId} tags={this.tags} text={text} subtext={subtext} caret={caret === undefined?true:caret} style={style}/>}
+            {type === 'button' && <Button dom={this.dom} dataUniqId={dataUniqId} text={text} subtext={subtext} caret={caret === undefined?(popOver?true:false):caret}/>}
+            {type === 'select' && <Button dom={this.dom} dataUniqId={dataUniqId} text={text} subtext={subtext} caret={caret === undefined?true:caret}/>}
+            {(type === 'radio' || type === 'checklist') && <Radio dom={this.dom} options={options}/>}
+            {(type === 'tabs') && <Tabs dom={this.dom} options={options}/>}
+            {type === 'checkbox' && <Checkbox dom={this.dom} {...this.props}/>}
             {this.showPopup(open,options) && <Popup dataUniqId={dataUniqId} options={options}/>}
         </aioButtonContext.Provider>
       );
@@ -356,9 +370,9 @@ class Button extends Component{
   static contextType = aioButtonContext;
   render(){
     let {onButtonClick,before,gap,attrs = {},rtl,caretAttrs,badge,badgeAttrs,after,disabled,className,style} = this.context;
-    let {dataUniqId,text,subtext,caret} = this.props;
+    let {dataUniqId,text,subtext,caret,dom} = this.props;
     let props = {
-      ...attrs,style,tabIndex:0,onClick:onButtonClick,'data-uniq-id':dataUniqId,disabled,
+      ...attrs,style,tabIndex:0,onClick:onButtonClick,'data-uniq-id':dataUniqId,disabled,ref:dom,
       className:`aio-button ${rtl?'rtl':'ltr'}${className?' ' + className:''}`,
     }
     return (
