@@ -349,11 +349,20 @@ class Checkbox extends Component{
     let {subtext} = this.props;
     return typeof subtext === 'function'?subtext():subtext;
   }
+  keyDown(e){
+    let code = e.keyCode;
+    let {disabled,onChange,value} = this.props;
+    if(code === 13){
+      if(!disabled){onChange(!!value,this.props)}
+    }
+  }
   render(){
     let {className,disabled,onChange,value,gap,rtl} = this.props;
     return (
       <Option
         {...this.props}
+        attrs={{onKeyDown:(e)=>this.keyDown(e),...this.props.attrs}}
+        onKeyDown={(e)=>this.keyDown(e)}
         gap={gap}
         rtl={rtl}
         text={this.getText()}
@@ -372,7 +381,7 @@ class Button extends Component{
     let {onButtonClick,before,gap,attrs = {},rtl,caretAttrs,badge,badgeAttrs,after,disabled,className,style} = this.context;
     let {dataUniqId,text,subtext,caret,dom} = this.props;
     let props = {
-      ...attrs,style,tabIndex:0,onClick:onButtonClick,'data-uniq-id':dataUniqId,disabled,ref:dom,
+      tabIndex:0,...attrs,style,onClick:onButtonClick,'data-uniq-id':dataUniqId,disabled,ref:dom,
       className:`aio-button ${rtl?'rtl':'ltr'}${className?' ' + className:''}`,
     }
     return (
@@ -648,8 +657,8 @@ function CheckIcon(props){
 }
 class Option extends Component{
   render(){
-    let {option,realIndex,renderIndex,checked,before,after,text,subtext,className,style,onClick,title,round = true,iconSize,iconColor,checkIcon,gap = 6,dragStart,dragOver,drop,rtl,onSwap} = this.props;
-    let props = {className,title,style,onClick,datarenderindex:renderIndex,datarealindex:realIndex,tabIndex:0}
+    let {option,realIndex,renderIndex,checked,before,after,text,subtext,className,style,onClick,title,round = true,iconSize,iconColor,checkIcon,gap = 6,dragStart,dragOver,drop,rtl,onSwap,attrs} = this.props;
+    let props = {className,title,style,onClick,datarenderindex:renderIndex,datarealindex:realIndex,tabIndex:0,...attrs}
     let checkIconProps = {checked,iconColor,iconSize,checkIcon,round,gap:!before && !text?0:gap}
     if(onSwap){
       props.onDragStart = dragStart;

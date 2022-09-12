@@ -858,6 +858,21 @@ class Checkbox extends _react.Component {
     return typeof subtext === 'function' ? subtext() : subtext;
   }
 
+  keyDown(e) {
+    let code = e.keyCode;
+    let {
+      disabled,
+      onChange,
+      value
+    } = this.props;
+
+    if (code === 13) {
+      if (!disabled) {
+        onChange(!!value, this.props);
+      }
+    }
+  }
+
   render() {
     let {
       className,
@@ -868,6 +883,11 @@ class Checkbox extends _react.Component {
       rtl
     } = this.props;
     return /*#__PURE__*/_react.default.createElement(Option, _extends({}, this.props, {
+      attrs: {
+        onKeyDown: e => this.keyDown(e),
+        ...this.props.attrs
+      },
+      onKeyDown: e => this.keyDown(e),
       gap: gap,
       rtl: rtl,
       text: this.getText(),
@@ -908,9 +928,10 @@ class Button extends _react.Component {
       caret,
       dom
     } = this.props;
-    let props = { ...attrs,
-      style,
+    let props = {
       tabIndex: 0,
+      ...attrs,
+      style,
       onClick: onButtonClick,
       'data-uniq-id': dataUniqId,
       disabled,
@@ -1531,7 +1552,8 @@ class Option extends _react.Component {
       dragOver,
       drop,
       rtl,
-      onSwap
+      onSwap,
+      attrs
     } = this.props;
     let props = {
       className,
@@ -1540,7 +1562,8 @@ class Option extends _react.Component {
       onClick,
       datarenderindex: renderIndex,
       datarealindex: realIndex,
-      tabIndex: 0
+      tabIndex: 0,
+      ...attrs
     };
     let checkIconProps = {
       checked,

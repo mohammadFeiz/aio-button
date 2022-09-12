@@ -323,6 +323,7 @@ direction:rtl;
   max-width:100%;
   min-width:fit-content;
   box-sizing: border-box;
+  outline:none;
 }
 .aio-button-radio-option.disabled{
 cursor:not-allowed;
