@@ -223,6 +223,7 @@ export default class AIOButton extends Component {
         }
         else if(type === 'radio'){
           className = 'aio-button-radio-option';
+          after = this.getProp({option,index:realIndex,field:'after',def:undefined});
           checked = this.props.value === value;
           round = true;
           close = false;

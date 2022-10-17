@@ -88,6 +88,10 @@ body.aio-button-open{
   right:unset;
   left:8px;
 }
+.aio-button.rtl .aio-button-icon{
+  right:unset;
+  left:8px;
+}
 .aio-button-icon.disabled{
   opacity:0.5;
 }
